@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THEO 2 Finals Study Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ef;
+    --warm-white: #f5f0e8;
+    --ink: #1a1208;
+    --brown: #5c3d1e;
+    --gold: #c9922a;
+    --gold-light: #e8c76d;
+    --rust: #b54a1a;
+    --sage: #4a6741;
+    --sage-light: #d4e6c3;
+    --blue-deep: #1e3a5f;
+    --blue-light: #c8ddef;
+    --purple: #4a2d6e;
+    --purple-light: #ddd0f0;
+    --teal: #1a5c5c;
+    --teal-light: #c3e0e0;
+    --rose: #7a2935;
+    --rose-light: #f0d0d4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(201,146,42,0.06) 40px,
+      rgba(201,146,42,0.06) 41px
+    );
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub {
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(250,246,239,0.7);
+    margin-bottom: 30px;
+  }
+  .toc-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .toc-pills a {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid rgba(201,146,42,0.5);
+    border-radius: 20px;
+    color: var(--gold-light);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+  }
+  .toc-pills a:hover {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+
+  /* MAIN LAYOUT */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* MODULE */
+  .module {
+    margin-top: 60px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(26,18,8,0.08);
+  }
+
+  .module-header {
+    padding: 28px 36px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .module-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    opacity: 0.7;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+  .module-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .module-header .tagline {
+    font-style: italic;
+    font-size: 0.95rem;
+    margin-top: 4px;
+    opacity: 0.8;
+  }
+
+  .module-body {
+    background: #fff;
+    padding: 32px 36px;
+  }
+
+  /* COLOR THEMES per module */
+  .mod-economic .module-header { background: #2a1800; color: #faf0dc; }
+  .mod-economic .module-num { color: var(--gold); }
+  .mod-political .module-header { background: var(--blue-deep); color: #e8f0f8; }
+  .mod-political .module-num { color: #a8c8e8; }
+  .mod-social .module-header { background: var(--sage); color: #e8f4e0; }
+  .mod-social .module-num { color: #b8d8a0; }
+  .mod-laudato .module-header { background: var(--teal); color: #e0f4f4; }
+  .mod-laudato .module-num { color: #a0d8d8; }
+  .mod-peace .module-header { background: var(--purple); color: #f0e8ff; }
+  .mod-peace .module-num { color: #c8a8f0; }
+  .mod-nonviolence .module-header { background: var(--rose); color: #ffe8ec; }
+  .mod-nonviolence .module-num { color: #f0a8b8; }
+
+  /* SECTION WITHIN MODULE */
+  .section {
+    margin-bottom: 28px;
+  }
+  .section:last-child { margin-bottom: 0; }
+
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.5;
+  }
+
+  .section-title.eco { color: var(--brown); }
+  .section-title.pol { color: var(--blue-deep); }
+  .section-title.soc { color: var(--sage); }
+  .section-title.lau { color: var(--teal); }
+  .section-title.pea { color: var(--purple); }
+  .section-title.non { color: var(--rose); }
+
+  /* KEY CONCEPT BOX */
+  .key-concept {
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin: 16px 0;
+    font-size: 0.95rem;
+  }
+  .key-concept.gold { background: #fef8e8; border-left: 4px solid var(--gold); }
+  .key-concept.blue { background: var(--blue-light); border-left: 4px solid var(--blue-deep); }
+  .key-concept.green { background: var(--sage-light); border-left: 4px solid var(--sage); }
+  .key-concept.teal { background: var(--teal-light); border-left: 4px solid var(--teal); }
+  .key-concept.purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .key-concept.rose { background: var(--rose-light); border-left: 4px solid var(--rose); }
+
+  .key-concept strong {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    opacity: 0.6;
+  }
+
+  /* CARDS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.9rem;
+  }
+  .card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+  .card.gold { background: #fef3d0; }
+  .card.blue { background: #dce9f8; }
+  .card.green { background: #d8edd0; }
+  .card.teal { background: #d0ecec; }
+  .card.purple { background: #e8d8f8; }
+  .card.rose { background: #f8d8dc; }
+
+  /* NUMBERED LIST */
+  .num-list { counter-reset: item; list-style: none; }
+  .num-list li {
+    counter-increment: item;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+  .num-list li::before {
+    content: counter(item);
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .num-list.gold li::before { background: var(--gold); color: #fff; }
+  .num-list.blue li::before { background: var(--blue-deep); color: #fff; }
+  .num-list.green li::before { background: var(--sage); color: #fff; }
+  .num-list.teal li::before { background: var(--teal); color: #fff; }
+  .num-list.purple li::before { background: var(--purple); color: #fff; }
+  .num-list.rose li::before { background: var(--rose); color: #fff; }
+
+  /* BULLET LIST */
+  .bullet-list { list-style: none; padding: 0; }
+  .bullet-list li {
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+  .bullet-list li::before {
+    content: '›';
+    position: absolute;
+    left: 4px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  .bullet-list.gold li::before { color: var(--gold); }
+  .bullet-list.blue li::before { color: var(--blue-deep); }
+  .bullet-list.green li::before { color: var(--sage); }
+  .bullet-list.teal li::before { color: var(--teal); }
+  .bullet-list.purple li::before { color: var(--purple); }
+  .bullet-list.rose li::before { color: var(--rose); }
+
+  /* QUOTE */
+  .pullquote {
+    margin: 20px 0;
+    padding: 20px 28px;
+    border-radius: 6px;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    position: relative;
+  }
+  .pullquote::before {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    line-height: 0;
+    position: absolute;
+    top: 28px;
+    left: 16px;
+    opacity: 0.2;
+  }
+  .pullquote p { padding-left: 28px; }
+  .pullquote.gold { background: #fef8e8; color: var(--brown); }
+  .pullquote.blue { background: var(--blue-light); color: var(--blue-deep); }
+  .pullquote.green { background: var(--sage-light); color: #2a4020; }
+  .pullquote.teal { background: var(--teal-light); color: var(--teal); }
+  .pullquote.purple { background: var(--purple-light); color: var(--purple); }
+  .pullquote.rose { background: var(--rose-light); color: var(--rose); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(26,18,8,0.12), transparent);
+    margin: 24px 0;
+  }
+
+  /* REMEMBER BOX */
+  .remember {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 0.9rem;
+  }
+  .remember-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: -2px;
+  }
+  .remember h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .remember.gold { background: #fef3d0; }
+  .remember.gold h4 { color: var(--brown); }
+  .remember.blue { background: #dce9f8; }
+  .remember.blue h4 { color: var(--blue-deep); }
+  .remember.green { background: #d8edd0; }
+  .remember.green h4 { color: var(--sage); }
+  .remember.teal { background: #d0ecec; }
+  .remember.teal h4 { color: var(--teal); }
+  .remember.purple { background: #e8d8f8; }
+  .remember.purple h4 { color: var(--purple); }
+  .remember.rose { background: #f8d8dc; }
+  .remember.rose h4 { color: var(--rose); }
+
+  /* TWO COLUMN */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .module-header { padding: 22px 24px; }
+    .module-body { padding: 24px 20px; }
+    .cards { grid-template-columns: 1fr; }
+  }
+
+  p { margin-bottom: 12px; font-size: 0.97rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: rgba(26,18,8,0.35);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">THEO 2 — Module 5-9 Reviewer by John Paul Nob</div>
+  <h1>Catholic Social <span>Doctrine</span><br>Study Notes</h1>
+  <p class="hero-sub">Compendium of the Social Doctrine of the Church — all six topics</p>
+  <div class="toc-pills">
+    <a href="#economic">01 Economic Life</a>
+    <a href="#political">02 Political Life</a>
+    <a href="#social">03 Social Analysis</a>
+    <a href="#laudato">04 Laudato Si'</a>
+    <a href="#peace">05 Promotion of Peace</a>
+    <a href="#nonviolence">06 Active Non-Violence</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MODULE 1: ECONOMIC LIFE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="module mod-economic" id="economic">
+  <div class="module-header">
+    <div>
+      <div class="module-num">MODULE 01</div>
+      <h2>Economic Life</h2>
+      <div class="tagline">How the Church sees money, work, and wealth</div>
+    </div>
+  </div>
+  <div class="module-body">
+
+    <div class="section">
+      <div class="section-title eco">The Big Idea</div>
+      <p>The Church teaches that <strong>economic activity is not just about making money</strong> — it must serve people, follow moral law, and ensure that wealth is shared. The economy is meant to serve humanity, not the other way around.</p>
+      <div class="key-concept gold">
+        <strong>Core Teaching</strong>
+        Even goods that are <em>legitimately owned</em> are still meant to be shared. Private ownership is not an absolute right — it comes with social responsibility.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title eco">Biblical Foundation</div>
+      <div class="two-col">
+        <div class="card gold">
+          <h4>Man, Poverty & Riches</h4>
+          The Bible consistently reminds us that wealth is a gift, not a guarantee of worth. The poor have a special place in God's heart.
+        </div>
+        <div class="card gold">
+          <h4>Wealth Exists to Be Shared</h4>
+          From the Old Testament onward, goods are meant for <em>everyone</em>, not just those who own them. Sharing is a biblical command.
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title eco">7 Basic Principles of Economic Life</div>
+      <ul class="num-list gold">
+        <li><span><strong>Justice governs economy.</strong> Economic activity must follow moral limits and serve people's real needs — not just maximize output.</span></li>
+        <li><span><strong>Everyone has a right to basic goods.</strong> Every person and family deserves a sufficient share of the earth's resources.</span></li>
+        <li><span><strong>Prosperity = fair distribution, not just total wealth.</strong> A rich country that ignores its poor is NOT truly prosperous.</span></li>
+        <li><span><strong>Work must be available.</strong> Opportunities to work must be provided for those able and willing.</span></li>
+        <li><span><strong>No monopoly on economic decisions.</strong> Economic development cannot be controlled by a small powerful group or state alone.</span></li>
+        <li><span><strong>Fair taxation.</strong> Taxes must be based on one's ability to pay — not a flat burden on everyone.</span></li>
+        <li><span><strong>Government has a role.</strong> The state must participate in regulating economic life for the common good.</span></li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title eco">Basic Economic Rights (Church Teaching)</div>
+      <div class="cards">
+        <div class="card gold"><h4>🏢 Employment</h4>Right to productive, meaningful work</div>
+        <div class="card gold"><h4>💰 Just Wages</h4>Fair pay that supports a dignified life</div>
+        <div class="card gold"><h4>🏠 Adequate Income</h4>Enough to meet basic needs</div>
+        <div class="card gold"><h4>🤝 Organize & Bargain</h4>Right to form unions and negotiate</div>
+        <div class="card gold"><h4>🏡 Own Property</h4>Property as protection of freedom</div>
+        <div class="card gold"><h4>🗳️ Participate</h4>Voice in economic decisions</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title eco">Catholic Priorities in Economic Order</div>
+      <ul class="bullet-list gold">
+        <li>Needs of the poor (always first)</li>
+        <li>Rights of workers (fair treatment, safe conditions)</li>
+        <li>Preservation of the environment</li>
+        <li>Production to meet social needs (not just profit)</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title eco">Economy & Morality — How Are They Related?</div>
+      <p>The Church teaches that <strong>economic activity and moral law are inseparable</strong>. You cannot have a "good economy" that ignores morality.</p>
+      <ul class="bullet-list gold">
+        <li><strong>Profit alone is NOT a good indicator</strong> of whether a business is functioning well — it must also uphold human dignity.</li>
+        <li>Business owners and managers must go beyond profit — they have responsibilities to workers, community, and society.</li>
+        <li>Wealth and development become <strong>immoral</strong> when they increase in quantity but worsen human dignity and fairness.</li>
+      </ul>
+      <div class="remember gold">
+        <div class="remember-icon">⚖️</div>
+        <div>
+          <h4>Key Distinction</h4>
+          Private property is real and protected — but NOT absolute. In extreme necessity, a person has the right to take from another's surplus for survival. The needs of life come before property rights.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MODULE 2: POLITICAL LIFE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="module mod-political" id="political">
+  <div class="module-header">
+    <div>
+      <div class="module-num">MODULE 02</div>
+      <h2>Political Life</h2>
+      <div class="tagline">Authority, rights, and the Catholic view of government</div>
+    </div>
+  </div>
+  <div class="module-body">
+
+    <div class="section">
+      <div class="section-title pol">What is Politics?</div>
+      <p>The word "politics" comes from the Greek <em>Πολιτικά</em> — Aristotle's book on "Affairs of the City." It involves social relations with authority, regulating public affairs, and forming/applying policy.</p>
+      <div class="key-concept blue">
+        <strong>Catholic Social Teaching</strong>
+        The Church's body of doctrine on poverty, economics, social organization, and the role of the state — all centered on the dignity of the human person.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pol">Biblical View of Political Authority</div>
+      <div class="cards">
+        <div class="card blue">
+          <h4>📜 Old Testament</h4>
+          Israel first had no king — only God ruled. When they asked for a king, God warned them. Yet a king's authority can still be a gift from God (1 Sam 9:16). The ideal king is wise, just, peaceful, and cares for the poor.
+        </div>
+        <div class="card blue">
+          <h4>✝️ New Testament</h4>
+          Jesus did not directly oppose authorities. He said "give to Caesar what is Caesar's." He rejected <em>political messianism</em> and taught leaders to be servants of all.
+        </div>
+        <div class="card blue">
+          <h4>✉️ Early Church</h4>
+          Paul: submit to legitimate authority (it reflects God's order). Pay taxes. Pray for rulers. Peter: be subject to human institutions — but always within God's higher law.
+        </div>
+      </div>
+      <div class="remember blue">
+        <div class="remember-icon">👑</div>
+        <div>
+          <h4>The Ideal Leader (Biblical)</h4>
+          Wise and just (especially to the poor) · Favors good, punishes evil · Treats all equally · God-fearing · Peacemaker
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pol">Political Authority — 4 Key Questions</div>
+      <ul class="num-list blue">
+        <li><span><strong>Foundation?</strong> Authority comes from God — since humans are social by nature and need someone directing all toward the common good.</span></li>
+        <li><span><strong>Purpose?</strong> To guarantee ordered community life <em>without</em> crushing individual freedom — directing freedom toward the common good.</span></li>
+        <li><span><strong>Limits?</strong> Must operate within morality and law. Citizens are conscience-bound to obey only when authority acts justly.</span></li>
+        <li><span><strong>Subject?</strong> The PEOPLE hold sovereignty. They transfer it to elected representatives but retain the right to evaluate and replace them.</span></li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pol">Authority as Moral Force — 3 Requirements</div>
+      <ol class="num-list blue">
+        <li><span>Must be <strong>guided by moral law</strong> — not arbitrary power or political whims. The moral order exists in God; cut from God, it disintegrates.</span></li>
+        <li><span>Must <strong>recognize, respect, and promote human values</strong> — dignity, rights, and truths that no state can create, change, or destroy.</span></li>
+        <li><span>Must <strong>enact just laws</strong> — laws that match human dignity and right reason. An unjust law is not really a law — it is an act of violence.</span></li>
+      </ol>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pol">Individual & National Rights</div>
+      <div class="two-col">
+        <div>
+          <p style="font-weight:600; margin-bottom:8px;">Individual Political Rights:</p>
+          <ul class="bullet-list blue">
+            <li>Participate freely in political process</li>
+            <li>Free speech, press, and dissent</li>
+            <li>Freedom of education</li>
+            <li>Security from arrest/torture for political views</li>
+            <li>Juridical protection of all rights</li>
+          </ul>
+        </div>
+        <div>
+          <p style="font-weight:600; margin-bottom:8px;">Rights of Every Nation:</p>
+          <ul class="bullet-list blue">
+            <li>Right to exist</li>
+            <li>Right to self-development</li>
+            <li>Right to the means of development</li>
+            <li>Right to lead its own development</li>
+            <li>Right to a good name</li>
+            <li>Duty to respect these rights in others</li>
+          </ul>
+        </div>
+      </div>
+      <div class="key-concept blue">
+        <strong>Fundamental Right</strong>
+        All rights flow from one root: <strong>the right to life</strong>. From this flows the right to work, housing, healthcare, speech, education, and family.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pol">When Can Citizens Disobey or Resist?</div>
+      <div class="key-concept blue">
+        <strong>Right to Conscientious Objection</strong>
+        Citizens are NOT obligated to follow civil laws that contradict moral order, fundamental human rights, or the Gospel. Refusing to cooperate with morally evil acts is both a moral duty and a basic human right.
+      </div>
+      <p style="margin-top:14px;"><strong>Right to Resist</strong> is legitimate when natural law is seriously and repeatedly violated. Five criteria must be met:</p>
+      <ol class="num-list blue">
+        <li><span>Certain, grave, and prolonged violation of fundamental rights</span></li>
+        <li><span>All other means of redress have been exhausted</span></li>
+        <li><span>Resistance will not provoke worse disorders</span></li>
+        <li><span>Well-founded hope of success</span></li>
+        <li><span>No better solution is reasonably foreseeable</span></li>
+      </ol>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pol">Punishment, Solidarity & Charity</div>
+      <p>Punishment exists to protect the common good, correct offenders, and restore justice — not revenge. It must respect human dignity, allow religious access, and aim at re-insertion into society.</p>
+      <div class="remember blue">
+        <div class="remember-icon">💙</div>
+        <div>
+          <h4>Conclusion</h4>
+          Church + Government must work together. Government protects human persons with power and resources. The Church proclaims the Gospel and serves as the conscience of society. Solidarity and charity — loving neighbor as self — are the foundations of a just political life.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MODULE 3: SOCIAL ANALYSIS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="module mod-social" id="social">
+  <div class="module-header">
+    <div>
+      <div class="module-num">MODULE 03</div>
+      <h2>Social Analysis</h2>
+      <div class="tagline">The See–Judge–Act method for understanding society</div>
+    </div>
+  </div>
+  <div class="module-body">
+
+    <div class="section">
+      <div class="section-title soc">What Is Social Analysis?</div>
+      <div class="pullquote green">
+        <p>"Social analysis can be defined as an effort to obtain a more complete picture of a social situation by exploring its historical and structural relationships."</p>
+      </div>
+      <p style="margin-top:8px;font-size:0.85rem;color:#666;">— Joe Holland, S.J. & Peter Henriot, S.J.</p>
+      <p>Simply put: <strong>Social Analysis is looking at a social problem DEEPLY</strong> — not just at what's happening on the surface, but WHY it's happening, and what structures in society cause it.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title soc">The Framework: See – Judge – Act</div>
+      <div class="cards">
+        <div class="card green">
+          <h4>👁 SEE</h4>
+          Reflect on your own situation. Look at resources, power, relationships, meaning. Gather facts and listen to people most affected.
+        </div>
+        <div class="card green">
+          <h4>⚖️ JUDGE</h4>
+          Evaluate what you see in light of Gospel values and Church teaching. What does faith say about this situation?
+        </div>
+        <div class="card green">
+          <h4>🚀 ACT</h4>
+          Decide on action. What concrete steps can be taken to address the root causes and bring about justice?
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title soc">3 Steps of Doing Social Analysis</div>
+      <ul class="num-list green">
+        <li><span><strong>Make explicit your values and biases.</strong> No investigation is value-free. Acknowledge the perspectives and stances you bring to the task before you begin.</span></li>
+        <li><span><strong>Describe the situation.</strong> Get an initial picture — gather facts and trends, hear stories, talk to people most directly involved, conduct surveys.</span></li>
+        <li><span><strong>Analyze the situation.</strong> Work through: What is the HISTORY here? What STRUCTURES maintain this problem? Who holds POWER? What are the key RELATIONSHIPS? What is the likely FUTURE direction?</span></li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title soc">What Factors Cause Social Problems?</div>
+      <div class="two-col">
+        <div>
+          <div class="key-concept green">
+            <strong>Cultural Factors</strong>
+            Assumptions and values baked into society — shaped by education, media, religion. These determine what people think is "normal" or "acceptable."
+          </div>
+        </div>
+        <div>
+          <div class="key-concept green">
+            <strong>Social Structures</strong>
+            How society is divided into groups — families, social classes, ethnic groups. These determine who has power and who doesn't.
+          </div>
+        </div>
+      </div>
+      <div class="key-concept green">
+        <strong>Critical Thinking Required</strong>
+        Always ask: Who benefits from this situation? Who loses? Who has power? Who is powerless? These structural questions reveal root causes.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title soc">Types of Issues to Analyze</div>
+      <div class="two-col">
+        <div>
+          <p><strong>Economic Issues:</strong></p>
+          <ul class="bullet-list green">
+            <li>Labor and unemployment</li>
+            <li>Poverty and income distribution</li>
+            <li>Production and consumption patterns</li>
+          </ul>
+        </div>
+        <div>
+          <p><strong>Political Issues:</strong></p>
+          <ul class="bullet-list green">
+            <li>Government policies and justice systems</li>
+            <li>Trade unions and lobby groups</li>
+            <li>Graft and corruption</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:14px;"><strong>Other social issues:</strong> overseas workers, street children, child labor, urban poor, teenage pregnancy, bullying, suicide, sexual harassment, debt burden.</p>
+      <div class="remember green">
+        <div class="remember-icon">🔍</div>
+        <div>
+          <h4>Analysis Process</h4>
+          1. Investigate how things ARE → 2. Ask WHY things are so → 3. Get behind the issue to find root causes
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title soc">Key Analysis Questions</div>
+      <ul class="bullet-list green">
+        <li>Are the causes of hunger/poverty linked to economic, political, cultural, or social structures?</li>
+        <li>Does anyone experience poverty or discrimination in your place today?</li>
+        <li>What factors (resources, power, relationships) contribute to this?</li>
+        <li>Who benefits from the current arrangement? Who bears the cost?</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MODULE 4: LAUDATO SI' -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="module mod-laudato" id="laudato">
+  <div class="module-header">
+    <div>
+      <div class="module-num">MODULE 04</div>
+      <h2>Laudato Si'</h2>
+      <div class="tagline">"Praise Be to You" — Pope Francis on Care for Our Common Home</div>
+    </div>
+  </div>
+  <div class="module-body">
+
+    <div class="section">
+      <div class="section-title lau">What Is Laudato Si'?</div>
+      <div class="cards">
+        <div class="card teal"><h4>📖 Name</h4>"Laudato Si'" means <em>Praise Be to You</em> in medieval Italian — from St. Francis' Canticle of the Creatures (13th c.)</div>
+        <div class="card teal"><h4>📜 Document Type</h4>A Papal Encyclical (formal Church letter/teaching) — the highest form of papal teaching document</div>
+        <div class="card teal"><h4>👥 Audience</h4>Written to ALL people — not just Catholics. Addressed to everyone, including non-religious people, about our shared home.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title lau">Chapter 1: Our Common Home Is in Crisis</div>
+      <p>The earth is a <strong>shared inheritance</strong> — not just for people alive today, but for past and future generations. And it is in serious trouble.</p>
+      <div class="cards">
+        <div class="card teal"><h4>🏭 Pollution & Waste</h4>Causes millions of premature deaths. The earth "looks like an immense pile of filth." Throwaway culture must end.</div>
+        <div class="card teal"><h4>🌡️ Climate Change</h4>Climate is a common good. Most global warming is caused by human activity (greenhouse gases). The poor are most affected.</div>
+        <div class="card teal"><h4>💧 Water Crisis</h4>Access to safe drinking water is a basic human right. Denying the poor water denies their dignity.</div>
+        <div class="card teal"><h4>🦁 Biodiversity Loss</h4>All creatures are connected. Extinction cannot be predicted or undone. Protecting biodiversity is essential.</div>
+        <div class="card teal"><h4>🏙️ Society in Crisis</h4>The current development model has not led to "integral development." Cities are wasteful and increasingly unlivable.</div>
+        <div class="card teal"><h4>🌍 Global Inequality</h4>The poor are "collateral damage" in global debates. A true ecological approach must be a social approach — hear BOTH the cry of the earth AND the cry of the poor.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title lau">Chapter 2: Gospel of Creation</div>
+      <div class="key-concept teal">
+        <strong>Three Fundamental Relationships</strong>
+        Human life is grounded in: (1) relationship with God, (2) relationship with our neighbor, (3) relationship with the earth. Sin breaks all three simultaneously.
+      </div>
+      <ul class="bullet-list teal">
+        <li><strong>The earth is a gift, not a possession</strong> — given to us to administer, not destroy</li>
+        <li>We must respect the laws of nature; all creation has its own goodness</li>
+        <li>Each creature has its own purpose — none is superfluous</li>
+        <li>The material universe speaks of God's love — it is the place of God's presence</li>
+        <li>The earth is "a shared inheritance whose fruits are meant to benefit everyone"</li>
+        <li>Owners must administer property with respect for its "social mortgage"</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title lau">Chapter 3: Human Roots of the Ecological Crisis</div>
+      <div class="two-col">
+        <div class="key-concept teal">
+          <strong>Anthropocentrism</strong>
+          The belief that humans are radically separate from and above nature. This devalues creation and leads to "practical relativism" — treating creation as only useful to humans.
+        </div>
+        <div class="key-concept teal">
+          <strong>The Technocratic Paradigm</strong>
+          Accepting every advance in technology for profit, without concern for negative human impact. Finance "overwhelms the real economy" of human flourishing.
+        </div>
+      </div>
+      <div class="remember teal">
+        <div class="remember-icon">⚠️</div>
+        <div>
+          <h4>Key Conclusion</h4>
+          "By itself the market cannot guarantee integral human development and social inclusion." Markets must be regulated when they fail the common good.
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title lau">Chapter 4: Integral Ecology</div>
+      <div class="key-concept teal">
+        <strong>Core Idea: Everything Is Connected</strong>
+        Ecology covers not just nature but all dimensions of human life — academics, economics, health, governance, culture, daily life. You cannot fix the environment while ignoring poverty.
+      </div>
+      <ul class="bullet-list teal">
+        <li>Care for creation is inseparable from the preferential option for the poor</li>
+        <li>Environmental justice must be understood as <strong>intergenerational</strong> — we owe it to future generations</li>
+        <li>Solidarity and commitment to the common good are ecological duties</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title lau">Chapter 5: Action & Dialogue</div>
+      <p>Guided by the principle of <strong>subsidiarity</strong> — address challenges at the lowest possible but highest necessary level of society.</p>
+      <ul class="bullet-list teal">
+        <li>Fossil fuels must be <strong>progressively replaced</strong> without delay</li>
+        <li>Renewable energy subsidies should help developing countries access clean tech</li>
+        <li>"Common but differentiated responsibilities" — wealthier/more industrial nations bear greater responsibility for solutions</li>
+        <li>Apply the <strong>precautionary principle</strong>: if serious irreversible damage is possible, halt or modify even without absolute proof</li>
+        <li>Marginalized communities must be able to participate in environmental decisions</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title lau">Chapter 6: Ecological Education & Spirituality</div>
+      <ul class="bullet-list teal">
+        <li>We need <strong>personal and communal conversion</strong> away from consumerism and collective selfishness</li>
+        <li>Ecological education must happen everywhere: schools, families, media, churches, political institutions</li>
+        <li>Consumer boycotts can successfully change how businesses operate</li>
+        <li>Sacraments and the Sabbath are essential to right relationship with creation</li>
+      </ul>
+      <div class="remember teal">
+        <div class="remember-icon">🌿</div>
+        <div>
+          <h4>The 3 GSW Questions to Ask Yourself</h4>
+          How are we adding to the deterioration of the Earth? · What can we do to help care for our common home? · How can we inspire others to reconsider their lifestyle?
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MODULE 5: PROMOTION OF PEACE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="module mod-peace" id="peace">
+  <div class="module-header">
+    <div>
+      <div class="module-num">MODULE 05</div>
+      <h2>Promotion of Peace</h2>
+      <div class="tagline">Peace as God's gift, humanity's project, and our shared responsibility</div>
+    </div>
+  </div>
+  <div class="module-body">
+
+    <div class="section">
+      <div class="section-title pea">What Is Peace?</div>
+      <div class="key-concept purple">
+        <strong>Peace Is More Than Absence of War</strong>
+        Biblical "Shalom" (Hebrew) means <em>completeness</em> and <em>fullness of life</em>. Peace is not just a ceasefire — it is the fullness of justice, love, and right relationship with God, neighbor, and creation.
+      </div>
+      <div class="cards">
+        <div class="card purple"><h4>☮️ Peace = God's Attribute</h4>"The Lord is peace" (Judges 6:24). Peace is a primary attribute of God himself — not a human invention.</div>
+        <div class="card purple"><h4>🕊️ Peace = God's Gift</h4>Far from being a human achievement alone, peace is one of the greatest gifts God offers to humanity.</div>
+        <div class="card purple"><h4>⚖️ Peace = Human Duty</h4>Peace is a universal duty — a value every person and community is responsible for building and protecting.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pea">Biblical Foundations of Peace</div>
+      <ul class="bullet-list purple">
+        <li><strong>Old Testament:</strong> Peace produces fruitfulness, well-being, prosperity, absence of fear, and profound joy. The Messiah is called "Prince of Peace" (Is 9:5).</li>
+        <li><strong>Jesus:</strong> "Peace I leave with you; my peace I give to you — not as the world gives" (John 14:27). After resurrection, His greeting was always: "Peace be with you."</li>
+        <li><strong>Peace = Reconciliation:</strong> First with God (through Christ), then with others. The Our Father links forgiveness from God to our forgiveness of others.</li>
+        <li><strong>Beatitudes:</strong> "Blessed are the peacemakers, for they shall be called children of God" (Mt 5:9).</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pea">Peace: Fruit of Justice AND Love</div>
+      <div class="two-col">
+        <div class="key-concept purple">
+          <strong>Peace as Fruit of Justice</strong>
+          Peace is threatened when people are not given what they are due as human persons. Defending and promoting human rights is ESSENTIAL to building peace.
+        </div>
+        <div class="key-concept purple">
+          <strong>Peace as Fruit of Love</strong>
+          "True and lasting peace is more a matter of love than of justice." Justice removes obstacles; love actually creates peace itself.
+        </div>
+      </div>
+      <div class="pullquote purple">
+        <p>"Violence is evil, that violence is unacceptable as a solution to problems, that violence is unworthy of man. Violence is a lie, for it goes against the truth of our faith, the truth of our humanity."</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pea">The Failure of Peace: War</div>
+      <div class="key-concept purple">
+        <strong>War Is Always a Defeat</strong>
+        War is described as a "scourge," an "unnecessary massacre," and "the failure of all true humanism." It creates new and more complicated conflicts. "Nothing is lost by peace; everything may be lost by war."
+      </div>
+      <p>War is <strong>never</strong> an appropriate way to resolve problems between nations — not in the past, not now, not ever. The damage is not only material but also moral.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pea">When Is Defense Justified? (Just War Doctrine)</div>
+      <p>A war of <em>aggression</em> is intrinsically immoral. But legitimate <em>defense</em> may be justified. Four strict conditions must ALL be met:</p>
+      <ol class="num-list purple">
+        <li><span>Damage from the aggressor is <strong>lasting, grave, and certain</strong></span></li>
+        <li><span>All other means have been <strong>shown to be ineffective</strong></span></li>
+        <li><span>There are <strong>serious prospects of success</strong></span></li>
+        <li><span>The use of arms will not produce <strong>evils graver than the original evil</strong></span></li>
+      </ol>
+      <div class="remember purple">
+        <div class="remember-icon">🛡️</div>
+        <div>
+          <h4>Important Distinctions</h4>
+          Self-defense ≠ domination. Possessing weapons does not justify using them for political goals. Military personnel must REFUSE orders that violate human rights — they cannot hide behind "just following orders."
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title pea">Building Peace — Practical Principles</div>
+      <ul class="bullet-list purple">
+        <li>Peace must begin in the heart of every person, then spread to families, communities, and nations</li>
+        <li>The root causes of conflict — injustice, poverty, exploitation — must be actively removed</li>
+        <li>"Another name for peace is development" — a collective responsibility</li>
+        <li>International organizations (like the UN) are needed to resolve conflicts peacefully</li>
+        <li>Conscientious objectors who refuse military service must be offered alternative community service</li>
+        <li>Innocent civilians must be protected — humanitarian aid cannot be weaponized</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MODULE 6: PROMOTION OF ACTIVE NON-VIOLENCE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="module mod-nonviolence" id="nonviolence">
+  <div class="module-header">
+    <div>
+      <div class="module-num">MODULE 06</div>
+      <h2>Promotion of Active Non-Violence</h2>
+      <div class="tagline">Not passive silence, but courageous, creative resistance to evil</div>
+    </div>
+  </div>
+  <div class="module-body">
+
+    <div class="section">
+      <div class="section-title non">What Is Active Non-Violence?</div>
+      <p><strong>Active Non-Violence is NOT passivity.</strong> It is a powerful, deliberate, courageous way of confronting injustice without resorting to physical violence. It uses truth, dialogue, moral force, and solidarity as its weapons.</p>
+      <div class="key-concept rose">
+        <strong>Compendium §496 — The Foundation</strong>
+        Violence is rejected as a solution. It is "a lie" that destroys human dignity. But the Church calls for <em>unarmed prophets</em> — people who defend human rights using nonviolent means available to the weakest, without harming others' rights.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title non">Key Documents & Sources</div>
+      <div class="cards">
+        <div class="card rose">
+          <h4>📗 Compendium (2004)</h4>
+          §496: Rejects violence as a "lie" against human dignity<br>
+          §515: Address root causes of violence — injustice and human rights violations<br>
+          §517: Reconciliation and forgiveness are essential for lasting peace
+        </div>
+        <div class="card rose">
+          <h4>✉️ Pope Francis (2017)</h4>
+          <em>Nonviolence: A Style of Politics for Peace</em> — His World Day of Peace message calling nonviolence a political method for our time, not just personal virtue
+        </div>
+        <div class="card rose">
+          <h4>📘 Fratelli Tutti (2020)</h4>
+          "Culture of encounter." Firm commitment to nonviolence in a fractured world. Challenges modern war (§256-262), advocates dialogue, rejects the death penalty and vengeance
+        </div>
+        <div class="card rose">
+          <h4>📕 Christus Vivit (2019)</h4>
+          Urges YOUNG PEOPLE to embrace active nonviolence, social friendship, and faith-based commitment to peace and justice. §168-170: proactive, creative engagement in building a new society
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title non">Core Principles of Active Non-Violence</div>
+      <ol class="num-list rose">
+        <li><span><strong>Reject violence as a solution.</strong> Violence is intrinsically wrong — it destroys what it claims to defend: dignity, life, and freedom.</span></li>
+        <li><span><strong>Address root causes.</strong> Injustice, poverty, and violations of rights are the breeding ground of violence. Fix these and violence loses its fuel (§515).</span></li>
+        <li><span><strong>Pursue reconciliation and forgiveness.</strong> No lasting peace without healing. Forgiveness is not weakness — it is the path to genuine peace (§517).</span></li>
+        <li><span><strong>Foster "social friendship."</strong> Counter "social enmity" by building bonds across difference — the opposite of division and hatred.</span></li>
+        <li><span><strong>Dialogue over conflict.</strong> Always exhaust every avenue for dialogue before any other option. "Meeting and negotiating" reveals our shared humanity.</span></li>
+        <li><span><strong>Dignity of every person.</strong> Reject the death penalty and vengeance as they deny the inherent dignity God gave every human being.</span></li>
+      </ol>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title non">For Young People — Christus Vivit §168-170</div>
+      <div class="key-concept rose">
+        <strong>Pope Francis to the Youth</strong>
+        Don't be inward-looking or selfish. Be <em>proactively, creatively engaged</em> in building a new, more just society. "Social friendship" — real bonds between different people — is what defeats the "social enmity" that drives violence and hatred.
+      </div>
+      <div class="cards">
+        <div class="card rose"><h4>🤝 Social Friendship</h4>Build genuine relationships across divisions of class, ethnicity, politics. Counter polarization with encounter.</div>
+        <div class="card rose"><h4>🕊️ Creative Engagement</h4>Find new, nonviolent ways to address injustice — art, advocacy, community, dialogue, witness.</div>
+        <div class="card rose"><h4>✝️ Faith-Based Commitment</h4>Root peace work in faith — not as an abstract ideal but as a concrete, daily practice of love and justice.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title non">Non-Violence vs. Violence — Quick Contrast</div>
+      <div class="two-col">
+        <div>
+          <p style="font-weight:600;color:var(--rose);margin-bottom:8px;">❌ Violence...</p>
+          <ul class="bullet-list rose">
+            <li>Is a lie against truth</li>
+            <li>Destroys what it claims to defend</li>
+            <li>Creates new and worse conflicts</li>
+            <li>Is unworthy of human dignity</li>
+            <li>Seeks power through domination</li>
+          </ul>
+        </div>
+        <div>
+          <p style="font-weight:600;color:var(--sage);margin-bottom:8px;">✅ Active Non-Violence...</p>
+          <ul class="bullet-list green">
+            <li>Speaks truth to power</li>
+            <li>Defends dignity without destroying it</li>
+            <li>Builds lasting, reconciled peace</li>
+            <li>Reflects evangelical charity</li>
+            <li>Seeks justice through love and truth</li>
+          </ul>
+        </div>
+      </div>
+      <div class="remember rose">
+        <div class="remember-icon">✨</div>
+        <div>
+          <h4>The Final Word</h4>
+          Active non-violence is a <em>style of politics</em> and a way of life — not retreat or passivity. It is the most courageous and most Christian response to a violent world. It trusts that truth, love, and human dignity are stronger than any weapon.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  THEO 2 — Finals Study Notes &nbsp;·&nbsp; Compendium of the Social Doctrine of the Church &nbsp;·&nbsp; 2026
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Technology — Finals Study Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Mulish:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e2a;
+    --card: #1e2330;
+    --border: #2a3045;
+    --accent1: #5b8dee;
+    --accent2: #3ecf8e;
+    --accent3: #f5a623;
+    --accent4: #e05c94;
+    --accent5: #a78bfa;
+    --accent6: #38bdf8;
+    --text: #e8ecf4;
+    --text2: #9aa5bf;
+    --text3: #6b7591;
+    --heading: #ffffff;
+    --tag-bg: rgba(91,141,238,0.12);
+    --tag-color: #5b8dee;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Mulish', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ─── TOP HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, #0d1220 0%, #111827 50%, #0d1530 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(91,141,238,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 30%, rgba(62,207,142,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; }
+  .hero-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(91,141,238,0.15); border: 1px solid rgba(91,141,238,0.3);
+    color: var(--accent1); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    color: var(--heading);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .hero h1 span { color: var(--accent1); }
+  .hero p {
+    color: var(--text2); font-size: 15px; max-width: 580px; margin-bottom: 28px;
+  }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .hero-tag {
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--text2); font-size: 12px; font-weight: 600;
+    padding: 5px 12px; border-radius: 6px;
+  }
+
+  /* ─── LAYOUT ─── */
+  .layout { display: flex; max-width: 1100px; margin: 0 auto; gap: 0; }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 260px; min-width: 260px;
+    padding: 32px 0 40px;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    border-right: 1px solid var(--border);
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .sidebar-title {
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3);
+    padding: 0 24px; margin-bottom: 12px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 24px; cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.2s; text-decoration: none; color: var(--text2);
+    font-size: 13px; font-weight: 600;
+  }
+  .nav-item:hover, .nav-item.active {
+    color: var(--text); border-left-color: var(--accent1);
+    background: rgba(91,141,238,0.06);
+  }
+  .nav-num {
+    width: 20px; height: 20px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; flex-shrink: 0;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main { flex: 1; padding: 0 40px 80px; overflow: hidden; }
+
+  /* ─── SECTION ─── */
+  .section {
+    padding: 52px 0 0;
+    scroll-margin-top: 24px;
+  }
+  .section-header {
+    display: flex; align-items: flex-start; gap: 20px; margin-bottom: 32px;
+    padding-bottom: 24px; border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .section-meta { flex: 1; }
+  .section-num {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .section h2 {
+    font-family: 'Syne', sans-serif; font-size: 1.7rem;
+    font-weight: 800; color: var(--heading); line-height: 1.2;
+  }
+  .section-desc { color: var(--text2); font-size: 14px; margin-top: 6px; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px 28px; margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+    color: var(--heading); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+
+  /* ─── DEFINITION BOX ─── */
+  .def-box {
+    background: linear-gradient(135deg, rgba(91,141,238,0.08), rgba(91,141,238,0.04));
+    border: 1px solid rgba(91,141,238,0.25);
+    border-left: 3px solid var(--accent1);
+    border-radius: 10px; padding: 18px 22px; margin-bottom: 16px;
+  }
+  .def-box .def-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent1); margin-bottom: 6px;
+  }
+  .def-box p { color: var(--text); font-size: 14px; }
+
+  /* ─── HIGHLIGHT BOX ─── */
+  .highlight {
+    background: rgba(62,207,142,0.07); border: 1px solid rgba(62,207,142,0.2);
+    border-left: 3px solid var(--accent2);
+    border-radius: 10px; padding: 16px 20px; margin: 12px 0;
+  }
+  .highlight.warn {
+    background: rgba(245,166,35,0.07); border-color: rgba(245,166,35,0.2);
+    border-left-color: var(--accent3);
+  }
+  .highlight.purple {
+    background: rgba(167,139,250,0.07); border-color: rgba(167,139,250,0.2);
+    border-left-color: var(--accent5);
+  }
+  .highlight strong { color: var(--accent2); }
+  .highlight.warn strong { color: var(--accent3); }
+  .highlight.purple strong { color: var(--accent5); }
+
+  /* ─── LISTS ─── */
+  ul.styled { list-style: none; padding: 0; }
+  ul.styled li {
+    padding: 7px 0 7px 22px; position: relative;
+    color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 14px;
+  }
+  ul.styled li:last-child { border-bottom: none; }
+  ul.styled li::before {
+    content: '›'; position: absolute; left: 0;
+    color: var(--accent1); font-size: 16px; font-weight: 700; line-height: 1.4;
+  }
+  ul.styled li strong { color: var(--accent6); }
+
+  /* ─── TIMELINE ─── */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px;
+    width: 2px; background: linear-gradient(to bottom, var(--accent1), var(--accent5), var(--accent2));
+    border-radius: 1px;
+  }
+  .tl-item { position: relative; margin-bottom: 20px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 6px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent1); border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px rgba(91,141,238,0.3);
+  }
+  .tl-year {
+    font-size: 11px; font-weight: 800; color: var(--accent1);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px;
+  }
+  .tl-item p { font-size: 14px; color: var(--text2); }
+  .tl-item strong { color: var(--text); }
+
+  /* ─── COMPARISON TABLE ─── */
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+  .cmp-table th {
+    background: var(--bg3); color: var(--text2);
+    font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 12px 16px; text-align: left; border-bottom: 2px solid var(--border);
+  }
+  .cmp-table td {
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+    color: var(--text); vertical-align: top;
+  }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .cmp-table .good { color: var(--accent2); font-weight: 700; }
+  .cmp-table .bad { color: #f87171; font-weight: 700; }
+  .cmp-table .mid { color: var(--accent3); font-weight: 700; }
+
+  /* ─── COMMAND BOX ─── */
+  .cmd-list { display: flex; flex-direction: column; gap: 8px; }
+  .cmd-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--bg3); border-radius: 8px; padding: 10px 14px;
+  }
+  .cmd-code {
+    font-family: 'Courier New', monospace; font-size: 12px;
+    color: var(--accent2); background: rgba(62,207,142,0.1);
+    padding: 3px 8px; border-radius: 5px; white-space: nowrap; flex-shrink: 0;
+  }
+  .cmd-desc { font-size: 13px; color: var(--text2); padding-top: 2px; }
+
+  /* ─── BADGE ─── */
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px; margin: 2px;
+  }
+  .badge.blue { background: rgba(91,141,238,0.15); color: var(--accent1); border: 1px solid rgba(91,141,238,0.3); }
+  .badge.green { background: rgba(62,207,142,0.15); color: var(--accent2); border: 1px solid rgba(62,207,142,0.3); }
+  .badge.orange { background: rgba(245,166,35,0.15); color: var(--accent3); border: 1px solid rgba(245,166,35,0.3); }
+  .badge.pink { background: rgba(224,92,148,0.15); color: var(--accent4); border: 1px solid rgba(224,92,148,0.3); }
+  .badge.purple { background: rgba(167,139,250,0.15); color: var(--accent5); border: 1px solid rgba(167,139,250,0.3); }
+  .badge.sky { background: rgba(56,189,248,0.15); color: var(--accent6); border: 1px solid rgba(56,189,248,0.3); }
+
+  /* ─── GRID 2 ─── */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+
+  /* ─── SUMMARY BOX ─── */
+  .summary {
+    background: linear-gradient(135deg, rgba(62,207,142,0.07), rgba(91,141,238,0.05));
+    border: 1px solid rgba(62,207,142,0.2); border-radius: 14px;
+    padding: 24px 28px; margin: 24px 0 0;
+  }
+  .summary-title {
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent2);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .summary ul { list-style: none; padding: 0; }
+  .summary ul li {
+    padding: 5px 0 5px 18px; position: relative; font-size: 13.5px; color: var(--text2);
+  }
+  .summary ul li::before { content: '✓'; position: absolute; left: 0; color: var(--accent2); font-weight: 800; }
+
+  /* ─── STEP FLOW ─── */
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+  .step {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--bg3); border-radius: 10px; padding: 14px 18px;
+  }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+    background: var(--accent1); color: white;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { color: var(--heading); font-size: 13.5px; display: block; margin-bottom: 2px; }
+  .step-body span { color: var(--text2); font-size: 13px; }
+
+  /* ─── DIVIDER ─── */
+  .divider { height: 1px; background: var(--border); margin: 36px 0; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 0 20px 60px; }
+    .hero { padding: 40px 20px; }
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ─── PRINT ─── */
+  @media print {
+    .sidebar { display: none; }
+    body { background: white; color: black; }
+    .card { border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">📚 Finals Review</div>
+    <h1>Platform <span>Technology</span><br>Study Notes</h1>
+    <p>A complete, beginner-friendly review covering all 7 topics for your finals. Clear explanations, real examples, and quick summaries.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">ITCC 12-A</span>
+      <span class="hero-tag">7 Topics</span>
+      <span class="hero-tag">Key Concepts</span>
+      <span class="hero-tag">Definitions</span>
+      <span class="hero-tag">Comparisons</span>
+      <span class="hero-tag">Quick Summaries</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-title">Topics</div>
+
+    <a class="nav-item" href="#s1">
+      <span class="nav-num" style="background:rgba(91,141,238,0.15);color:var(--accent1)">1</span>
+      Introduction
+    </a>
+    <a class="nav-item" href="#s2">
+      <span class="nav-num" style="background:rgba(56,189,248,0.15);color:var(--accent6)">2</span>
+      Windows
+    </a>
+    <a class="nav-item" href="#s3">
+      <span class="nav-num" style="background:rgba(62,207,142,0.15);color:var(--accent2)">3</span>
+      Virtualization
+    </a>
+    <a class="nav-item" href="#s4">
+      <span class="nav-num" style="background:rgba(245,166,35,0.15);color:var(--accent3)">4</span>
+      Architecture
+    </a>
+    <a class="nav-item" href="#s5">
+      <span class="nav-num" style="background:rgba(224,92,148,0.15);color:var(--accent4)">5</span>
+      Infrastructure
+    </a>
+    <a class="nav-item" href="#s6">
+      <span class="nav-num" style="background:rgba(167,139,250,0.15);color:var(--accent5)">6</span>
+      Optimization
+    </a>
+    <a class="nav-item" href="#s7">
+      <span class="nav-num" style="background:rgba(62,207,142,0.15);color:var(--accent2)">7</span>
+      Deployment
+    </a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+
+    <!-- ══════════════════════════════════════════════
+         TOPIC 1 — INTRODUCTION
+    ══════════════════════════════════════════════ -->
+    <section class="section" id="s1">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(91,141,238,0.12)">🖥️</div>
+        <div class="section-meta">
+          <div class="section-num" style="color:var(--accent1)">Topic 01</div>
+          <h2>Platform Technology Introduction</h2>
+          <div class="section-desc">What platforms are, how computing evolved, and what makes up IT infrastructure.</div>
+        </div>
+      </div>
+
+      <!-- What is a Platform -->
+      <div class="def-box">
+        <div class="def-label">Key Definition</div>
+        <p><strong>A Platform</strong> is any combination of <strong>Hardware + Software + Networks</strong> that forms a base on which other technologies or services are built. Think of it as the foundation — almost everything you use (websites, apps, games) runs on top of a platform.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent1)"></span>What Makes Up a Platform?</div>
+        <ul class="styled">
+          <li><strong>Hardware Environment</strong> — The physical computer, server, or device</li>
+          <li><strong>Software</strong> — Programs designed to run within that hardware</li>
+          <li><strong>Associated Facilities</strong> — Networks, tools, and resources used alongside it</li>
+        </ul>
+        <div class="highlight" style="margin-top:14px">
+          <strong>Real-World Example:</strong> Your smartphone is a platform. Apps (Instagram, TikTok) are built on top of it. The phone's hardware + Android/iOS = the platform.
+        </div>
+      </div>
+
+      <!-- Generations of Computing -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>5 Generations of Computing</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-year">1945–1955 · Gen 1</div>
+            <p><strong>Vacuum Tubes</strong> — Huge machines using glass tubes. Programmed with punch cards and machine language. Very slow and unreliable.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">1955–1965 · Gen 2</div>
+            <p><strong>Transistors & Batch Systems</strong> — Transistors replaced tubes. Jobs were collected in batches and run together. Introduced mainframes like <em>IBM 1401, IBM 7094</em> and FORTRAN compilers.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">1965–1980 · Gen 3</div>
+            <p><strong>Integrated Circuits (ICs) & Multiprogramming</strong> — Multiple programs could run in memory at once. Introduced IBM System/360, OS/360, timesharing, and MULTICS.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">1980–Present · Gen 4</div>
+            <p><strong>Personal Computers</strong> — IBM PC, DOS, Macintosh, Windows, Linux. Computing came to homes and offices.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">1990–Present · Gen 5</div>
+            <p><strong>Mobile Computers</strong> — PDAs, Symbian OS, BlackBerry, Smartphones, iOS, Android. Computing in our pockets.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operating Systems -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>What is an Operating System (OS)?</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Definition</div>
+          <p>An <strong>Operating System</strong> is a collection of software that manages computer hardware and provides services for programs. It's like a <em>manager</em> — it controls the CPU, memory, disk, and all devices.</p>
+        </div>
+        <ul class="styled">
+          <li>The <strong>most important program</strong> on a computer — loaded first when you turn it on</li>
+          <li>Acts as an <strong>intermediary</strong> between users and hardware</li>
+          <li>Every app (browser, game, Word) needs an OS to run</li>
+          <li>Manages <strong>resources</strong>: CPU time, memory space, disk access</li>
+        </ul>
+
+        <div class="card-title" style="margin-top:20px"><span class="dot" style="background:var(--accent5)"></span>Two Main Roles of an OS</div>
+        <div class="grid2">
+          <div class="highlight purple">
+            <strong>Extended Machine</strong><br>
+            <span style="color:var(--text2);font-size:13px">Hides ugly hardware details and gives programmers clean, easy-to-use tools and abstractions.</span>
+          </div>
+          <div class="highlight warn">
+            <strong>Resource Manager</strong><br>
+            <span style="color:var(--text2);font-size:13px">Shares and manages CPU, memory, and I/O devices among multiple programs running at the same time.</span>
+          </div>
+        </div>
+
+        <div class="card-title" style="margin-top:16px"><span class="dot" style="background:var(--accent4)"></span>Types of Operating Systems</div>
+        <div style="padding:4px 0">
+          <span class="badge blue">Mainframe OS</span>
+          <span class="badge green">Server OS</span>
+          <span class="badge orange">Multiprocessor OS</span>
+          <span class="badge sky">Personal Computer OS</span>
+          <span class="badge purple">Handheld OS</span>
+          <span class="badge pink">Embedded OS</span>
+          <span class="badge blue">Real-time OS</span>
+          <span class="badge green">Smart Card OS</span>
+        </div>
+      </div>
+
+      <!-- IT Infrastructure Components -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent6)"></span>IT Infrastructure — 7 Main Components</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Everything a company needs to run its technology systems:</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num" style="background:var(--accent1)">1</div>
+            <div class="step-body"><strong>Computer Hardware Platforms</strong> <span>Client machines (PCs, laptops), servers, blade servers, mainframes. Key makers: Intel, AMD, IBM, HP, Dell.</span></div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent6)">2</div>
+            <div class="step-body"><strong>Operating System Platforms</strong> <span>Servers mostly run Unix/Linux (65%) or Windows (35%). Clients mostly Windows. Mobile: Android, iOS.</span></div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent2)">3</div>
+            <div class="step-body"><strong>Enterprise Software Applications</strong> <span>Large-scale business software. Providers: SAP, Oracle. Middleware: BEA.</span></div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent3)">4</div>
+            <div class="step-body"><strong>Data Management & Storage</strong> <span>Database software (IBM DB2, Oracle, MySQL, SQL Server). Physical storage (EMC, Seagate, Western Digital). SANs connect multiple storage devices.</span></div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent4)">5</div>
+            <div class="step-body"><strong>Networking Platforms</strong> <span>Network OS (Windows Server, Linux). Hardware providers: Cisco, Alcatel-Lucent. Telecoms: AT&T, Verizon.</span></div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent5)">6</div>
+            <div class="step-body"><strong>Internet Platforms</strong> <span>Hardware/software for websites, intranets, extranets. Server market: IBM, Dell, HP. Web tools: Microsoft .NET, Oracle Java, Adobe.</span></div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent1)">7</div>
+            <div class="step-body"><strong>Consulting & System Integration Services</strong> <span>Ensures new and old systems work together. Key firms: Accenture, IBM Global Services, Infosys, Wipro.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Evolution of IT -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent5)"></span>Evolution of IT Infrastructure (Eras)</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-year">1959–Present</div>
+            <p><strong>Mainframe & Minicomputer Era</strong> — IBM mainframes (1958), DEC minicomputers (1965)</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">1981–Present</div>
+            <p><strong>Personal Computer Era</strong> — IBM PC introduced; personal software boom</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">1983–Present</div>
+            <p><strong>Client/Server Era</strong> — Desktop clients networked to servers; work split between them</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">1992–Present</div>
+            <p><strong>Enterprise Computing Era</strong> — Integration of networks using Internet standards</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2000–Present</div>
+            <p><strong>Cloud & Mobile Era</strong> — Computing delivered over the Internet; smartphones dominate</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-title">📌 Topic 1 Quick Summary</div>
+        <ul>
+          <li>A platform = Hardware + Software + Networks that others build on</li>
+          <li>Computing evolved through 5 generations, from vacuum tubes to smartphones</li>
+          <li>An OS manages hardware resources and acts as a bridge between users and hardware</li>
+          <li>IT Infrastructure has 7 components: hardware, OS, enterprise software, data storage, networking, internet, and consulting</li>
+          <li>IT evolved from mainframes → PCs → client/server → enterprise → cloud/mobile</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+
+    <!-- ══════════════════════════════════════════════
+         TOPIC 2 — WINDOWS
+    ══════════════════════════════════════════════ -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(56,189,248,0.12)">🪟</div>
+        <div class="section-meta">
+          <div class="section-num" style="color:var(--accent6)">Topic 02</div>
+          <h2>Platform Technology: Windows</h2>
+          <div class="section-desc">Windows history, GUI, file system structure, NTFS permissions, and command-line tools.</div>
+        </div>
+      </div>
+
+      <!-- Windows History -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent6)"></span>Windows History — Key Milestones</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-year">1981</div><p><strong>MS-DOS</strong> — Command-line only. Users typed commands to interact with the computer.</p></div>
+          <div class="tl-item"><div class="tl-year">1985</div><p><strong>Windows 1.0</strong> — First graphical user interface (GUI). Click and interact visually.</p></div>
+          <div class="tl-item"><div class="tl-year">1990/1992</div><p><strong>Windows 3.0/3.1</strong> — Introduced virtual memory and games like Solitaire.</p></div>
+          <div class="tl-item"><div class="tl-year">1995</div><p><strong>Windows 95</strong> — Big milestone: introduced the <em>Start button</em>. Looked like modern Windows.</p></div>
+          <div class="tl-item"><div class="tl-year">1998</div><p><strong>Windows 98</strong> — Improved USB support.</p></div>
+          <div class="tl-item"><div class="tl-year">2001</div><p><strong>Windows XP</strong> ⭐ — One of the <em>best and most stable</em> versions. Widely used for many years.</p></div>
+          <div class="tl-item"><div class="tl-year">2006</div><p><strong>Windows Vista</strong> ❌ — Disliked for being buggy and prone to crashes.</p></div>
+          <div class="tl-item"><div class="tl-year">2009</div><p><strong>Windows 7</strong> ⭐ — Restored trust after Vista. Major migration target from XP.</p></div>
+          <div class="tl-item"><div class="tl-year">2012/2013</div><p><strong>Windows 8 / 8.1</strong> — Built for tablets; removed (then restored) the Start bar.</p></div>
+          <div class="tl-item"><div class="tl-year">2015</div><p><strong>Windows 10</strong> — Intended to be the final version; continuous updates.</p></div>
+          <div class="tl-item"><div class="tl-year">2021</div><p><strong>Windows 11</strong> — Current stable version; regularly updated for security.</p></div>
+        </div>
+      </div>
+
+      <!-- GUI -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Windows GUI — Key Elements</div>
+        <ul class="styled">
+          <li><strong>Taskbar</strong> — Bottom bar with pinned apps, open programs, system icons, search bar, widgets (weather), and task tray (background apps)</li>
+          <li><strong>Desktop</strong> — Main workspace for opening apps and storing files/shortcuts. Windows 11 adds <em>virtual desktops</em> for separate workspaces</li>
+          <li><strong>Start Menu</strong> — Accessed via Start button; shows all applications and a powerful search</li>
+          <li><strong>Personalization</strong> — Right-click desktop → "Personalize" to change backgrounds, colors, and themes</li>
+        </ul>
+      </div>
+
+      <!-- Windows OS Structure / Folders -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Windows OS Folder Structure</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Understanding what's inside your C: drive:</p>
+        <ul class="styled">
+          <li><strong>File Explorer</strong> — Primary tool for navigating files and folders</li>
+          <li><strong>C: Drive</strong> — Where Windows is installed and all data is stored</li>
+          <li><strong>Users Folder</strong> — Contains folders for each user (Documents, Pictures, Desktop). "Public" folder accessible to all users</li>
+          <li><strong>Program Files</strong> — Stores 64-bit applications (faster, more efficient)</li>
+          <li><strong>Program Files (x86)</strong> — Stores older 32-bit applications</li>
+          <li><strong>Windows Folder</strong> — Core OS files. <em style="color:#f87171">Do not delete!</em></li>
+          <li><strong>System32 Folder</strong> — Critical for Windows to run. Deleting it can completely break the system</li>
+          <li><strong>SysWOW64</strong> — Like System32 but for 64-bit systems</li>
+          <li><strong>WinSxS Directory</strong> — Windows component store; contains updates and service packs</li>
+          <li><strong>AppData (Hidden)</strong> — Stores app settings per user; useful for troubleshooting</li>
+        </ul>
+      </div>
+
+      <!-- File Systems -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent5)"></span>Windows File Systems — How Windows Organizes Data</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">What is a File System?</div>
+          <p>A <strong>file system</strong> is the method an OS uses to organize and store data on a storage device. Every storage device (phone, USB, hard drive) uses one.</p>
+        </div>
+        <table class="cmp-table">
+          <tr>
+            <th>File System</th>
+            <th>Year</th>
+            <th>Max File Size</th>
+            <th>Key Notes</th>
+          </tr>
+          <tr>
+            <td><strong>FAT</strong><br><small style="color:var(--text3)">File Allocation Table</small></td>
+            <td>1977</td>
+            <td class="bad">4 GB (FAT32)</td>
+            <td>Very old, limited capacity. FAT32 caps disk at 32 GB. <span class="badge orange">Legacy</span></td>
+          </tr>
+          <tr>
+            <td><strong>HPFS</strong><br><small style="color:var(--text3)">High Performance File System</small></td>
+            <td>~1988</td>
+            <td class="mid">—</td>
+            <td>Briefly used after FAT. Not used today. <span class="badge pink">Obsolete</span></td>
+          </tr>
+          <tr>
+            <td><strong>NTFS</strong><br><small style="color:var(--text3)">New Technology File System</small></td>
+            <td>1993</td>
+            <td class="good">16 Exabytes</td>
+            <td>Required for Windows installs. Supports file recovery & permissions. Windows-only. <span class="badge green">Standard</span></td>
+          </tr>
+          <tr>
+            <td><strong>exFAT</strong><br><small style="color:var(--text3)">Extended File Allocation Table</small></td>
+            <td>2006</td>
+            <td class="good">16 Exabytes</td>
+            <td>Cross-platform (works on Windows, Mac, Linux). Ideal for USB drives & SD cards. <span class="badge sky">Portable</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- NTFS Permissions -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent1)"></span>NTFS Permissions — Controlling Who Can Access Files</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">To view: right-click any file/folder → Properties → Security tab</p>
+        <table class="cmp-table">
+          <tr><th>Permission</th><th>What it Allows</th></tr>
+          <tr><td><span class="badge green">Full Control</span></td><td>All possible actions on the file or folder</td></tr>
+          <tr><td><span class="badge blue">Read &amp; Execute</span></td><td>Open and run files, but cannot change them</td></tr>
+          <tr><td><span class="badge sky">Read Only</span></td><td>View the file only — cannot edit or run</td></tr>
+          <tr><td><span class="badge orange">Modify</span></td><td>Read, write, and run — but cannot change other users' permissions</td></tr>
+          <tr><td><span class="badge purple">Write</span></td><td>Add or change data in a file</td></tr>
+          <tr><td><span class="badge pink">Deny</span></td><td>Blocks all access — overrides all other permissions</td></tr>
+        </table>
+        <div class="highlight warn" style="margin-top:14px">
+          <strong>⚠️ Important:</strong> Files inside a folder <em>inherit</em> the folder's permissions by default. But you can set explicit permissions on individual files to override this. <strong>Deny</strong> always takes precedence!
+        </div>
+      </div>
+
+      <!-- Command Line -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Windows Command Line — Useful Commands</div>
+        <div class="cmd-list">
+          <div class="cmd-row"><span class="cmd-code">whoami</span><span class="cmd-desc">Shows the current logged-in user's name</span></div>
+          <div class="cmd-row"><span class="cmd-code">dir</span><span class="cmd-desc">Lists contents of the current directory (same as <code>ls</code> in Linux/Mac)</span></div>
+          <div class="cmd-row"><span class="cmd-code">dir [folder]</span><span class="cmd-desc">Lists contents of a specific folder</span></div>
+          <div class="cmd-row"><span class="cmd-code">cd [folder]</span><span class="cmd-desc">Change directory — move into a folder</span></div>
+          <div class="cmd-row"><span class="cmd-code">cd ..</span><span class="cmd-desc">Go up one directory level</span></div>
+          <div class="cmd-row"><span class="cmd-code">cd</span><span class="cmd-desc">Return to root directory</span></div>
+          <div class="cmd-row"><span class="cmd-code">cd [path]</span><span class="cmd-desc">Jump directly to a full path (e.g., C:\Users\Pau)</span></div>
+          <div class="cmd-row"><span class="cmd-code">tree</span><span class="cmd-desc">Shows a visual tree of the directory structure</span></div>
+          <div class="cmd-row"><span class="cmd-code">clear</span><span class="cmd-desc">Clears the terminal screen (also Ctrl + L)</span></div>
+          <div class="cmd-row"><span class="cmd-code">Get-ChildItem -Force</span><span class="cmd-desc">PowerShell command to show hidden files and folders</span></div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-title">📌 Topic 2 Quick Summary</div>
+        <ul>
+          <li>Windows evolved from MS-DOS (1981) text commands → Windows 11 (2021) modern GUI</li>
+          <li>Best versions: Windows XP (stability), Windows 7 (recovery), Windows 10/11 (current)</li>
+          <li>NTFS is the standard file system for Windows — supports huge files and permissions</li>
+          <li>exFAT is best for removable storage (USB, SD cards) — works across all OS platforms</li>
+          <li>NTFS permissions control file access: Full Control, Read, Write, Modify, Deny</li>
+          <li>"Deny" always overrides all other permissions — most powerful restriction</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+
+    <!-- ══════════════════════════════════════════════
+         TOPIC 3 — VIRTUALIZATION
+    ══════════════════════════════════════════════ -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(62,207,142,0.12)">📦</div>
+        <div class="section-meta">
+          <div class="section-num" style="color:var(--accent2)">Topic 03</div>
+          <h2>Virtualization &amp; Containerization</h2>
+          <div class="section-desc">Running multiple systems on one machine, hypervisors, containers, Docker, and Kubernetes.</div>
+        </div>
+      </div>
+
+      <!-- Virtualization -->
+      <div class="def-box">
+        <div class="def-label">Key Definition</div>
+        <p><strong>Virtualization</strong> is a technology that lets you create multiple <em>virtual machines (VMs)</em> on a single physical computer. Instead of buying 5 physical servers, you run 5 virtual servers on one machine. It separates hardware from software environments.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Benefits of Virtualization</div>
+        <ul class="styled">
+          <li><strong>Cost Savings</strong> — Fewer physical machines needed = less money spent on hardware</li>
+          <li><strong>Better Utilization</strong> — Use 100% of a server's power instead of leaving it idle</li>
+          <li><strong>Easier Backup & Recovery</strong> — Save and restore VM states quickly</li>
+          <li><strong>Faster Provisioning</strong> — Spin up a new system in minutes, not hours</li>
+          <li><strong>Improved Isolation</strong> — One VM crashing doesn't affect others</li>
+        </ul>
+      </div>
+
+      <!-- Hypervisor -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>What is a Hypervisor?</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Definition</div>
+          <p>A <strong>Hypervisor</strong> is software that creates, runs, and manages virtual machines. It acts as a layer between the physical hardware and the virtual systems running on it.</p>
+        </div>
+        <div class="grid2">
+          <div class="card" style="background:var(--bg3);margin-bottom:0">
+            <div class="card-title" style="color:var(--accent1)"><span class="dot" style="background:var(--accent1)"></span>Type 1 Hypervisor</div>
+            <p style="font-size:13px;color:var(--text2);margin-bottom:10px">Runs <em>directly on the hardware</em> — no host OS needed.</p>
+            <ul class="styled">
+              <li>High performance</li>
+              <li>Used in data centers</li>
+              <li>No host OS required</li>
+            </ul>
+            <div style="margin-top:12px">
+              <span class="badge blue">VMware ESXi</span>
+              <span class="badge blue">Microsoft Hyper-V</span>
+              <span class="badge blue">Xen</span>
+            </div>
+          </div>
+          <div class="card" style="background:var(--bg3);margin-bottom:0">
+            <div class="card-title" style="color:var(--accent5)"><span class="dot" style="background:var(--accent5)"></span>Type 2 Hypervisor</div>
+            <p style="font-size:13px;color:var(--text2);margin-bottom:10px">Runs <em>on top of an existing OS</em> (like Windows).</p>
+            <ul class="styled">
+              <li>Easy to install</li>
+              <li>Great for training & testing</li>
+              <li>Lower performance vs Type 1</li>
+            </ul>
+            <div style="margin-top:12px">
+              <span class="badge purple">Oracle VirtualBox</span>
+              <span class="badge purple">VMware Workstation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VM Lifecycle -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent6)"></span>Virtual Machine Lifecycle — How to Create a VM</div>
+        <div class="steps">
+          <div class="step"><div class="step-num" style="background:var(--accent1)">1</div><div class="step-body"><strong>Create VM on Hypervisor</strong><span> — Start a new virtual machine in your hypervisor software</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent6)">2</div><div class="step-body"><strong>Assign Resources</strong><span> — Allocate CPU cores, RAM amount, and storage size to the VM</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent2)">3</div><div class="step-body"><strong>Install Guest OS</strong><span> — Install Windows, Linux, or any OS inside the VM</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent3)">4</div><div class="step-body"><strong>Configure Network</strong><span> — Set up networking so the VM can communicate</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent5)">5</div><div class="step-body"><strong>Start the VM</strong><span> — Power it on and begin using it like a real computer</span></div></div>
+        </div>
+        <div class="highlight" style="margin-top:14px">
+          <strong>VM Management Tools:</strong> Snapshots (save state at any point), Resource allocation controls, Monitoring tools, Backup & replication features.
+        </div>
+      </div>
+
+      <!-- Containers -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent4)"></span>What is a Container?</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Definition</div>
+          <p>A <strong>Container</strong> is a lightweight package that includes an application plus everything it needs to run (libraries, dependencies) — but it <em>shares the host OS kernel</em> instead of having its own full OS.</p>
+        </div>
+        <div class="highlight warn">
+          <strong>Simple Analogy:</strong> A VM is like renting an entire apartment (with its own kitchen, bathroom, etc.). A container is like renting just a room in a shared house — you share common areas (the OS kernel) but have your own private space (your app).
+        </div>
+        <div class="card-title" style="margin-top:16px"><span class="dot" style="background:var(--accent2)"></span>Why Use Containers?</div>
+        <ul class="styled">
+          <li><strong>Faster Startup</strong> — Containers start in seconds; VMs take minutes</li>
+          <li><strong>Smaller Footprint</strong> — Container images are MBs; VMs are GBs</li>
+          <li><strong>Portable</strong> — Run the same container on any system</li>
+          <li><strong>Great for Microservices</strong> — Each service runs in its own isolated container</li>
+        </ul>
+        <div class="card-title" style="margin-top:16px"><span class="dot" style="background:var(--accent6)"></span>Container Technologies</div>
+        <div style="padding:4px 0">
+          <span class="badge sky">Docker Engine</span>
+          <span class="badge sky">Kubernetes (Orchestration)</span>
+        </div>
+      </div>
+
+      <!-- VM vs Container Comparison -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent1)"></span>Virtual Machine vs Container — Comparison</div>
+        <table class="cmp-table">
+          <tr>
+            <th>Feature</th>
+            <th>Virtual Machine (VM)</th>
+            <th>Container</th>
+          </tr>
+          <tr>
+            <td>Has its own Guest OS?</td>
+            <td class="bad">Yes (full OS copy)</td>
+            <td class="good">No (shares host OS kernel)</td>
+          </tr>
+          <tr>
+            <td>Startup Time</td>
+            <td class="bad">Slow (minutes)</td>
+            <td class="good">Fast (seconds)</td>
+          </tr>
+          <tr>
+            <td>Size</td>
+            <td class="bad">Large (GBs)</td>
+            <td class="good">Small (MBs)</td>
+          </tr>
+          <tr>
+            <td>Isolation Level</td>
+            <td>Hardware level</td>
+            <td>Process level</td>
+          </tr>
+          <tr>
+            <td>Portability</td>
+            <td class="mid">Moderate</td>
+            <td class="good">Highly portable</td>
+          </tr>
+          <tr>
+            <td>Best Use Case</td>
+            <td>Running different OS environments</td>
+            <td>Microservices, CI/CD, cloud apps</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Real World Containers -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Containers in the Real World</div>
+        <ul class="styled">
+          <li><strong>Microservices (Netflix)</strong> — Netflix runs each service (login, recommendations, streaming) in separate containers. If one crashes, others keep working.</li>
+          <li><strong>CI/CD Pipelines (eBay)</strong> — When code is pushed, containers automatically build, test, and deploy it. Fast rollbacks if something breaks.</li>
+          <li><strong>Cloud-Native Apps (Uber)</strong> — Kubernetes orchestrates thousands of containers managing UberEATS, UberPOOL, and more across global cloud infrastructure.</li>
+        </ul>
+      </div>
+
+      <div class="summary">
+        <div class="summary-title">📌 Topic 3 Quick Summary</div>
+        <ul>
+          <li>Virtualization = running multiple virtual machines on one physical machine</li>
+          <li>A Hypervisor manages VMs; Type 1 runs on hardware directly (faster); Type 2 runs on an OS (easier)</li>
+          <li>Containers are lighter than VMs — they share the host OS kernel and start faster</li>
+          <li>VMs are isolated at hardware level; Containers at process level</li>
+          <li>Docker = container engine; Kubernetes = container orchestration (managing many containers)</li>
+          <li>Real-world users: Netflix (microservices), eBay (CI/CD), Uber (cloud-native)</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+
+    <!-- ══════════════════════════════════════════════
+         TOPIC 4 — COMPUTER ARCHITECTURE
+    ══════════════════════════════════════════════ -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(245,166,35,0.12)">⚙️</div>
+        <div class="section-meta">
+          <div class="section-num" style="color:var(--accent3)">Topic 04</div>
+          <h2>Computer Architecture &amp; Organization</h2>
+          <div class="section-desc">CPU internals, the fetch-decode-execute cycle, memory hierarchy, and storage systems.</div>
+        </div>
+      </div>
+
+      <div class="def-box">
+        <div class="def-label">Key Distinction</div>
+        <p><strong>Computer Architecture</strong> = the <em>conceptual design</em> of a computer system (think: blueprint). <strong>Computer Organization</strong> = how that design is actually <em>implemented in hardware</em> (think: construction). Architecture defines what it does; Organization defines how it does it.</p>
+      </div>
+
+      <!-- 4 Main Components -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>4 Major Computer Components</div>
+        <div class="grid2">
+          <div class="highlight">
+            <strong>CPU (Processor)</strong><br>
+            <span style="color:var(--text2);font-size:13px">The brain. Executes all instructions and calculations.</span>
+          </div>
+          <div class="highlight warn">
+            <strong>Memory (RAM)</strong><br>
+            <span style="color:var(--text2);font-size:13px">Temporary storage for currently running programs.</span>
+          </div>
+          <div class="highlight purple">
+            <strong>Storage</strong><br>
+            <span style="color:var(--text2);font-size:13px">Permanent storage for data (HDD, SSD).</span>
+          </div>
+          <div class="highlight">
+            <strong>Input/Output Devices</strong><br>
+            <span style="color:var(--text2);font-size:13px">Keyboard, mouse, monitor, printer — user interaction.</span>
+          </div>
+        </div>
+        <div class="highlight warn" style="margin-top:8px">
+          <strong>System Bus</strong> — The communication highway connecting all components. Carries three types of signals:<br>
+          <span style="color:var(--text2);font-size:13px">• <strong>Data Bus</strong> — transfers actual data &nbsp;|&nbsp; <strong>Address Bus</strong> — specifies memory location &nbsp;|&nbsp; <strong>Control Bus</strong> — sends commands</span>
+        </div>
+      </div>
+
+      <!-- CPU Deep Dive -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent1)"></span>The CPU — Brain of the Computer</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">The CPU has 3 key internal parts:</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num" style="background:var(--accent1)">ALU</div>
+            <div class="step-body">
+              <strong>Arithmetic Logic Unit</strong>
+              <span>Performs all <em>math operations</em> (add, subtract, multiply) and <em>logical operations</em> (AND, OR, NOT). Example: 5 + 3 = 8 is calculated by the ALU.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent3)">CU</div>
+            <div class="step-body">
+              <strong>Control Unit</strong>
+              <span>The <em>manager</em> of the CPU. Fetches instructions from memory, decodes them, and sends signals to other components to execute them.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent5)">REG</div>
+            <div class="step-body">
+              <strong>Registers</strong>
+              <span>Tiny, super-fast storage locations <em>inside</em> the CPU. Hold data temporarily during processing. Key registers: PC (Program Counter), IR (Instruction Register), MAR, MDR.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fetch Decode Execute -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>The Instruction Cycle — How the CPU Works</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Also called</div>
+          <p>The <strong>Fetch–Decode–Execute Cycle</strong>. This is the fundamental loop the CPU repeats <em>billions of times per second</em> to run programs.</p>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num" style="background:var(--accent1)">1</div><div class="step-body"><strong>Fetch</strong><span> — The CPU retrieves (fetches) the next instruction from RAM</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent3)">2</div><div class="step-body"><strong>Decode</strong><span> — The Control Unit decodes the instruction to understand what operation to perform</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent2)">3</div><div class="step-body"><strong>Execute</strong><span> — The ALU or other components carry out the instruction</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent5)">4</div><div class="step-body"><strong>Store</strong><span> — The result is written back to memory or a register</span></div></div>
+        </div>
+      </div>
+
+      <!-- Memory Hierarchy -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent6)"></span>Memory Hierarchy — Speed vs Cost vs Size</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Computers use several types of memory. <em>Faster = more expensive = smaller capacity.</em></p>
+        <table class="cmp-table">
+          <tr>
+            <th>Memory Type</th>
+            <th>Speed</th>
+            <th>Size</th>
+            <th>Purpose</th>
+          </tr>
+          <tr>
+            <td><strong>Registers</strong></td>
+            <td class="good">Fastest</td>
+            <td class="bad">Tiny (bytes)</td>
+            <td>Immediate CPU operations</td>
+          </tr>
+          <tr>
+            <td><strong>L1 Cache</strong></td>
+            <td class="good">Very Fast</td>
+            <td class="bad">Small (KBs)</td>
+            <td>Most frequently used data</td>
+          </tr>
+          <tr>
+            <td><strong>L2 / L3 Cache</strong></td>
+            <td class="mid">Fast</td>
+            <td class="mid">Medium (MBs)</td>
+            <td>Recently used data</td>
+          </tr>
+          <tr>
+            <td><strong>RAM</strong></td>
+            <td class="mid">Moderate</td>
+            <td class="mid">GBs</td>
+            <td>Currently running programs</td>
+          </tr>
+          <tr>
+            <td><strong>Secondary Storage</strong></td>
+            <td class="bad">Slow</td>
+            <td class="good">TBs</td>
+            <td>Permanent file storage</td>
+          </tr>
+        </table>
+        <div class="highlight" style="margin-top:12px">
+          <strong>Cache Memory</strong> is located physically close to the CPU and stores frequently-accessed data to reduce the time the CPU spends waiting for RAM. L1 is fastest; L3 is largest.
+        </div>
+        <div class="highlight warn" style="margin-top:8px">
+          <strong>RAM is Volatile</strong> — it loses all data when you turn off the computer. Storage (HDD/SSD) is <strong>non-volatile</strong> — data stays even without power.
+        </div>
+      </div>
+
+      <!-- Storage -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent4)"></span>Storage Systems — HDD vs SSD</div>
+        <table class="cmp-table">
+          <tr>
+            <th>Feature</th>
+            <th>HDD (Hard Disk Drive)</th>
+            <th>SSD (Solid State Drive)</th>
+          </tr>
+          <tr>
+            <td>Technology</td>
+            <td>Mechanical spinning disk</td>
+            <td>Flash memory (no moving parts)</td>
+          </tr>
+          <tr>
+            <td>Speed</td>
+            <td class="bad">Slower</td>
+            <td class="good">Much faster</td>
+          </tr>
+          <tr>
+            <td>Price</td>
+            <td class="good">Cheaper</td>
+            <td class="bad">More expensive</td>
+          </tr>
+          <tr>
+            <td>Reliability</td>
+            <td class="bad">Can fail (moving parts)</td>
+            <td class="good">More reliable</td>
+          </tr>
+          <tr>
+            <td>Best Use</td>
+            <td>Large file storage (cheap)</td>
+            <td>Operating system, fast apps</td>
+          </tr>
+        </table>
+        <p style="color:var(--text2);font-size:13px;margin-top:10px">Other storage: USB Flash Drives, Optical Disks (CDs/DVDs)</p>
+      </div>
+
+      <!-- I/O -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent5)"></span>Input / Output (I/O) Systems</div>
+        <div class="grid2">
+          <div>
+            <div class="card-title" style="font-size:13px;color:var(--accent2)">Input Devices</div>
+            <ul class="styled">
+              <li><strong>Keyboard</strong></li>
+              <li><strong>Mouse</strong></li>
+              <li><strong>Scanner</strong></li>
+              <li><strong>Microphone</strong></li>
+            </ul>
+          </div>
+          <div>
+            <div class="card-title" style="font-size:13px;color:var(--accent3)">Output Devices</div>
+            <ul class="styled">
+              <li><strong>Monitor</strong></li>
+              <li><strong>Printer</strong></li>
+              <li><strong>Speakers</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight" style="margin-top:14px">
+          <strong>How I/O talks to the CPU:</strong> Through <em>device controllers</em>, <em>drivers</em>, and <em>interrupts</em>. An <strong>interrupt</strong> is a signal sent to the CPU saying "I'm done!" — so the CPU doesn't have to constantly check if I/O is finished.
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-title">📌 Topic 4 Quick Summary</div>
+        <ul>
+          <li>A computer has 4 main parts: CPU, Memory, Storage, and I/O devices</li>
+          <li>CPU has 3 parts: ALU (math/logic), Control Unit (manages), Registers (fast temp storage)</li>
+          <li>CPU follows Fetch → Decode → Execute → Store cycle (billions of times per second)</li>
+          <li>Memory hierarchy from fastest to slowest: Registers → Cache → RAM → Storage</li>
+          <li>RAM is volatile (temporary); Storage is non-volatile (permanent)</li>
+          <li>SSD is faster and more reliable than HDD; HDD is cheaper and has more capacity per cost</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+
+    <!-- ══════════════════════════════════════════════
+         TOPIC 5 — COMPUTING INFRASTRUCTURE
+    ══════════════════════════════════════════════ -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(224,92,148,0.12)">🏢</div>
+        <div class="section-meta">
+          <div class="section-num" style="color:var(--accent4)">Topic 05</div>
+          <h2>Computing Infrastructure</h2>
+          <div class="section-desc">Data centers, power and cooling systems, rack systems, and infrastructure management.</div>
+        </div>
+      </div>
+
+      <div class="def-box">
+        <div class="def-label">Key Definition</div>
+        <p><strong>Computing Infrastructure</strong> refers to all the physical and virtual resources that support computing operations — servers, storage, networking equipment, power systems, and cooling. Think of it as the <em>physical backbone</em> of all IT systems.</p>
+      </div>
+
+      <!-- Data Centers -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent4)"></span>Data Centers — The "Brain Hub"</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Definition</div>
+          <p>A <strong>Data Center</strong> is a physical facility that houses computer systems and all related components. It's where all servers, storage, and networking equipment live. Without infrastructure, no apps or services can run.</p>
+        </div>
+        <div class="card-title" style="font-size:13px"><span class="dot" style="background:var(--accent3)"></span>What's Inside a Data Center?</div>
+        <div style="margin-bottom:12px">
+          <span class="badge pink">Servers</span>
+          <span class="badge orange">Storage Systems</span>
+          <span class="badge blue">Networking Devices</span>
+          <span class="badge sky">Power Supply</span>
+          <span class="badge green">Cooling Systems</span>
+        </div>
+        <div class="card-title" style="font-size:13px"><span class="dot" style="background:var(--accent1)"></span>Types of Data Centers</div>
+        <table class="cmp-table">
+          <tr>
+            <th>Type</th>
+            <th>Who Owns It</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><strong>Enterprise</strong></td>
+            <td>The company itself</td>
+            <td>Private data center owned and operated by one organization</td>
+          </tr>
+          <tr>
+            <td><strong>Colocation</strong></td>
+            <td>Shared facility</td>
+            <td>Multiple companies share one building but have their own equipment</td>
+          </tr>
+          <tr>
+            <td><strong>Cloud</strong></td>
+            <td>Cloud providers</td>
+            <td>Managed by AWS, Microsoft Azure, Google Cloud. Rented virtually.</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Power -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Power Requirements</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Servers must run 24/7 without interruption. Power management is critical.</p>
+        <ul class="styled">
+          <li><strong>Power Consumption</strong> — Measured in Watts. Formula: <em>Power (W) = Voltage × Current</em>. Example: 220V × 5A = 1,100W</li>
+          <li><strong>UPS (Uninterruptible Power Supply)</strong> — Backup battery that keeps servers running during a power outage (buys time for safe shutdown)</li>
+          <li><strong>Generators</strong> — For extended outages; takes over when UPS runs out</li>
+          <li><strong>Power Supply Units (PSU)</strong> — Internal power converters in each server</li>
+        </ul>
+        <div class="highlight warn">
+          <strong>Total rack power</strong> = sum of all individual device wattages in the rack.
+        </div>
+      </div>
+
+      <!-- Cooling -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent6)"></span>Cooling Requirements</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Servers generate massive heat. Overheating destroys equipment. Target temperature: <strong>18–27°C</strong>.</p>
+        <div class="grid2">
+          <div class="highlight">
+            <strong>Air Cooling</strong><br>
+            <span style="color:var(--text2);font-size:13px">Cool air is blown through the server room. Cheaper but less efficient for large setups.</span>
+          </div>
+          <div class="highlight warn">
+            <strong>Liquid Cooling</strong><br>
+            <span style="color:var(--text2);font-size:13px">Liquid (water or coolant) runs through pipes to absorb heat. More efficient for dense setups.</span>
+          </div>
+        </div>
+        <div class="highlight purple" style="margin-top:10px">
+          <strong>Hot Aisle / Cold Aisle Design:</strong> Racks are arranged so cool air comes in from the <em>cold aisle</em> (front of rack) and hot air exits from the <em>hot aisle</em> (back of rack). Prevents hot and cool air from mixing, which improves efficiency.
+        </div>
+      </div>
+
+      <!-- Rack Systems -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent5)"></span>Rack Systems</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Definition</div>
+          <p>A <strong>rack</strong> is a standardized frame (usually 19-inch wide) used to mount and organize servers and equipment. Measured in <strong>Rack Units (U)</strong>. 1U = one unit of height (~44mm).</p>
+        </div>
+        <ul class="styled">
+          <li><strong>1U Server</strong> — Small, compact server (1 rack unit tall)</li>
+          <li><strong>4U Server</strong> — Larger server with more expansion space</li>
+          <li><strong>Rack-mounted Servers</strong> — Standard servers mounted in a rack</li>
+          <li><strong>Blade Servers</strong> — Ultra-thin modular servers that share power/cooling in one chassis</li>
+        </ul>
+        <div class="highlight">
+          <strong>Benefits of racks:</strong> Organizes equipment neatly, improves airflow, and simplifies cable management and maintenance.
+        </div>
+      </div>
+
+      <!-- Infrastructure Management -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Infrastructure Management</div>
+        <div class="grid2">
+          <div>
+            <div class="card-title" style="font-size:13px;color:var(--text2)">Management Tasks</div>
+            <ul class="styled">
+              <li>Monitoring systems</li>
+              <li>Regular maintenance</li>
+              <li>Security management</li>
+              <li>Backup and recovery</li>
+            </ul>
+          </div>
+          <div>
+            <div class="card-title" style="font-size:13px;color:var(--text2)">Management Tools</div>
+            <ul class="styled">
+              <li><strong>Nagios</strong> — Monitoring</li>
+              <li><strong>Zabbix</strong> — Monitoring</li>
+              <li>Remote management systems</li>
+              <li>Asset tracking systems</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout Design -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent1)"></span>Infrastructure Layout Design — Key Considerations</div>
+        <ul class="styled">
+          <li><strong>Space Planning</strong> — How much floor space is available? Where will equipment go?</li>
+          <li><strong>Power Distribution</strong> — How is power routed to all equipment?</li>
+          <li><strong>Cooling Placement</strong> — Where do cooling units go to maximize efficiency?</li>
+          <li><strong>Cable Management</strong> — Organized cables prevent errors and improve airflow</li>
+        </ul>
+        <div class="highlight">
+          <strong>Goal:</strong> Create an efficient, scalable, and maintainable infrastructure setup.
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-title">📌 Topic 5 Quick Summary</div>
+        <ul>
+          <li>Computing infrastructure = all physical/virtual resources supporting IT operations</li>
+          <li>Data centers house servers, storage, networking, power, and cooling</li>
+          <li>3 types: Enterprise (owned), Colocation (shared), Cloud (rented from AWS/Azure/Google)</li>
+          <li>Power: UPS (short outages) + Generators (extended outages); Power = Voltage × Current</li>
+          <li>Cooling: Keep servers between 18–27°C; use Hot/Cold aisle design for efficiency</li>
+          <li>Racks organize equipment; measured in Rack Units (U); 19-inch standard width</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+
+    <!-- ══════════════════════════════════════════════
+         TOPIC 6 — OPTIMIZATION
+    ══════════════════════════════════════════════ -->
+    <section class="section" id="s6">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(167,139,250,0.12)">⚡</div>
+        <div class="section-meta">
+          <div class="section-num" style="color:var(--accent5)">Topic 06</div>
+          <h2>Platform Technology Optimization</h2>
+          <div class="section-desc">Performance metrics, monitoring tools, optimization techniques, and troubleshooting.</div>
+        </div>
+      </div>
+
+      <div class="def-box">
+        <div class="def-label">Key Definition</div>
+        <p><strong>Platform Performance</strong> refers to how efficiently a system (server, application, or infrastructure) responds to workloads. A high-performing system is fast, responsive, and stable. Poor performance leads to downtime, user frustration, and business losses.</p>
+      </div>
+
+      <!-- Performance Metrics -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent5)"></span>Performance Metrics — What to Measure</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Metrics are measurable values that tell you how healthy your system is.</p>
+        <table class="cmp-table">
+          <tr>
+            <th>Metric</th>
+            <th>What it Measures</th>
+            <th>Warning Sign</th>
+          </tr>
+          <tr>
+            <td><strong>CPU Usage</strong></td>
+            <td>How much of the processor is being used</td>
+            <td class="bad">&gt;70% = possible bottleneck</td>
+          </tr>
+          <tr>
+            <td><strong>Memory Usage</strong></td>
+            <td>How much RAM is consumed</td>
+            <td class="bad">High = slow system or crashes</td>
+          </tr>
+          <tr>
+            <td><strong>Disk I/O</strong></td>
+            <td>Speed of reading and writing to storage</td>
+            <td class="bad">High activity = storage bottleneck</td>
+          </tr>
+          <tr>
+            <td><strong>Network Latency</strong></td>
+            <td>Delay in network communication</td>
+            <td class="bad">High = slow connections</td>
+          </tr>
+          <tr>
+            <td><strong>Throughput</strong></td>
+            <td>Amount of data transferred per second</td>
+            <td class="bad">Low = network congestion</td>
+          </tr>
+          <tr>
+            <td><strong>Response Time</strong></td>
+            <td>How long a system takes to respond to a request</td>
+            <td class="bad">High = poor user experience</td>
+          </tr>
+          <tr>
+            <td><strong>Error Rate</strong></td>
+            <td>How often the system fails or returns errors</td>
+            <td class="bad">High = reliability problem</td>
+          </tr>
+          <tr>
+            <td><strong>Requests/sec</strong></td>
+            <td>How many requests the system handles each second</td>
+            <td class="mid">Capacity limit indicator</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Monitoring Tools -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent1)"></span>Monitoring Tools</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Tools that collect, store, visualize, and alert on system performance data.</p>
+        <div class="grid2">
+          <div class="highlight">
+            <strong>Nagios</strong><br>
+            <span style="color:var(--text2);font-size:13px">One of the oldest and most popular monitoring tools. Tracks servers, services, and networks.</span>
+          </div>
+          <div class="highlight warn">
+            <strong>Zabbix</strong><br>
+            <span style="color:var(--text2);font-size:13px">Enterprise-level monitoring. Highly configurable; supports agent-based and agentless monitoring.</span>
+          </div>
+          <div class="highlight purple">
+            <strong>Prometheus</strong><br>
+            <span style="color:var(--text2);font-size:13px">Modern, open-source metrics collection. Great for cloud-native and containerized environments.</span>
+          </div>
+          <div class="highlight">
+            <strong>Grafana</strong><br>
+            <span style="color:var(--text2);font-size:13px">Visualization dashboard. Connects to Prometheus and others to display beautiful, real-time graphs.</span>
+          </div>
+        </div>
+        <div class="highlight warn" style="margin-top:10px">
+          <strong>How Monitoring Works:</strong> Collect data (metrics) → Store it → Visualize on dashboards → Trigger alerts when thresholds are exceeded.
+        </div>
+      </div>
+
+      <!-- Optimization Techniques -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Optimization Techniques</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Goal</div>
+          <p><strong>Optimization</strong> = making a system faster, more efficient, and able to handle more users by reducing inefficiencies.</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num" style="background:var(--accent1)">1</div>
+            <div class="step-body">
+              <strong>Load Balancing</strong>
+              <span>Distributes incoming requests across multiple servers. No single server gets overwhelmed. Like having multiple checkout lanes at a store.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent2)">2</div>
+            <div class="step-body">
+              <strong>Caching</strong>
+              <span>Stores frequently-used data so it doesn't need to be recomputed. Example: A website caches your profile picture so it doesn't reload it every page.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent3)">3</div>
+            <div class="step-body">
+              <strong>Resource Scaling</strong>
+              <span>Adjust resources based on demand. <em>Scale up</em> = bigger machine. <em>Scale out</em> = more machines. Cloud makes this easy and automatic.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent5)">4</div>
+            <div class="step-body">
+              <strong>Code Optimization</strong>
+              <span>Improving the program's code to run more efficiently. Eliminate loops, reduce complexity, use better algorithms.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent4)">5</div>
+            <div class="step-body">
+              <strong>Database Tuning</strong>
+              <span>Improving how data is stored and retrieved. Add indexes, optimize queries, clean up unused data.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottlenecks -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent4)"></span>Bottlenecks — What Slows Systems Down</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Definition</div>
+          <p>A <strong>Bottleneck</strong> is a single component that limits the entire system's performance. Like a traffic jam — even if all other roads are clear, one blocked lane slows everything.</p>
+        </div>
+        <ul class="styled">
+          <li><strong>CPU Bottleneck</strong> — Too many calculations; processor at 100%</li>
+          <li><strong>Memory Bottleneck</strong> — Not enough RAM; system uses slow disk swap</li>
+          <li><strong>Disk Bottleneck</strong> — Slow HDD can't read/write fast enough</li>
+          <li><strong>Network Bottleneck</strong> — Congested network; slow data transfer</li>
+        </ul>
+      </div>
+
+      <!-- Troubleshooting -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Troubleshooting Performance Issues — 5 Steps</div>
+        <div class="steps">
+          <div class="step"><div class="step-num" style="background:var(--accent1)">1</div><div class="step-body"><strong>Identify the Problem</strong><span> — What symptom is the user experiencing? Slow load? Crashes? Errors?</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent6)">2</div><div class="step-body"><strong>Analyze Metrics</strong><span> — Check CPU, memory, disk, network metrics to see which is abnormal</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent3)">3</div><div class="step-body"><strong>Locate the Bottleneck</strong><span> — Which specific component is the culprit?</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent2)">4</div><div class="step-body"><strong>Apply the Fix</strong><span> — Use appropriate optimization technique (scale, cache, tune DB, etc.)</span></div></div>
+          <div class="step"><div class="step-num" style="background:var(--accent5)">5</div><div class="step-body"><strong>Monitor Results</strong><span> — Verify the fix worked; continue monitoring to catch future issues</span></div></div>
+        </div>
+        <div class="highlight warn" style="margin-top:14px">
+          <strong>Example:</strong> A website is slow. CPU = normal, Memory = normal, Response Time = HIGH → Issue is network latency or backend processing delay, not hardware.
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent6)"></span>Best Practices for Platform Performance</div>
+        <ul class="styled">
+          <li><strong>Monitor Continuously</strong> — Don't wait for problems; detect them early</li>
+          <li><strong>Use Alerts</strong> — Set thresholds so you're notified automatically when something is wrong</li>
+          <li><strong>Optimize Regularly</strong> — Performance tuning is not a one-time task</li>
+          <li><strong>Test Under Load</strong> — Simulate peak traffic before go-live to find bottlenecks in advance</li>
+        </ul>
+      </div>
+
+      <div class="summary">
+        <div class="summary-title">📌 Topic 6 Quick Summary</div>
+        <ul>
+          <li>Platform performance = how efficiently a system handles workloads (speed + stability)</li>
+          <li>Key metrics: CPU usage, RAM usage, Disk I/O, Network latency, Response time, Error rate</li>
+          <li>Monitoring tools: Nagios, Zabbix (collect + alert); Prometheus + Grafana (modern dashboards)</li>
+          <li>5 optimization techniques: Load Balancing, Caching, Scaling, Code Optimization, DB Tuning</li>
+          <li>A bottleneck is one slow component that limits the whole system</li>
+          <li>Troubleshoot: Identify → Analyze Metrics → Find Bottleneck → Fix → Monitor</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+
+    <!-- ══════════════════════════════════════════════
+         TOPIC 7 — DEPLOYMENT & INTEGRATION
+    ══════════════════════════════════════════════ -->
+    <section class="section" id="s7">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(62,207,142,0.12)">🚀</div>
+        <div class="section-meta">
+          <div class="section-num" style="color:var(--accent2)">Topic 07</div>
+          <h2>Platform Deployment &amp; Integration</h2>
+          <div class="section-desc">Deployment strategies, platform integration, cloud platforms, and cloud service models.</div>
+        </div>
+      </div>
+
+      <!-- Deployment Definition -->
+      <div class="def-box">
+        <div class="def-label">Key Definition</div>
+        <p><strong>Platform Deployment</strong> is the process of installing, configuring, and making a system or application available for real-world use. It's the stage where development is finished and the system goes live. <em>Example: Uploading your website to a web server so users can visit it.</em></p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Why Deployment Matters</div>
+        <ul class="styled">
+          <li><strong>Ensures System Availability</strong> — Users can't access the system without proper deployment</li>
+          <li><strong>Supports Scalability</strong> — Good deployment plans for growth</li>
+          <li><strong>Enables User Access</strong> — Makes the application reachable</li>
+          <li><strong>Reduces Downtime</strong> — Structured deployment minimizes failures during rollout</li>
+        </ul>
+        <div class="highlight warn">
+          <strong>Poor deployment = system failures, outages, and downtime.</strong>
+        </div>
+      </div>
+
+      <!-- Deployment Strategies -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Deployment Strategies — 4 Main Types</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num" style="background:var(--accent1)">1</div>
+            <div class="step-body">
+              <strong>Recreate Deployment</strong>
+              <span>Shut down the old version completely, then launch the new version. <em>Simple but causes downtime.</em> Best for development environments.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent3)">2</div>
+            <div class="step-body">
+              <strong>Rolling Deployment</strong>
+              <span>Gradually update servers one by one (or group by group). Old and new versions run simultaneously for a short time. <em>Less downtime than Recreate.</em></span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent2)">3</div>
+            <div class="step-body">
+              <strong>Blue-Green Deployment</strong>
+              <span>Two identical environments: <em>Blue</em> (current live) and <em>Green</em> (new version). Traffic switches from Blue to Green instantly. If Green fails, instantly switch back to Blue. <em>Zero downtime. Easy rollback.</em></span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:var(--accent5)">4</div>
+            <div class="step-body">
+              <strong>Canary Deployment</strong>
+              <span>Roll out the new version to a <em>small percentage</em> of users first (the "canary group"). If no issues, gradually increase to 100%. <em>Like testing with a small audience before full release.</em></span>
+            </div>
+          </div>
+        </div>
+        <table class="cmp-table" style="margin-top:16px">
+          <tr>
+            <th>Strategy</th>
+            <th>Downtime</th>
+            <th>Rollback</th>
+            <th>Risk</th>
+          </tr>
+          <tr>
+            <td>Recreate</td>
+            <td class="bad">Yes</td>
+            <td class="bad">Hard</td>
+            <td class="bad">High</td>
+          </tr>
+          <tr>
+            <td>Rolling</td>
+            <td class="mid">Minimal</td>
+            <td class="mid">Moderate</td>
+            <td class="mid">Medium</td>
+          </tr>
+          <tr>
+            <td>Blue-Green</td>
+            <td class="good">None</td>
+            <td class="good">Instant</td>
+            <td class="good">Low</td>
+          </tr>
+          <tr>
+            <td>Canary</td>
+            <td class="good">None</td>
+            <td class="good">Easy</td>
+            <td class="good">Very Low</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Platform Integration -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent6)"></span>Platform Integration</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Definition</div>
+          <p><strong>Platform Integration</strong> is the process of connecting different systems so they can <em>work together and share data</em>. Modern applications rarely work alone — they connect to databases, APIs, cloud services, and other systems.</p>
+        </div>
+        <div class="card-title" style="font-size:13px"><span class="dot" style="background:var(--accent3)"></span>Examples of Integration</div>
+        <ul class="styled">
+          <li><strong>Website + Database</strong> — Your blog posts are stored in a database that the website retrieves</li>
+          <li><strong>Application + API</strong> — A weather app connects to a weather API to get current data</li>
+          <li><strong>System + Cloud</strong> — Your company's app stores backups on AWS S3 cloud storage</li>
+        </ul>
+        <div class="card-title" style="font-size:13px;margin-top:16px"><span class="dot" style="background:var(--accent5)"></span>Types of Integration</div>
+        <div class="grid2">
+          <div class="highlight">
+            <strong>API Integration</strong><br>
+            <span style="color:var(--text2);font-size:13px">Two systems talk to each other using APIs (Application Programming Interfaces). Most common type today.</span>
+          </div>
+          <div class="highlight warn">
+            <strong>Data Integration</strong><br>
+            <span style="color:var(--text2);font-size:13px">Combining data from multiple sources into one unified view. Common in business analytics.</span>
+          </div>
+          <div class="highlight purple" style="grid-column: 1 / -1;">
+            <strong>System Integration</strong><br>
+            <span style="color:var(--text2);font-size:13px">Connecting entire systems/platforms together so they function as one cohesive unit. Example: CRM + ERP + HR systems all integrated.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloud Platforms -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent4)"></span>Cloud Platforms</div>
+        <div class="def-box" style="margin-bottom:14px">
+          <div class="def-label">Definition</div>
+          <p><strong>Cloud Platforms</strong> provide computing resources (servers, storage, databases, networking) over the Internet — so you don't need to own physical hardware. You rent what you need, when you need it.</p>
+        </div>
+        <div class="grid2">
+          <div class="highlight">
+            <strong>☁️ Amazon Web Services (AWS)</strong><br>
+            <span style="color:var(--text2);font-size:13px">Largest cloud provider. Offers 200+ services including EC2 (servers), S3 (storage), RDS (database).</span>
+          </div>
+          <div class="highlight warn">
+            <strong>☁️ Microsoft Azure</strong><br>
+            <span style="color:var(--text2);font-size:13px">Microsoft's cloud. Tightly integrated with Windows, Office 365, and enterprise Microsoft products.</span>
+          </div>
+          <div class="highlight purple" style="grid-column: 1 / -1">
+            <strong>☁️ Google Cloud Platform (GCP)</strong><br>
+            <span style="color:var(--text2);font-size:13px">Google's cloud. Known for data analytics (BigQuery), AI/ML tools, and YouTube infrastructure.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloud Service Models -->
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent1)"></span>Cloud Service Models — IaaS, PaaS, SaaS</div>
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px">The three main ways cloud services are delivered, each with a different level of control:</p>
+        <table class="cmp-table">
+          <tr>
+            <th>Model</th>
+            <th>Full Name</th>
+            <th>What You Manage</th>
+            <th>Real Example</th>
+          </tr>
+          <tr>
+            <td><span class="badge blue">IaaS</span></td>
+            <td>Infrastructure as a Service</td>
+            <td>You manage: OS, apps, data. Provider gives: servers, storage, networking.</td>
+            <td>AWS EC2, Azure VMs, Google Compute Engine</td>
+          </tr>
+          <tr>
+            <td><span class="badge orange">PaaS</span></td>
+            <td>Platform as a Service</td>
+            <td>You manage: apps and data only. Provider handles: OS, runtime, servers.</td>
+            <td>Google App Engine, Heroku, Azure App Service</td>
+          </tr>
+          <tr>
+            <td><span class="badge green">SaaS</span></td>
+            <td>Software as a Service</td>
+            <td>You just use the application. Provider manages everything.</td>
+            <td>Gmail, Google Docs, Microsoft 365, Dropbox</td>
+          </tr>
+        </table>
+        <div class="highlight purple" style="margin-top:14px">
+          <strong>Simple Analogy — Pizza as a Service:</strong><br>
+          <span style="color:var(--text2);font-size:13px">
+            🏠 <em>IaaS</em> = You rent a kitchen and oven, buy ingredients, cook yourself.<br>
+            🍕 <em>PaaS</em> = You get the kitchen ready-to-use, just bring your recipe and ingredients.<br>
+            🚗 <em>SaaS</em> = Pizza is delivered to your door — you just eat it (no cooking needed).
+          </span>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-title">📌 Topic 7 Quick Summary</div>
+        <ul>
+          <li>Deployment = making a system live and available for users</li>
+          <li>4 deployment strategies: Recreate (simple, has downtime), Rolling (gradual), Blue-Green (instant switch, zero downtime), Canary (test on small group first)</li>
+          <li>Blue-Green and Canary are best for production — minimal risk, easy rollback</li>
+          <li>Integration = connecting different systems to work together (via APIs, data sharing, etc.)</li>
+          <li>3 cloud providers: AWS (largest), Azure (Microsoft), Google Cloud (analytics/AI)</li>
+          <li>IaaS = rent infrastructure | PaaS = rent platform | SaaS = use software directly</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FINAL MASTER SUMMARY -->
+    <div style="margin-top:52px; padding:36px 0; border-top:2px solid var(--border);">
+      <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--heading);margin-bottom:6px;">📖 Master Summary — All 7 Topics</div>
+      <p style="color:var(--text2);font-size:13.5px;margin-bottom:24px">Everything you need to remember, at a glance.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="card" style="margin-bottom:0">
+          <div style="font-size:11px;font-weight:800;color:var(--accent1);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">01 · Introduction</div>
+          <p style="font-size:13px;color:var(--text2)">Platform = HW+SW+Networks. OS manages resources. 5 computing generations. 7 IT infrastructure components.</p>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div style="font-size:11px;font-weight:800;color:var(--accent6);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">02 · Windows</div>
+          <p style="font-size:13px;color:var(--text2)">MS-DOS → Win 11. NTFS = standard Windows file system. exFAT = cross-platform. Permissions: Full Control, Modify, Read, Write, Deny.</p>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div style="font-size:11px;font-weight:800;color:var(--accent2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">03 · Virtualization</div>
+          <p style="font-size:13px;color:var(--text2)">VMs need Hypervisor (Type1=bare metal, Type2=on OS). Containers share OS kernel — faster, smaller. Docker + Kubernetes.</p>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div style="font-size:11px;font-weight:800;color:var(--accent3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">04 · Architecture</div>
+          <p style="font-size:13px;color:var(--text2)">CPU = ALU + CU + Registers. Fetch→Decode→Execute cycle. Memory hierarchy: Registers→Cache→RAM→Storage. SSD faster than HDD.</p>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div style="font-size:11px;font-weight:800;color:var(--accent4);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">05 · Infrastructure</div>
+          <p style="font-size:13px;color:var(--text2)">Data centers = servers+storage+cooling+power. Types: Enterprise/Colo/Cloud. Racks = 19-inch frames, measured in U. Hot/Cold aisle cooling.</p>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div style="font-size:11px;font-weight:800;color:var(--accent5);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">06 · Optimization</div>
+          <p style="font-size:13px;color:var(--text2)">Metrics: CPU, RAM, Disk I/O, Latency, Response Time. Tools: Nagios, Zabbix, Prometheus, Grafana. Fix with: Load Balancing, Caching, Scaling.</p>
+        </div>
+        <div class="card" style="margin-bottom:0;grid-column:1/-1">
+          <div style="font-size:11px;font-weight:800;color:var(--accent2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">07 · Deployment & Integration</div>
+          <p style="font-size:13px;color:var(--text2)">Deployment strategies: Recreate (downtime), Rolling (gradual), Blue-Green (zero downtime, easy rollback), Canary (small test group). Integration types: API, Data, System. Cloud models: IaaS (rent servers), PaaS (rent platform), SaaS (use software). Big 3 clouds: AWS, Azure, GCP.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Smooth scrolling + active nav highlighting
+  document.querySelectorAll('.nav-item').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Intersection Observer for active state
+  const sections = document.querySelectorAll('.section');
+  const navItems = document.querySelectorAll('.nav-item');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

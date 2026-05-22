@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHILO 25 Finals Study Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --ink-light: #4a3f35;
+    --parchment: #faf7f2;
+    --cream: #f4efe6;
+    --gold: #b8922a;
+    --gold-light: #d4b06a;
+    --rust: #8b3a2a;
+    --sage: #4a6741;
+    --slate: #3d5068;
+    --divider: #d4c8b8;
+    --highlight: #fff3cd;
+    --note-bg: #f0f5f0;
+    --border-radius: 4px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--parchment);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; width: 260px; height: 100vh;
+    background: var(--ink);
+    color: #e8ddd0;
+    overflow-y: auto;
+    padding: 2rem 0 4rem;
+    z-index: 100;
+    font-family: 'Playfair Display', serif;
+  }
+  nav .nav-title {
+    font-size: 1rem; font-weight: 700; letter-spacing: .08em;
+    color: var(--gold-light);
+    padding: 0 1.5rem 1.5rem;
+    border-bottom: 1px solid #3a3028;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+  nav .nav-subtitle { font-size: .72rem; color: #9a8e80; font-weight: 400; margin-top: .3rem; font-family: 'Source Serif 4', serif; font-style: italic; }
+  nav ul { list-style: none; margin-top: 1rem; }
+  nav li a {
+    display: block; padding: .55rem 1.5rem;
+    color: #c8bdb0; text-decoration: none;
+    font-size: .82rem; font-family: 'Source Serif 4', serif;
+    border-left: 3px solid transparent;
+    transition: all .2s;
+    line-height: 1.4;
+  }
+  nav li a:hover, nav li a.active {
+    color: var(--gold-light); background: rgba(184,146,42,.08);
+    border-left-color: var(--gold);
+  }
+  nav li .topic-num { color: var(--gold); margin-right: .4rem; font-family: 'Playfair Display', serif; font-size: .9em; }
+  /* MAIN */
+  main { margin-left: 260px; padding: 3rem 3.5rem 6rem; max-width: 980px; }
+  /* HERO */
+  .hero {
+    text-align: center; padding: 3rem 0 2.5rem;
+    border-bottom: 2px solid var(--divider);
+    margin-bottom: 3.5rem;
+  }
+  .hero .course-tag {
+    display: inline-block; background: var(--gold); color: #fff;
+    font-size: .75rem; letter-spacing: .15em; text-transform: uppercase;
+    padding: .3rem .9rem; border-radius: 2px; margin-bottom: 1rem;
+    font-family: 'Source Serif 4', serif;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem; font-weight: 700; color: var(--ink);
+    line-height: 1.15; margin-bottom: .8rem;
+  }
+  .hero p { color: var(--ink-light); font-size: 1rem; font-style: italic; }
+  /* TOPIC SECTION */
+  .topic {
+    margin-bottom: 4rem;
+    scroll-margin-top: 2rem;
+  }
+  .topic-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--gold);
+  }
+  .topic-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 400;
+    color: var(--gold); min-width: 2.2rem;
+    line-height: 1;
+  }
+  .topic-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.65rem; font-weight: 700;
+    color: var(--ink); line-height: 1.2;
+  }
+  .topic-header .source-tag {
+    margin-left: auto;
+    font-size: .72rem; font-family: 'Source Serif 4', serif;
+    color: var(--ink-light); font-style: italic;
+    white-space: nowrap; align-self: center;
+  }
+  /* Author box */
+  .author-box {
+    background: var(--cream); border-left: 4px solid var(--gold);
+    padding: 1rem 1.4rem; margin: 1.2rem 0 1.5rem;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  }
+  .author-box .author-name {
+    font-family: 'Playfair Display', serif; font-size: 1rem;
+    font-weight: 700; color: var(--rust); margin-bottom: .25rem;
+  }
+  .author-box p { font-size: .9rem; color: var(--ink-light); }
+  /* Subsection */
+  .subsection { margin: 1.8rem 0; }
+  .subsection h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 700;
+    color: var(--slate); margin-bottom: .7rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .subsection h3::before {
+    content: ''; display: inline-block; width: 18px; height: 3px;
+    background: var(--slate); flex-shrink: 0;
+  }
+  .subsection h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700;
+    color: var(--rust); margin: 1rem 0 .4rem;
+  }
+  /* Body text */
+  p { margin-bottom: .9rem; }
+  /* Key term */
+  .key-term {
+    background: var(--highlight);
+    border: 1px solid #e8d080;
+    padding: .05rem .4rem; border-radius: 3px;
+    font-weight: 600; font-style: normal;
+  }
+  /* Definition box */
+  .def-box {
+    background: #fff; border: 1px solid var(--divider);
+    border-left: 4px solid var(--slate);
+    padding: 1rem 1.3rem; margin: 1.2rem 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  }
+  .def-box .def-term {
+    font-weight: 700; color: var(--slate);
+    font-family: 'Playfair Display', serif; font-size: .95rem;
+  }
+  .def-box p { margin-bottom: 0; font-size: .92rem; }
+  /* Analogy/example box */
+  .analogy-box {
+    background: #f0f4fa; border: 1px solid #c5d4e8;
+    border-left: 4px solid var(--slate);
+    padding: 1rem 1.4rem; margin: 1.2rem 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  }
+  .analogy-box .analogy-title {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--slate); font-family: 'Source Serif 4', serif;
+    margin-bottom: .5rem; font-weight: 600;
+  }
+  .analogy-box p { font-style: italic; color: var(--ink); font-size: .93rem; margin-bottom: 0; }
+  /* Argument box */
+  .argument-box {
+    background: #fff8f0; border: 1px solid #e8cba0;
+    border-left: 4px solid var(--gold);
+    padding: 1rem 1.4rem; margin: 1.2rem 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  }
+  .argument-box .arg-title {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--gold); font-family: 'Source Serif 4', serif;
+    margin-bottom: .5rem; font-weight: 600;
+  }
+  /* Criticism / counterpoint */
+  .criticism-box {
+    background: #fdf0f0; border: 1px solid #e8c0b8;
+    border-left: 4px solid var(--rust);
+    padding: 1rem 1.4rem; margin: 1.2rem 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  }
+  .criticism-box .crit-title {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--rust); font-family: 'Source Serif 4', serif;
+    margin-bottom: .5rem; font-weight: 600;
+  }
+  /* Numbered steps */
+  .steps { padding-left: 1.2rem; }
+  .steps li { margin-bottom: .6rem; }
+  .steps li::marker { color: var(--gold); font-weight: 700; font-family: 'Playfair Display', serif; }
+  /* Bullet list */
+  .bullet-list { padding-left: 1.2rem; margin: .5rem 0 1rem; }
+  .bullet-list li { margin-bottom: .45rem; }
+  .bullet-list li::marker { color: var(--gold); }
+  /* Table */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: .9rem; }
+  .compare-table th {
+    background: var(--ink); color: #e8ddd0;
+    font-family: 'Playfair Display', serif;
+    padding: .6rem 1rem; text-align: left;
+  }
+  .compare-table td { padding: .55rem 1rem; border-bottom: 1px solid var(--divider); vertical-align: top; }
+  .compare-table tr:nth-child(even) td { background: var(--cream); }
+  /* Summary box */
+  .summary-box {
+    background: var(--note-bg); border: 1px solid #b8d4b8;
+    border-left: 4px solid var(--sage);
+    padding: 1rem 1.4rem; margin: 1.5rem 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  }
+  .summary-box .sum-title {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--sage); font-family: 'Source Serif 4', serif;
+    margin-bottom: .5rem; font-weight: 600;
+  }
+  /* Divider */
+  hr.section-divider { border: none; border-top: 1px solid var(--divider); margin: 3rem 0; }
+  /* Back to top */
+  .back-top { text-align: right; margin-top: 1rem; }
+  .back-top a { font-size: .8rem; color: var(--gold); text-decoration: none; font-style: italic; }
+  .back-top a:hover { text-decoration: underline; }
+  /* Scrollbar */
+  nav::-webkit-scrollbar { width: 4px; }
+  nav::-webkit-scrollbar-track { background: transparent; }
+  nav::-webkit-scrollbar-thumb { background: #4a3f35; border-radius: 2px; }
+  @media (max-width: 820px) {
+    nav { display: none; }
+    main { margin-left: 0; padding: 2rem 1.5rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-title">
+    PHILO 25 Finals
+    <div class="nav-subtitle">Philosophy of Religion</div>
+  </div>
+  <ul>
+    <li><a href="#topic1"><span class="topic-num">1.</span> Ontological Argument</a></li>
+    <li><a href="#topic2"><span class="topic-num">2.</span> Cosmological Argument</a></li>
+    <li><a href="#topic3"><span class="topic-num">3.</span> Design / Teleological Argument</a></li>
+    <li><a href="#topic4"><span class="topic-num">4.</span> Problem of Evil</a></li>
+    <li><a href="#topic5"><span class="topic-num">5.</span> The Idea of the Holy</a></li>
+    <li><a href="#topic6"><span class="topic-num">6.</span> Sacred and Profane</a></li>
+    <li><a href="#topic7"><span class="topic-num">7.</span> Miracles & Modern Worldview</a></li>
+    <li><a href="#topic8"><span class="topic-num">8.</span> Human Freedom</a></li>
+    <li><a href="#topic9"><span class="topic-num">9.</span> Life After Death</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <div class="hero">
+    <div class="course-tag">Finals Review</div>
+    <h1>Philosophy of Religion<br>Study Notes</h1>
+    <p>Comprehensive notes covering all 9 topics &mdash; PHILO 25</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 1: ONTOLOGICAL ARGUMENT
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic1">
+    <div class="topic-header">
+      <div class="topic-number">1</div>
+      <h2>The Classical Ontological Argument</h2>
+      <div class="source-tag">Anselm, <em>Proslogion</em> — Chapters II–V</div>
+    </div>
+
+    <div class="author-box">
+      <div class="author-name">Anselm of Canterbury (1033–1109)</div>
+      <p>Christian philosopher, theologian, and Archbishop of Canterbury. Best known for his <em>Proslogium</em>, where he presents a single argument for God's existence requiring no proof beyond itself. The term "ontological argument" was coined later by Immanuel Kant (from Greek <em>ontos</em> = being, <em>logos</em> = rational account).</p>
+    </div>
+
+    <div class="subsection">
+      <h3>What Is the Ontological Argument?</h3>
+      <p>Unlike the cosmological or design arguments — which start from things we observe in the world — the ontological argument starts entirely from <em>concepts and definitions</em>. It tries to show that just by understanding what "God" means, you are logically forced to conclude that God exists.</p>
+      <p>In short: <strong>God's existence can be proven from the concept of God alone.</strong></p>
+    </div>
+
+    <div class="subsection">
+      <h3>Anselm's Core Idea: "That Than Which Nothing Greater Can Be Conceived"</h3>
+      <p>Anselm defines God as <span class="key-term">"a being than which nothing greater can be conceived"</span> — the absolutely greatest possible being. Even a fool (atheist) who denies God's existence <em>understands</em> this phrase when they hear it. When you understand it, the concept is in your mind.</p>
+
+      <div class="argument-box">
+        <div class="arg-title">The Core Argument (Chapter II, Simplified)</div>
+        <ol class="steps">
+          <li>God is "a being than which nothing greater can be conceived." (By definition.)</li>
+          <li>This being exists, at minimum, in our understanding (in the mind).</li>
+          <li>A being that exists <em>both in the mind and in reality</em> is greater than a being that exists only in the mind.</li>
+          <li>If God existed only in the mind, we could conceive of an even greater being — one that also exists in reality. But that would contradict step 1 (God is already the greatest conceivable).</li>
+          <li><strong>Conclusion:</strong> Therefore, God must exist in reality, not just in the mind.</li>
+        </ol>
+      </div>
+
+      <div class="analogy-box">
+        <div class="analogy-title">Anselm's Painter Analogy</div>
+        <p>Before a painter creates a painting, the painting exists in his mind but not yet in reality. After he paints it, it exists both in his mind and in reality. The completed painting is "more real" than the mere mental idea. Anselm uses this to show that there is a difference between existing only in the mind and existing in reality — and existence in reality is "greater."</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Chapter III: God Cannot Be Conceived Not to Exist</h3>
+      <p>Anselm goes further: not only does God exist, but God necessarily exists — meaning it is <em>impossible</em> to even coherently imagine God not existing.</p>
+      <div class="argument-box">
+        <div class="arg-title">Necessary Existence Argument</div>
+        <p>A being that <em>cannot</em> be conceived not to exist is greater than a being that <em>can</em> be conceived not to exist. Since God is the greatest conceivable being, God cannot be conceived as non-existent. Therefore, God's existence is necessary — He cannot not exist.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Chapter IV: How the Fool Can "Say" God Doesn't Exist</h3>
+      <p>Anselm addresses the obvious objection: "But people do deny God exists!" He distinguishes two senses of "conceiving" something:</p>
+      <ul class="bullet-list">
+        <li><strong>Saying a word without understanding it</strong> — someone can utter "God does not exist" while not really grasping what "God" means. In this word-only sense, yes, someone can say God doesn't exist.</li>
+        <li><strong>Truly understanding the thing itself</strong> — once a person truly understands what "God" means (the greatest conceivable being), they cannot coherently think that being does not exist.</li>
+      </ul>
+      <p>The fool, therefore, only "says" God doesn't exist in the shallow sense — using words without proper understanding.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Key Vocabulary</h3>
+      <table class="compare-table">
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td><strong>Ontological</strong></td><td>From Greek <em>ontos</em> (being). Relating to the nature of existence itself.</td></tr>
+        <tr><td><strong>"Being than which nothing greater can be conceived"</strong></td><td>Anselm's definition of God — the perfect, maximum being.</td></tr>
+        <tr><td><strong>Exists "in the understanding"</strong></td><td>The concept is in your mind, whether real or not (like a unicorn).</td></tr>
+        <tr><td><strong>Exists "in reality"</strong></td><td>Actually exists outside the mind in the world.</td></tr>
+        <tr><td><strong>Necessary existence</strong></td><td>Cannot possibly not exist; non-existence is logically impossible.</td></tr>
+      </table>
+    </div>
+
+    <div class="criticism-box">
+      <div class="crit-title">Famous Objection (Gaunilo's Island)</div>
+      <p>A monk named Gaunilo objected: by Anselm's logic, we could prove the existence of a "perfect island" — just define it as "the island than which none greater can be conceived" and it must exist! Anselm replied that the argument only works for beings that possess <em>necessary existence by nature</em> — islands are contingent things, not the kind of being that cannot fail to exist.</p>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>Anselm's ontological argument is a purely <em>a priori</em> (reasoning alone, no experience needed) proof for God. The logic: if God is the greatest conceivable being, and existence in reality is greater than existence only in the mind, then God must exist in reality. To deny God's existence is to contradict yourself — you'd be saying the greatest being lacks something (real existence).</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 2: COSMOLOGICAL ARGUMENT
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic2">
+    <div class="topic-header">
+      <div class="topic-number">2</div>
+      <h2>The Classical Cosmological Argument</h2>
+      <div class="source-tag">Thomas Aquinas, <em>Summa Theologiae</em></div>
+    </div>
+
+    <div class="author-box">
+      <div class="author-name">Thomas Aquinas (1225–1274)</div>
+      <p>Dominican monk, theologian, and philosopher; considered the Catholic Church's greatest theologian. His "Five Ways" (<em>Quinque Viae</em>) are five distinct proofs for God's existence drawn from observable facts about the world. The first four are cosmological arguments; the fifth is teleological. From his <em>Summa Theologiae</em>.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>What Is the Cosmological Argument?</h3>
+      <p>Unlike the ontological argument (which is purely conceptual), the cosmological argument begins with observable facts about the universe — <em>things exist and change</em> — and reasons backward to a first cause. The key word is <span class="key-term">"cosmos"</span> (the universe), because the argument starts from the universe's existence and character.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The First Way: Argument from Motion</h3>
+      <div class="argument-box">
+        <div class="arg-title">Step by Step</div>
+        <ol class="steps">
+          <li>We observe things in motion (change) around us. Fire heats wood; wood doesn't heat itself.</li>
+          <li>Whatever is in motion must be put in motion by something else. A thing cannot be both the mover and the moved simultaneously in the same respect.</li>
+          <li>An infinite regress of movers is impossible — there would then be no <em>first</em> mover, and without a first, there would be no subsequent movers, and nothing would be in motion at all.</li>
+          <li>Therefore, there must be a <strong>First Mover</strong>, itself unmoved. <em>This is what everyone understands to be God.</em></li>
+        </ol>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-title">Key Analogy: Potency and Act</div>
+        <p>Fire (in a state of "act" or actuality) makes wood hot (brings it from "potency" to "act"). Something can only change if something else actualizes its potential. Hot things cannot simultaneously be cold; a mover and a moved cannot be identical in the same respect.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>The Second Way: Argument from Efficient Causation</h3>
+      <div class="argument-box">
+        <div class="arg-title">Step by Step</div>
+        <ol class="steps">
+          <li>We observe a chain of efficient causes (causes that produce effects) in the world.</li>
+          <li>Nothing can be its own efficient cause — it would have to exist before itself, which is impossible.</li>
+          <li>A chain of causes cannot go back infinitely (same logic: no first cause = no subsequent causes = no effects now).</li>
+          <li>Therefore, there must be a <strong>First Efficient Cause</strong> — uncaused. <em>This is God.</em></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>The Third Way: Argument from Possibility and Necessity</h3>
+      <p>This is the most philosophically sophisticated of the five.</p>
+
+      <div class="def-box">
+        <div class="def-term">Contingent Being</div>
+        <p>A being that <em>can</em> exist or not exist — it is generated, corrupts, dies. Most things in nature are contingent.</p>
+      </div>
+      <div class="def-box">
+        <div class="def-term">Necessary Being</div>
+        <p>A being that <em>must</em> exist — it cannot fail to exist. It has its necessity from itself, not from another.</p>
+      </div>
+
+      <div class="argument-box">
+        <div class="arg-title">Step by Step</div>
+        <ol class="steps">
+          <li>Everything in nature is contingent — it can fail to exist.</li>
+          <li>If everything were contingent, there would have been a time when nothing existed at all.</li>
+          <li>But if nothing existed, nothing could have begun to exist (something must exist to bring other things into being).</li>
+          <li>Yet things clearly exist now. Contradiction.</li>
+          <li>Therefore, at least one <strong>Necessary Being</strong> must exist — that which cannot not be. <em>This is God.</em></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>The Fourth Way: Argument from Gradation</h3>
+      <div class="argument-box">
+        <div class="arg-title">Step by Step</div>
+        <ol class="steps">
+          <li>We observe degrees of perfection in the world — some things are more good, more true, more noble than others.</li>
+          <li>Things are said to be "more or less" something according to how closely they resemble a maximum (fire is the hottest; it causes all heat in other things).</li>
+          <li>Therefore, there must be a <strong>maximum being</strong> — most good, most true, most noble — which is the cause of all goodness and being in others. <em>This is God.</em></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>The Fifth Way: Argument from Design (Brief — Developed in Topic 3)</h3>
+      <p>Natural things without knowledge act toward ends as though guided by an intelligent designer (an arrow needs an archer). Therefore an intelligent being directs all natural things to their ends. <em>This is God.</em></p>
+      <p><em>(The Fifth Way is more fully discussed as the Teleological Argument.)</em></p>
+    </div>
+
+    <div class="subsection">
+      <h3>Aquinas's Replies to Objections</h3>
+      <p>Aquinas anticipated two major objections:</p>
+      <ul class="bullet-list">
+        <li><strong>Objection 1:</strong> If God exists and is infinitely good, why is there evil? Aquinas replies (following Augustine): God's infinite goodness means He can bring good out of evil — evil is permitted precisely so that good may arise from it.</li>
+        <li><strong>Objection 2:</strong> Can't we explain everything through nature and human reason without God? Aquinas replies: natural causes and human will themselves trace back to higher causes; ultimately all must trace to an immovable, self-necessary first principle.</li>
+      </ul>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>All five of Aquinas's Ways share a common structure: they observe something about the universe (motion, causation, contingency, gradation, purpose), argue that an infinite regress is impossible, and conclude that there must be a First (Unmoved Mover / Uncaused Cause / Necessary Being / Greatest Being / Intelligent Director). All roads lead to God.</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 3: DESIGN / TELEOLOGICAL ARGUMENT
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic3">
+    <div class="topic-header">
+      <div class="topic-number">3</div>
+      <h2>The Classical Design / Teleological Argument</h2>
+      <div class="source-tag">William Paley, <em>Natural Theology</em> (1802) + Chapter on Teleological Arguments</div>
+    </div>
+
+    <div class="author-box">
+      <div class="author-name">William Paley (1743–1805)</div>
+      <p>English theologian, moral philosopher, and Christian apologist in eighteenth-century England. His book <em>Natural Theology</em> (1802) is the classic defense of the design argument. Best known for the <em>Watchmaker Analogy</em>.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>What Is the Teleological Argument?</h3>
+
+      <div class="def-box">
+        <div class="def-term">Teleological (from Greek: telos + logos)</div>
+        <p><em>Telos</em> = end or goal; <em>logos</em> = reason or rational account. The teleological argument says that the ends/goals we observe in nature are best explained by a purposive designer. Also called the <strong>argument from design</strong>.</p>
+      </div>
+
+      <p>Where the cosmological argument focuses on the <em>existence</em> of the universe, the teleological argument focuses on its <em>properties</em> — particularly the apparent order, purpose, and means-to-ends design found in nature. It concludes not just that a creator exists, but that the creator has <em>mental properties</em>: intention, knowledge, and purpose.</p>
+
+      <p>The argument can be traced back to ancient thinkers (Heraclitus, Plato, Aristotle, the Stoics; in India, the Nyāya school ca. 100–1000 CE), but found its most influential expression in Paley.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Paley's Watchmaker Analogy — The Central Argument</h3>
+
+      <div class="analogy-box">
+        <div class="analogy-title">The Famous Analogy (Opening of Natural Theology)</div>
+        <p>Suppose you were crossing a heath and found a <strong>stone</strong>. You might say it had always been there — no big deal. But suppose you found a <strong>watch</strong>. When you inspect it, you see that its parts are perfectly fitted together for a purpose: springs, gears, and a glass face all work together to tell the time. You would conclude without hesitation that the watch had a maker — someone who designed it with intelligence and purpose. The watch could not have arisen by chance.</p>
+        <p><strong>The analogy:</strong> Nature is like a watch — only far more complex and intricate. When we look at the human eye, a bird's wing, or a complex organism, we find the same kind of means-to-ends complexity. Therefore, just as the watch implies a watchmaker, nature implies a grand Designer — God.</p>
+      </div>
+
+      <div class="argument-box">
+        <div class="arg-title">The Formal Argument</div>
+        <ol class="steps">
+          <li>Complex objects whose parts serve a purpose imply a designer.</li>
+          <li>Nature contains objects of extreme complexity and apparent purpose (far more than any watch).</li>
+          <li>Therefore, nature implies a designer of great intelligence, power, and purpose.</li>
+          <li>This designer is God.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Paley's Pre-Emptive Objections — Why the Argument Still Holds</h3>
+      <p>Paley anticipates objections and shows none of them undermine the inference to a designer:</p>
+      <ul class="bullet-list">
+        <li><strong>I: "We've never seen a watch being made."</strong> — Ignorance of how a watch was made does not change the inference. The design is evident regardless of whether we've witnessed its creation.</li>
+        <li><strong>II: "The watch sometimes goes wrong."</strong> — Imperfection does not disprove design. The purpose of the machinery is still evident; we don't need perfection to recognize intention.</li>
+        <li><strong>III: "Some parts seem unnecessary."</strong> — Having some parts we don't understand doesn't undermine our understanding of the parts we do. The overall evidence for design remains.</li>
+        <li><strong>IV: "Maybe it arose from chance combinations."</strong> — No sensible person would believe the watch's complex configuration just happened by chance assembly of materials.</li>
+        <li><strong>V: "Maybe there's just a principle of order in nature."</strong> — You can't separate "order" from an agent who orders. Order requires an orderer; you can't substitute an abstract principle for intelligent agency.</li>
+        <li><strong>VI–VIII: "It's just the laws of metallic/natural nature at work."</strong> — Laws describe how agents act; they do not replace agents. A law "implies a power; for it is only the mode, according to which an agent proceeds." Without the agent, the law does nothing.</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <h3>The Teleological Argument More Broadly</h3>
+      <p>The textbook chapter extends beyond Paley to note:</p>
+      <ul class="bullet-list">
+        <li>Teleological arguments begin with <em>specific properties</em> of the world (order, purpose, complexity) rather than mere existence.</li>
+        <li>They conclude with a designer having <em>mental properties</em> — intention, knowledge, purpose — not just a "first cause."</li>
+        <li>Cosmological arguments → First Cause; Teleological arguments → Intelligent Designer.</li>
+      </ul>
+    </div>
+
+    <div class="criticism-box">
+      <div class="crit-title">Classic Objection: David Hume & Charles Darwin</div>
+      <p>David Hume (before Darwin) argued the analogy between a watch and nature is weak — they are too dissimilar to support the same conclusion. Charles Darwin's theory of evolution later offered an alternative explanation for biological complexity: natural selection, not a designer. Most modern versions of the teleological argument address these challenges.</p>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>Paley's design argument: the complex, purposive structure of nature — especially living organisms — cannot be explained by chance. Just as a watch implies a watchmaker, nature implies God as a grand intelligent designer. Key insight: Paley shows that not knowing exactly how the watch was made, or finding some imperfection in it, does not weaken the inference to a maker at all.</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 4: PROBLEM OF EVIL
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic4">
+    <div class="topic-header">
+      <div class="topic-number">4</div>
+      <h2>The Problem of Evil</h2>
+      <div class="source-tag">Pojman, <em>Philosophy of Religion</em> — Chapter on The Problem of Evil</div>
+    </div>
+
+    <div class="subsection">
+      <h3>What Is the Problem of Evil?</h3>
+      <p>The problem of evil is the most powerful objection against the existence of God. It's used by atheologians (those who argue against God's existence) to claim that belief in the Judeo-Christian God is <em>unreasonable</em> or even <em>internally contradictory</em>.</p>
+
+      <p>The Judeo-Christian tradition affirms four propositions simultaneously:</p>
+      <ol class="steps">
+        <li>God is all-powerful (omnipotent).</li>
+        <li>God is all-knowing (omniscient).</li>
+        <li>God is perfectly good (omnibenevolent).</li>
+        <li>Evil exists in the world.</li>
+      </ol>
+      <p>The problem: <strong>if God is perfectly good, He would not want evil; if He is omniscient, He knows about it; if He is omnipotent, He can prevent it. So why does evil exist at all?</strong> It seems that God and evil cannot coexist.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Two Types of Evil</h3>
+      <table class="compare-table">
+        <tr><th>Type</th><th>Definition</th><th>Examples</th></tr>
+        <tr>
+          <td><strong>Moral Evil</strong></td>
+          <td>Evil for which <em>creatures</em> (humans) are morally responsible</td>
+          <td>Murder, theft, war, cruelty, deception</td>
+        </tr>
+        <tr>
+          <td><strong>Natural Evil</strong> (also: surd evil)</td>
+          <td>Terrible events that arise from nature itself, <em>without human agency</em></td>
+          <td>Earthquakes, hurricanes, natural diseases, floods, volcanic eruptions</td>
+        </tr>
+      </table>
+      <p><em>Note: Some theists argue all evil is essentially moral, claiming the devil is responsible even for natural evil.</em></p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Main Theistic Defense: The Free Will Defense</h3>
+      <p>The most important theistic response, traceable to St. Augustine (354–430 CE) and developed by philosophers like John Hick, Alvin Plantinga, and Richard Swinburne.</p>
+
+      <div class="argument-box">
+        <div class="arg-title">The Free Will Defense</div>
+        <p>God gave human beings <em>genuine free will</em> — the capacity to choose between good and evil. A world with free creatures who can genuinely choose good is more valuable than a world of morally perfect robots who are programmed to do good. But free will entails the <em>possibility</em> of choosing evil. God could have prevented all evil only by taking away human freedom — and that would be a greater loss than the evil it prevents.</p>
+        <p>Therefore, moral evil is explained by human free choice. God is not responsible for what free creatures freely choose.</p>
+      </div>
+
+      <div class="criticism-box">
+        <div class="crit-title">Limits of the Free Will Defense</div>
+        <p>The free will defense handles <em>moral evil</em> well — but what about <em>natural evil</em> (earthquakes, diseases)? Human free will does not cause earthquakes. So the defense alone doesn't resolve the full problem of evil. Some theists extend it by attributing natural evil to the devil, or argue that a world with natural challenges develops virtuous souls (the "soul-making" theodicy of John Hick).</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>The Epicurean Challenge</h3>
+      <div class="analogy-box">
+        <div class="analogy-title">Epicurus's Famous Trilemma (341–270 BCE)</div>
+        <p>"Is he willing to prevent evil, but not able? Then he is impotent. Is he able, but not willing? Then he is malevolent. Is he both able and willing? Whence then is evil?"</p>
+      </div>
+      <p>This three-pronged challenge captures the logical tension at the heart of the problem. If God can prevent evil and chooses not to, He seems malevolent. If He wants to but can't, He's not omnipotent. Either way, the traditional God seems impossible.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Key Vocabulary</h3>
+      <table class="compare-table">
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td><strong>Omnipotent</strong></td><td>All-powerful; able to do anything</td></tr>
+        <tr><td><strong>Omniscient</strong></td><td>All-knowing; knows all past, present, future</td></tr>
+        <tr><td><strong>Omnibenevolent</strong></td><td>Perfectly good; wills only what is good</td></tr>
+        <tr><td><strong>Atheologian</strong></td><td>One who argues against the existence of God</td></tr>
+        <tr><td><strong>Theodicy</strong></td><td>A defense or justification of God's goodness in light of evil</td></tr>
+        <tr><td><strong>Free Will Defense</strong></td><td>God allows evil because freedom is more valuable than a world without evil</td></tr>
+        <tr><td><strong>Surd evil</strong></td><td>Another name for natural evil — evil that seems pointless or purposeless</td></tr>
+      </table>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>The problem of evil: if God is all-powerful, all-knowing, and all-good, why does evil exist? The best theistic response is the Free Will Defense — God gave humans freedom, and evil results from that freedom. However, this mostly addresses moral evil; natural evil remains more difficult to explain. The problem of evil is the strongest argument against God's existence.</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 5: THE IDEA OF THE HOLY
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic5">
+    <div class="topic-header">
+      <div class="topic-number">5</div>
+      <h2>The Idea of the Holy</h2>
+      <div class="source-tag">Rudolf Otto, <em>The Idea of the Holy</em></div>
+    </div>
+
+    <div class="author-box">
+      <div class="author-name">Rudolf Otto (1869–1937)</div>
+      <p>German Protestant theologian and philosopher of religion. <em>The Idea of the Holy</em> (German: <em>Das Heilige</em>, 1917) is his most influential work. Otto argued that religion cannot be reduced to rational concepts or moral obligations — there is a fundamentally <em>non-rational</em> core to religious experience which he called the <em>numinous</em>.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Rational vs. the Non-Rational in Religion</h3>
+      <p>Theology traditionally describes God using rational attributes: Spirit, Reason, Purpose, Good Will, Supreme Power, Unity, Selfhood. These are <span class="key-term">rational</span> attributes — they can be grasped by the intellect and defined conceptually. Otto does not deny their importance.</p>
+      <p>But his central claim is: <strong>these rational attributes do NOT exhaust the idea of God.</strong> They imply a deeper subject — something that cannot be fully captured in concepts. This deeper, irreducible element is the <em>non-rational</em> core of religious experience.</p>
+
+      <div class="def-box">
+        <div class="def-term">Rationalism (Otto's sense)</div>
+        <p>The view that the essence of deity can be completely and exhaustively expressed in rational concepts. Otto criticizes this as one-sided and misleading.</p>
+      </div>
+
+      <p>Otto's argument: Rationalism — even in orthodox Christianity — has overstressed the rational side and failed to do justice to the non-rational. The result is a "one-sidedly intellectualistic and rationalistic" idea of God.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Concept of "Holiness" — And Its Problem</h3>
+      <p>In everyday use, "holy" has come to mean simply <em>"morally perfect"</em> (e.g., Kant called the perfectly dutiful will a "holy will"). But Otto argues this is inaccurate — the original Hebrew <em>qadosh</em>, Greek <em>hagios</em>, and Latin <em>sacer</em> meant something <em>other</em> than moral goodness. They pointed to a specific, unique quality that is <em>not</em> the same as moral goodness — an extra dimension beyond the ethical.</p>
+      <p>To isolate this extra element, Otto coins a new word:</p>
+
+      <div class="def-box">
+        <div class="def-term">The Numinous</div>
+        <p>From Latin <em>numen</em> (divine presence/power). The "numinous" is that unique, non-rational, non-moral element in the idea of the holy — the extra quality beyond "perfectly good" that cannot be fully defined, only evoked. It is the mysterious, awe-inspiring core of religious experience. <em>Every religion has it at its core.</em></p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Creature-Feeling: The Human Response to the Numinous</h3>
+      <p>When one encounters the numinous, the characteristic response is what Otto calls <span class="key-term">creature-feeling</span> or creature-consciousness: an overwhelming awareness of one's own smallness, nothingness, and abasement before the awesome, overpowering presence of something supremely "other."</p>
+
+      <div class="analogy-box">
+        <div class="analogy-title">Abraham's Example (Genesis 18:27)</div>
+        <p>"Behold now, I have taken upon me to speak unto the Lord, which am but dust and ashes." This is creature-feeling in its purest form — the sense of being utterly nothing before the divine majesty.</p>
+      </div>
+
+      <p>Otto distinguishes his creature-feeling from Schleiermacher's "feeling of dependence." Schleiermacher described religion as a "feeling of absolute dependence." Otto agrees this is close but criticizes it as not quite right: the creature-feeling is not primarily <em>about the self</em> (self-depreciation), but is a response to something outside the self — the numinous object. The self-abasement is secondary; the <em>presence</em> of the numinous comes first.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Mysterium Tremendum — The Heart of the Numinous</h3>
+      <p>The numinous experience can best be captured by the Latin phrase <span class="key-term">mysterium tremendum</span> — literally: "awe-inspiring mystery." It has three elements:</p>
+
+      <h4>1. The Mysterium (Mystery)</h4>
+      <p>The numinous object is <em>wholly other</em> — utterly unlike anything in the natural world. It is hidden, beyond comprehension, extraordinary, and unfamiliar. But "mystery" here doesn't just mean "unknown" — it refers to something that is positively other and beyond, not just conceptually undefined. It is encountered, not merely absent.</p>
+
+      <h4>2. The Tremendum (Awe/Dread)</h4>
+      <p>This is not ordinary fear, but a specific kind of dread — a holy terror. Otto traces three sub-elements:</p>
+      <ul class="bullet-list">
+        <li><strong>Awfulness</strong> — a shuddering, creeping sensation. "My flesh crept." "My blood ran cold." A specific physiological response to something uncanny and unearthly. Its primitive form is "daemonic dread"; its refined form is holy awe.</li>
+        <li><strong>Overpoweringness (Majestas)</strong> — the sense of an absolute, overwhelming might before which the self is nothing. This generates the creature-feeling. The difference between feeling "caused" (Schleiermacher) and feeling crushed by supreme majesty.</li>
+        <li><strong>Energy / Urgency</strong> — the numinous has a quality of vitality, passion, force, and will. In the Hebrew Bible, this appears as the <em>orge</em> (wrath) of Yahweh — not moral anger, but an uncanny, incalculable, "stored-up electricity" quality.</li>
+      </ul>
+
+      <h4>3. The Fascinans (Fascination)</h4>
+      <p>Despite being terrifying, the numinous is also strangely <em>attractive</em> — it draws us in. The response is not pure terror but a paradox of dread and fascination, repulsion and attraction. This "fascination" is the positive, captivating pull of the holy.</p>
+
+      <div class="argument-box">
+        <div class="arg-title">The Full Numinous Experience</div>
+        <p>The complete numinous experience combines mysterium + tremendum + fascinans: it is something wholly other, awesome and terrifying, yet also strangely compelling and attractive. Worship, awe, mystical ecstasy — all are expressions of this complex response.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Key Vocabulary</h3>
+      <table class="compare-table">
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td><strong>Numinous</strong></td><td>The non-rational, non-moral quality of the holy; the divine presence that evokes awe</td></tr>
+        <tr><td><strong>Mysterium tremendum</strong></td><td>"Awe-inspiring mystery" — the core phrase capturing the numinous experience</td></tr>
+        <tr><td><strong>Creature-feeling</strong></td><td>The sense of absolute nothingness and smallness before the divine</td></tr>
+        <tr><td><strong>Majestas</strong></td><td>Absolute overpoweringness; the overwhelming might of the divine</td></tr>
+        <tr><td><strong>Orge (Wrath of Yahweh)</strong></td><td>The energetic, dynamic, "electric" quality of the divine — not moral anger but numinous energy</td></tr>
+        <tr><td><strong>Wholly other (ganz andere)</strong></td><td>The numinous is entirely unlike anything in ordinary experience</td></tr>
+        <tr><td><strong>Fascinans</strong></td><td>The fascinating, attractive side of the holy — what draws us toward it despite the dread</td></tr>
+        <tr><td><strong>Schematization</strong></td><td>The process by which moral and rational content fills in the originally non-rational concept of "holy"</td></tr>
+      </table>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>Otto argues that religion has a non-rational core that cannot be captured in rational concepts or moral categories alone. This core is the <em>numinous</em> — the awe-inspiring mystery of the divine. The human response to it is the <em>mysterium tremendum</em>: a combination of holy dread, creature-feeling (self-abasement), and fascination. All religions share this numinous element at their heart. The mistake of Rationalism is to reduce God entirely to moral and intellectual concepts, losing this living, experiential core.</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 6: SACRED AND PROFANE
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic6">
+    <div class="topic-header">
+      <div class="topic-number">6</div>
+      <h2>The Sacred and the Profane</h2>
+      <div class="source-tag">Mircea Eliade, <em>The Sacred and the Profane</em></div>
+    </div>
+
+    <div class="author-box">
+      <div class="author-name">Mircea Eliade (1907–1986)</div>
+      <p>Romanian-born scholar and leading figure in religious studies and comparative religion. Born in Bucharest, he became a professor at the University of Chicago and is known for his work on religious symbolism, mythology, and the sacred. His concept of the "sacred and the profane" is foundational to the study of religion.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Core Distinction: Sacred vs. Profane</h3>
+      <p>Eliade argues that the most fundamental distinction in religious experience is between the <em>sacred</em> and the <em>profane</em>. These are two <em>modes of being</em> — two fundamentally different ways of experiencing the world.</p>
+
+      <div class="def-box">
+        <div class="def-term">The Sacred</div>
+        <p>The sacred is that which is <em>set apart</em> from ordinary existence — a space, time, object, or person imbued with a special significance, power, and reality. It is where the transcendent is believed to manifest uniquely. The sacred is experienced as fundamentally <em>different in kind</em> from the profane — not just more important, but of a different order of reality altogether.</p>
+      </div>
+
+      <div class="def-box">
+        <div class="def-term">The Profane</div>
+        <p>The ordinary, everyday world — lacking special sacred significance or power. The secular world of routines, daily tasks, and homogenous space and time. The profane is not evil — it is simply <em>ordinary</em>.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Sacred Space</h3>
+      <p>A <span class="key-term">sacred space</span> is a place set apart from the ordinary world where the transcendent manifests in a unique way. Sacred spaces are distinct, special environments where religious rituals, ceremonies, and encounters with the divine occur.</p>
+
+      <p><strong>Key characteristics of sacred space:</strong></p>
+      <ul class="bullet-list">
+        <li><strong>Set Apart:</strong> Distinctly separated from the ordinary profane world. There are boundaries — thresholds, doors, altars — marking the transition from profane to sacred.</li>
+        <li><strong>Transcendence:</strong> Sacred spaces are believed to be places where the transcendent (divine) is specially present or accessible.</li>
+        <li><strong>Power:</strong> Sacred spaces carry a special force, energy, or significance not found in ordinary spaces.</li>
+        <li><strong>Orientation:</strong> In Eliade's view, sacred space provides a "center of the world" (axis mundi) — a fixed point of orientation around which all other space is organized. It creates order out of chaos.</li>
+      </ul>
+
+      <p><strong>Examples of sacred spaces:</strong> Temples, shrines, churches, cathedrals, mountains, hills (like Mt. Sinai), ceremonial circles, pilgrimage sites (like Lourdes, Mecca).</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Profane Space</h3>
+      <p><span class="key-term">Profane space</span> is the ordinary, everyday environment — homogeneous (all parts are equal), undifferentiated, lacking in inherent spiritual quality.</p>
+
+      <p><strong>Examples of profane spaces:</strong> Homes and dwellings (in their everyday function), marketplaces, streets and public spaces, workplaces and offices.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Hierophany — The Appearance of the Sacred</h3>
+      <div class="def-box">
+        <div class="def-term">Hierophany</div>
+        <p>From Greek <em>hieros</em> (sacred) + <em>phainein</em> (to appear). A hierophany is any act or moment in which the sacred <em>manifests</em> itself — where the sacred "shows itself" in something. A burning bush, a sacred mountain, a holy relic, a consecrated object — all are hierophanies. They are moments when the transcendent breaks into ordinary, profane space.</p>
+      </div>
+      <p>When a hierophany occurs, the ordinary object or place is transformed — it becomes sacred. But it doesn't cease to be itself (a stone remains a stone, a tree remains a tree); it simply now also participates in the sacred.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Sacred Time</h3>
+      <p>Eliade extends the sacred/profane distinction from space to time. Sacred time is not ordinary, sequential, historical time — it is <em>mythical time</em>, the "Great Time" of origins, when the sacred events happened. Religious rituals allow humans to re-enter sacred time — to reactualize the primordial events (creation, divine deeds) and participate in the sacred reality once more.</p>
+      <p>Profane time is ordinary linear time — one thing after another, with no special significance.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Axis Mundi — Center of the World</h3>
+      <div class="def-box">
+        <div class="def-term">Axis Mundi</div>
+        <p>The "world axis" or "cosmic axis" — the point where heaven, earth, and the underworld meet. Every sacred space functions as an <em>axis mundi</em>: the center of the world, the point of contact between cosmic realms. Sacred mountains, temples, altars, and poles in many cultures serve as axis mundi. It is around this center that the world becomes ordered and livable.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Comparing Sacred and Profane</h3>
+      <table class="compare-table">
+        <tr><th></th><th>Sacred</th><th>Profane</th></tr>
+        <tr><td><strong>Nature</strong></td><td>Set apart, extraordinary, transcendent</td><td>Ordinary, everyday, secular</td></tr>
+        <tr><td><strong>Space</strong></td><td>Non-homogeneous; has a "center" (axis mundi)</td><td>Homogeneous; all parts equivalent</td></tr>
+        <tr><td><strong>Time</strong></td><td>Cyclical, mythical; re-entry into origins</td><td>Linear, historical, profane duration</td></tr>
+        <tr><td><strong>Experience</strong></td><td>Awe, reverence, trembling</td><td>Routine, mundane, ordinary</td></tr>
+        <tr><td><strong>Examples</strong></td><td>Temple, mountain, shrine, ritual</td><td>Marketplace, office, street</td></tr>
+      </table>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>Eliade argues that all religious experience is organized around the fundamental distinction between the sacred and the profane. The sacred is that which is set apart, extraordinary, and transcendent; the profane is the ordinary world. Sacred spaces (temples, mountains, shrines) function as axis mundi — centers where heaven and earth meet. The sacred "breaks in" to the profane through hierophanies. Religion is, at its core, the human experience of and response to the sacred.</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 7: MIRACLES AND THE MODERN WORLDVIEW
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic7">
+    <div class="topic-header">
+      <div class="topic-number">7</div>
+      <h2>Miracles and the Modern Worldview</h2>
+      <div class="source-tag">Chapter 8 — <em>Philosophy of Religion</em></div>
+    </div>
+
+    <div class="subsection">
+      <h3>The Central Question</h3>
+      <p>The chapter asks: <strong>Is it still possible to believe in miracles?</strong> And if miracles can occur, is it ever <em>reasonable</em> to believe one has occurred? Two major thinkers anchor the discussion: Rudolf Bultmann (arguing it's no longer possible) and David Hume (arguing it's never reasonable).</p>
+
+      <div class="def-box">
+        <div class="def-term">Miracle (Popular Sense)</div>
+        <p>An unexpected, beneficial, extraordinary event — "It's a miracle I passed that exam!" This is the loose, everyday meaning.</p>
+      </div>
+      <div class="def-box">
+        <div class="def-term">Miracle (Strict/Philosophical Sense)</div>
+        <p>An event that (1) <em>would not have occurred</em> had only natural causes been at work, AND (2) <em>was brought about by God or a supernatural agent</em>. Both conditions must be satisfied.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Bultmann: Miracles Are Incompatible with the Modern World View</h3>
+
+      <div class="author-box">
+        <div class="author-name">Rudolf Bultmann (1884–1976)</div>
+        <p>German biblical historian and theologian. Argued that belief in miracles belongs to a pre-scientific worldview that modern people can no longer hold.</p>
+      </div>
+
+      <p>Bultmann's claim: The modern scientific worldview treats nature as a <em>closed, autonomous realm</em> — every event in nature is accounted for by another event in nature. Science and technology have given us this worldview; it is impossible for modern people to believe in supernatural interventions.</p>
+
+      <div class="analogy-box">
+        <div class="analogy-title">Bultmann's Famous Statement</div>
+        <p>"It is impossible to use electric light and the wireless and to avail ourselves of modern medical and surgical discoveries, and at the same time to believe in the New Testament world of spirits and miracles."</p>
+      </div>
+
+      <p>The modern world view means: when a TV breaks, we look for electrical failure — not demons. When disease strikes, we look for germs and viruses — not God's punishment. There is simply no room for supernatural explanation in the modern mindset.</p>
+
+      <div class="criticism-box">
+        <div class="crit-title">Criticism of Bultmann</div>
+        <p>The author argues Bultmann's claim is too strong. People today <em>do</em> still believe in miracles, so it is clearly <em>possible</em> to do so. Also, Bultmann commits a logical error: the fact that science makes natural explanations our first resort does not <em>commit us</em> to rejecting all supernatural explanations. The modern scientific worldview makes miracles harder to accept, but not logically impossible.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Hume's Definition of Miracles</h3>
+
+      <div class="def-box">
+        <div class="def-term">Hume's Definition (Strict Sense)</div>
+        <p>A miracle is "a transgression of a law of nature by a particular volition of the Deity, or by the interposition of some invisible agent." Two necessary conditions: (1) the event would not have occurred by natural causes alone; (2) it is caused by God or a supernatural agent.</p>
+      </div>
+
+      <p>Hume also identifies objections to his definition:</p>
+      <ul class="bullet-list">
+        <li>Some argue that miracles must also be <em>astounding/surprising</em> (Condition 3) and <em>beneficial</em> (Condition 4). Hume disagrees — these are conditions for us to <em>recognize</em> a miracle, not conditions for it to <em>be</em> a miracle. A small invisible miracle (a leaf moved an extra inch by God) would still be a miracle even if no one noticed.</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <h3>Hume's Central Argument Against Believing in Miracles</h3>
+      <p>Hume's famous argument: it is <em>never</em> reasonable to believe a miracle has occurred. Here is the logic:</p>
+
+      <div class="argument-box">
+        <div class="arg-title">Hume's Argument</div>
+        <ol class="steps">
+          <li>A law of nature is established by uniform, constant experience — the strongest kind of evidence available.</li>
+          <li>A miracle is, by definition, a violation of a law of nature.</li>
+          <li>Therefore, the evidence against a miracle (all our past experience supporting the law) is always extremely strong.</li>
+          <li>The only evidence for a miracle is the testimony of witnesses.</li>
+          <li>It is always more reasonable to believe witnesses were mistaken or lying than to believe a law of nature was violated.</li>
+          <li><strong>Conclusion:</strong> It is never reasonable to believe a miracle has occurred.</li>
+        </ol>
+      </div>
+
+      <p>Hume does allow one theoretical exception: if the testimony for an event were so overwhelming and cross-verified that its falsehood would itself be "more miraculous" than the event, we could believe it. But in practice, no miracle testimony is ever that strong.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Two Major Weaknesses in Hume's Argument</h3>
+
+      <h4>Weakness 1: Hume Ignores Indirect Evidence</h4>
+      <p>Hume says the only evidence for a miracle is direct witness testimony. But this is wrong. Evidence can be:</p>
+      <ul class="bullet-list">
+        <li><strong>Direct evidence:</strong> Eyewitness testimony ("I saw a bear in my camp").</li>
+        <li><strong>Indirect evidence:</strong> Facts best explained by a hypothesis ("The ice chest is damaged, food is gone, camp is in disarray" — all indirect evidence a bear was there).</li>
+      </ul>
+      <p>Indirect evidence for miracles can be very strong — sometimes stronger than direct evidence. Hume ignored indirect evidence, making his argument incomplete.</p>
+
+      <div class="analogy-box">
+        <div class="analogy-title">The Resurrection Example</div>
+        <p>The direct testimony of Resurrection eyewitnesses may be weak, but the indirect evidence is compelling: (a) the disciples were deeply depressed after the crucifixion; (b) they had little faith; (c) yet something transformed them into bold believers. The best explanation? Their Master had risen. Indirect evidence here is far stronger than direct testimony.</p>
+      </div>
+
+      <h4>Weakness 2: Hume Overweights Past Experience</h4>
+      <p>Hume's second error: he gives too much weight to the <em>uniformity</em> of past experience as evidence against an event. In science, exceptions to established laws do occur — and when they do, scientists don't simply dismiss them as impossible. They revise the law. Similarly, when an extraordinary event occurs, the reasonable response is to investigate, not automatically disbelieve.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>A Violation of Nature vs. Refuting a Law of Nature</h3>
+      <p>An important distinction: when something unusual happens, there are three possibilities:</p>
+      <ul class="bullet-list">
+        <li>A natural force is operating that we don't know about (the unusual event <em>conforms</em> to a revised natural law).</li>
+        <li>The unusual event <em>refutes</em> the supposed law (it was never a law of nature).</li>
+        <li>The unusual event truly <em>violates</em> a law of nature (a genuine miracle).</li>
+      </ul>
+      <p>Determining which category an event falls into requires investigation, not automatic dismissal.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>When Is It Reasonable to Believe in Divine Intervention?</h3>
+      <p>The chapter concludes: believing a genuine miracle occurred requires two steps:</p>
+      <ol class="steps">
+        <li>First, reasonable grounds that a <em>violation of natural law</em> has occurred (not just an unusual event).</li>
+        <li>Second, reasonable grounds that the violation is due to <em>God's activity specifically</em>.</li>
+      </ol>
+      <p>The second step depends partly on whether we already have good reason to believe God exists. If we do, violations of natural law in circumstances where God would plausibly act are good evidence of miracles. Without theistic belief, it is much harder to conclude any particular violation is divine.</p>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>Bultmann: the modern scientific worldview makes it impossible to believe in miracles. (Verdict: too strong — possible but harder.) Hume: it is never reasonable to believe a miracle occurred because the evidence from uniform experience always outweighs witness testimony. (Verdict: flawed — ignores indirect evidence and overweights past experience.) The chapter concludes that believing in miracles is reasonable if: (a) there is evidence of a genuine violation of natural law, and (b) we have good reason to believe in a God who would intervene in the world.</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 8: HUMAN FREEDOM
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic8">
+    <div class="topic-header">
+      <div class="topic-number">8</div>
+      <h2>Human Freedom</h2>
+      <div class="source-tag">William Rowe, <em>Philosophy of Religion</em> — Chapter 10</div>
+    </div>
+
+    <div class="author-box">
+      <div class="author-name">William Rowe (Author)</div>
+      <p>The chapter discusses the problem of <em>Predestination, Divine Foreknowledge, and Human Freedom</em> — one of the most ancient and difficult problems in philosophical theology. Rowe presents the problem and its major solutions with unusual clarity and personal engagement.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Two Concepts of Human Freedom</h3>
+      <p>The entire problem turns on which concept of freedom we adopt:</p>
+
+      <div class="def-box">
+        <div class="def-term">First Idea of Freedom: "Acting Freely = Doing What You Want"</div>
+        <p>On this view, you act freely when you do what you want or choose to do, without external compulsion. If you <em>want</em> to stay in a room and you stay, you stay freely — even if, unknown to you, the door is locked.</p>
+      </div>
+
+      <div class="def-box">
+        <div class="def-term">Second Idea of Freedom (More Adequate): "The Power to Do Otherwise"</div>
+        <p>You act freely only if, at the time just before you do it, it was <em>in your power to do otherwise</em>. Freedom requires genuine alternative possibilities — not just doing what you want, but having the <em>real power</em> to have done differently.</p>
+      </div>
+
+      <div class="analogy-box">
+        <div class="analogy-title">Locke's Locked Room (John Locke, 1632–1704)</div>
+        <p>A man is brought asleep into a room. The door is locked from outside. He wakes up, wants to stay and talk to friends, so he stays. On the first idea of freedom: he stays freely (he's doing what he wants). But on the second, more adequate idea: he's NOT free — because it was NOT in his power to leave. He would have stayed regardless of his choice. True freedom requires the power to have done otherwise.</p>
+      </div>
+
+      <p>Rowe argues the <strong>second idea of freedom is more adequate</strong>. The first idea would make divine predestination no problem at all — but that seems to evade the real issue rather than resolve it.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Problem: Divine Foreknowledge vs. Human Freedom</h3>
+      <p>The doctrine of divine foreknowledge says God knows, before we are born, everything we will do. The problem: if God already knew what you would do, how could you have done otherwise?</p>
+
+      <div class="argument-box">
+        <div class="arg-title">The Formal Argument</div>
+        <ol class="steps">
+          <li>God knows before we are born everything we will do.</li>
+          <li>If God knows before we are born everything we will do, then it is never in our power to do otherwise.</li>
+          <li>If it is never in our power to do otherwise, then there is no human freedom.</li>
+          <li>Therefore: there is no human freedom.</li>
+        </ol>
+      </div>
+
+      <p>This argument is valid (the logic holds). The question is whether all the premises are true. This limits solutions to four: reject premise 1, 2, or 3, or accept conclusion 4.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Why Premise 2 Is Problematic — The "Closed Past"</h3>
+      <p>The reasoning for premise 2 rests on the <em>fixity of the past</em>: the past cannot be changed. If God knew yesterday that you would do X today, then that knowledge is now a fact about the past. And the past is not in our power to alter. Therefore, you cannot do otherwise than X.</p>
+
+      <div class="analogy-box">
+        <div class="analogy-title">The Classroom Example</div>
+        <p>It's 2:45 PM Tuesday. You're in class. You now know it was in your power at 2:00 PM to go to a movie instead — you regret not going. But at 2:45, can you make it the case that at 2:30 you went to class? No — the past is fixed. You cannot retroactively change past facts. Now: if before you were born God knew you'd be in class at 2:30, that "F: Before you were born, God knew you'd come to class at 2:30" is a past fact. And past facts are not within our power to alter.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Four Solutions to the Conflict</h3>
+
+      <h4>Solution I: Reject Premise 3 — Redefine Freedom (Jonathan Edwards)</h4>
+      <p>Accept the first idea of freedom: acting freely = doing what you want. On this view, there is no conflict between foreknowledge and freedom. God ordained you to want what you want; you do it freely because you want it. <strong>Rowe's verdict:</strong> Inadequate — because it relies on the weaker first idea of freedom, which doesn't capture real human responsibility.</p>
+
+      <h4>Solution II: Reject Premise 2 — "Power Over the Past" (William of Ockham, 1285–1349)</h4>
+      <p>Ockham argues that not all facts about the past are truly "simply about the past." Some facts about the past are also implicitly about the future — and those may be within our power to affect.</p>
+      <p><strong>Key distinction:</strong></p>
+      <ul class="bullet-list">
+        <li><strong>Facts simply about the past:</strong> "In 1941, Japan attacked Pearl Harbor." No one in 1943 could have affected this.</li>
+        <li><strong>Facts not simply about the past:</strong> "In 1941, a war begins that lasts four years." This implies a fact about 1944 — which, in 1943, was still somewhat open.</li>
+      </ul>
+      <p>Similarly, "Before you were born, God knew you'd come to class at 2:30" is not simply about the past — it implies something about your future at 2:30. Since it implies a future fact, it might be within your power to affect. <strong>Rowe's verdict:</strong> The most promising solution — it preserves both divine foreknowledge and human freedom.</p>
+
+      <h4>Solution III: Reject Premise 1 — Deny Foreknowledge (Radical)</h4>
+      <p>Perhaps God does <em>not</em> have foreknowledge of future free acts. There are two versions:</p>
+      <ul class="bullet-list">
+        <li><strong>Open future view:</strong> Statements about future contingent events are neither true nor false yet. God cannot "know" what is not yet determined. (Associated with Aristotle.)</li>
+        <li><strong>Boethius/Aquinas view (more widely held):</strong> God is eternal in the sense of existing <em>outside of time altogether</em>. He does not "foreknow" — He simply knows, because all of time (past, present, future) is simultaneously present to Him as a single eternal "now." God doesn't know your future acts before they happen — He sees them as they happen from His timeless vantage point.</li>
+      </ul>
+      <div class="analogy-box">
+        <div class="analogy-title">Boethius's Image</div>
+        <p>Imagine God looking down from a mountaintop at a long road. Travelers at different parts of the road cannot see each other — one cannot see what's at mile 50 from mile 1. But God, above it all, sees the whole road at once. His knowledge of "future" events is really just knowledge of what is eternally present to Him.</p>
+      </div>
+      <p><strong>Problem with this solution:</strong> If God exists outside time, how can He act in time? Creating, forgiving, answering prayers — all these are temporal acts. An atemporal God seems to be unable to act in history, which undermines much of traditional theism.</p>
+
+      <h4>Solution IV: Accept Conclusion — Deny Human Freedom (No serious theist accepts this)</h4>
+    </div>
+
+    <div class="subsection">
+      <h3>Key Vocabulary</h3>
+      <table class="compare-table">
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td><strong>Divine Foreknowledge</strong></td><td>God's knowledge of all future events before they happen</td></tr>
+        <tr><td><strong>Divine Predestination</strong></td><td>God's eternal decree of all things that come to pass</td></tr>
+        <tr><td><strong>Contingent event</strong></td><td>Something that may or may not happen; not determined in advance</td></tr>
+        <tr><td><strong>Foreknowledge₁</strong></td><td>Standard foreknowledge — knowing event X at a time earlier than X occurs</td></tr>
+        <tr><td><strong>Foreknowledge₂</strong></td><td>Eternal knowledge — knowing X because X is eternally present to God, not before it happens</td></tr>
+        <tr><td><strong>Eternal (first sense)</strong></td><td>Everlasting — existing through all time with no beginning or end</td></tr>
+        <tr><td><strong>Eternal (second sense)</strong></td><td>Timeless — existing <em>outside</em> time altogether</td></tr>
+        <tr><td><strong>Ockham's distinction</strong></td><td>Facts simply about the past vs. facts not simply about the past (which imply future events)</td></tr>
+      </table>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>The conflict: if God knows before you are born what you will do, you cannot do otherwise — hence no freedom. Two adequate solutions emerge. The Ockham solution (Solution II): facts about God's foreknowledge are not "simply about the past" — they imply future events still within our power to affect. The Boethius/Aquinas solution (Solution III): God is timeless and doesn't literally "foreknow" — He knows all time from an eternal present, so His knowledge doesn't constrain our freedom. Both solutions are tenable; the first rests on God as everlasting; the second on God as timeless but faces problems about divine agency in time.</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════════
+       TOPIC 9: LIFE AFTER DEATH
+  ═══════════════════════════════════════════════ -->
+  <section class="topic" id="topic9">
+    <div class="topic-header">
+      <div class="topic-number">9</div>
+      <h2>Life After Death</h2>
+      <div class="source-tag">William Rowe, <em>Philosophy of Religion</em> — Chapter 9</div>
+    </div>
+
+    <div class="subsection">
+      <h3>Overview</h3>
+      <p>The chapter covers: (1) different conceptions of immortality, (2) questions about the meaningfulness of personal survival, (3) arguments for immortality, and (4) the case against immortality.</p>
+      <p>Rowe separates two questions: <span class="key-term">the conceptual question</span> (Is belief in life after death even <em>meaningful</em>?) and <span class="key-term">the factual question</span> (Is it <em>true</em>?).</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Varieties of Immortality</h3>
+
+      <h4>1. The Homeric Conception (Ancient Greece)</h4>
+      <p>In early Greek religion, the gods were immortal — humans were not, properly speaking. Yet after death, a shadow of the person survived in Hades — a diminished, inferior form of existence. Not truly living, but not completely gone. Homer's Achilles voices this: better to be a living farm hand than king over the dead.</p>
+
+      <h4>2. The Platonic Conception</h4>
+      <p>Plato identified the <em>real person</em> with the <em>soul</em> — not the body. The body is a "prison house" for the soul. At death, the soul is liberated from the body and achieves its true, eternal existence. The soul is immortal; the life of the soul after death is superior to earthly life. In <em>Phaedo</em>, Socrates argues for the soul's immortality right before his own death.</p>
+
+      <h4>3. Eastern Conceptions (Hindu/Buddhist)</h4>
+      <p>Hinduism generally holds the soul (<em>atman</em>) undergoes <em>transmigration</em> (reincarnation) — passing from body to body in a "cycle of rebirth" (<em>samsara</em>). Ultimately the soul achieves release (<em>moksha</em>) — absorption into the Universal Soul (Brahman), losing individual identity and consciousness. Individual immortality is ultimately undesirable; the goal is loss of individual self in the divine totality. Buddhism similarly holds that what we call the "self" is not a permanent substance; the cycle of rebirth continues until Nirvana (extinction of the self).</p>
+
+      <h4>4. Resurrection of the Body (Christian/Jewish/Islamic)</h4>
+      <p>The person is a <em>unity</em> of soul and body. The continued existence of only the soul (disembodied) would not be the full person. True personal survival requires the <em>reuniting of soul with a resurrected body</em>. The resurrected body, according to St. Paul, is neither physical (corporeal) nor perishable — it is spiritual and immortal.</p>
+
+      <table class="compare-table">
+        <tr><th>Conception</th><th>What Survives</th><th>Nature of Afterlife</th></tr>
+        <tr><td>Homeric</td><td>A shadow/shade</td><td>Inferior, ghostly existence in Hades</td></tr>
+        <tr><td>Platonic</td><td>Soul (immaterial substance)</td><td>Superior, eternal; better than earthly life</td></tr>
+        <tr><td>Hindu</td><td>Atman (soul)</td><td>Reincarnation; ultimate absorption into Brahman</td></tr>
+        <tr><td>Christian</td><td>Soul reunited with resurrected body</td><td>Full personal existence restored</td></tr>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <h3>The Meaningfulness of Immortality — Two Problems</h3>
+
+      <h4>Problem 1: What does it mean to survive as a "person"?</h4>
+      <p>Persons have: actions, intentions, sensations, emotions, thoughts, memories, perceptions, and physical characteristics. If something survives disembodied, can it perform <em>any</em> of these? Actions involve physical movement. Emotions are closely tied to bodily states. Perceptions (seeing, hearing, tasting) require sensory organs. A purely immaterial soul would seem to lack all of these — raising serious doubt about whether "immortal soul" is a meaningful idea of a <em>person</em>.</p>
+
+      <h4>Problem 2: What makes the survivor the same person?</h4>
+      <p>Even if something immaterial survives, why would it be <em>you</em> specifically? Personal identity through time involves psychological continuity (memories, personality) and/or bodily continuity. A disembodied soul lacks bodily continuity. The Christian resurrection view has an advantage here: bodily resurrection preserves some form of bodily continuity. But the resurrected body is radically different — spiritual and immortal — which creates its own puzzles.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Arguments FOR Immortality (The Case for Survival)</h3>
+
+      <h4>1. The Philosophical Argument (Plato)</h4>
+      <p>The soul is an immaterial substance. Since material things are destroyed by <em>separation of parts</em>, and the soul has <em>no parts</em> (it is simple and indivisible), the soul cannot be destroyed.</p>
+
+      <div class="argument-box">
+        <div class="arg-title">The Argument</div>
+        <ol class="steps">
+          <li>A thing can be destroyed only by separating its parts.</li>
+          <li>The soul has no parts (it is an immaterial, simple substance).</li>
+          <li>Therefore, the soul cannot be destroyed — it is immortal.</li>
+        </ol>
+      </div>
+
+      <div class="criticism-box">
+        <div class="crit-title">Objections</div>
+        <p><strong>Kant's Objection:</strong> Even if the soul has no spatial parts (no "extensive quantity"), it might still have "intensive quantity" — degrees of consciousness, strength, vitality. If these degrees diminish gradually to zero, the soul has been destroyed not by dissolution but by gradual fading of its powers.</p>
+        <p><strong>Materialist Objection:</strong> There is no immaterial soul substance to begin with. The "soul" is just the organized functioning of the brain. When the brain dies, mental life ceases.</p>
+        <p><strong>Bundle Theory Objection:</strong> The soul is not a single enduring substance but a <em>bundle of mental events</em> connected by memory and sequence. The question of survival becomes: will the bundle of mental events associated with this body continue after the body's death? This is far from obvious.</p>
+      </div>
+
+      <h4>2. The Scientific Argument: Mental Mediumship</h4>
+      <p>Some scientific evidence (of a parapsychological kind) is offered by the phenomenon of <em>mental mediumship</em>: living persons who claim to communicate with the spirits of the dead. Key features:</p>
+      <ul class="bullet-list">
+        <li>A <strong>medium</strong> enters a trancelike state; a "control" (a spirit closely associated with the medium) takes over and relays messages from a "communicator" (the spirit of the deceased).</li>
+        <li>Research organizations (the Society for Psychical Research, founded 1882) have tried to study this scientifically under controlled conditions.</li>
+        <li>The most interesting cases are <em>proxy sittings</em>: where the sitter knows neither the medium nor the deceased, and the medium nonetheless provides highly specific, accurate information.</li>
+      </ul>
+
+      <div class="analogy-box">
+        <div class="analogy-title">The Vandy Case</div>
+        <p>Edgar Vandy, an inventor, died under mysterious circumstances. His brothers hired mediums (blind to the circumstances) using proxy sitters. The mediums produced specific, accurate details about how Vandy died (diving board, swimming pool, blow to the head, water) and about his secret invention (a complex printing/lithography machine). C.D. Broad concluded that the concordance between these details was too specific to be mere coincidence — either fraud, ESP (Super-Extrasensory Perception), or genuine survival.</p>
+      </div>
+
+      <h4>3. The Theological Argument</h4>
+      <p>If the theistic God exists — a God who created persons for fellowship with Himself — then it would be contrary to God's purposes to allow persons to simply perish at bodily death. God's love for His creatures implies He would not allow permanent extinction. Therefore, if theism is true, immortality is very probably true as well.</p>
+      <p><strong>Note:</strong> This is the strongest argument for immortality, but it depends entirely on theism being true first. Its strength equals the strength of the grounds for theism.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Case AGAINST Immortality</h3>
+      <p>The main scientific argument against immortality, stated by Bertrand Russell:</p>
+      <div class="criticism-box">
+        <div class="crit-title">The Dependence Argument (Bertrand Russell)</div>
+        <p>All evidence shows that mental life is <em>dependent on bodily life</em>, particularly on the brain. Brain damage → loss of specific mental functions. Brain death → cessation of all mental activity. It is therefore rational to conclude that when the brain ceases to function permanently, mental life ceases as well. The mind is not a separate substance that survives the body — it is a function of the body.</p>
+      </div>
+
+      <div class="analogy-box">
+        <div class="analogy-title">McTaggart's Window Analogy (Rebuttal to Russell)</div>
+        <p>Imagine a person locked in a room with only one window. Her experience of the outside world entirely depends on that window. If the window is damaged, boarded up, or covered, her experience of the outside is affected. But this dependence does NOT mean she ceases to exist when the window is removed. Similarly: the mind's dependence on the brain while in a body doesn't prove the mind ceases when the body dies — it might be freed from that dependency at death.</p>
+      </div>
+
+      <p>Rowe's evaluation: McTaggart's response is clever, but the analogy is imperfect. The connection between mind and brain is far more intimate than a person and a window — it is the mind itself (memories, personality, thought processes) that is tied to the brain, not just the mind's access to information.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Final Assessment</h3>
+      <ul class="bullet-list">
+        <li>The <strong>philosophical argument</strong> (Platonic) is the weakest — too many objections to the idea of an immaterial soul substance.</li>
+        <li>The <strong>scientific argument</strong> (mediumship) may provide some evidence, but it is hard to rule out fraud or ESP.</li>
+        <li>The <strong>theological argument</strong> is the strongest — but depends on theism.</li>
+        <li>The <strong>scientific argument against immortality</strong> (dependence on brain) is strong — but might rest on a "false analogy" (McTaggart).</li>
+        <li><strong>Overall:</strong> Without theism, we have more reason to doubt personal survival than to believe in it. With theism, personal survival becomes quite reasonable.</li>
+      </ul>
+    </div>
+
+    <div class="summary-box">
+      <div class="sum-title">Bottom Line</div>
+      <p>Life after death can be conceived in many ways (Homeric shadow, Platonic soul, Hindu reincarnation, Christian resurrection). The key philosophical questions are whether survival is even <em>meaningful</em> (can a disembodied thing be a person?) and whether survival is the <em>same person</em>. Three arguments support immortality: the philosophical (soul is indestructible), the scientific (mediumship evidence), and the theological (God's purpose implies survival). Against: mental life depends on the brain. The strongest positive case rests on theism; the strongest negative case is the brain-dependence argument. Neither case is conclusive.</p>
+    </div>
+
+    <div class="back-top"><a href="#nav">↑ Back to top</a></div>
+  </section>
+
+  <hr class="section-divider">
+  <p style="text-align:center; color: var(--ink-light); font-style: italic; font-size: .88rem; padding: 2rem 0;">
+    PHILO 25 Finals Study Notes &mdash; Compiled from course readings &mdash; Good luck on your finals!
+  </p>
+
+</main>
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('.topic');
+  const navLinks = document.querySelectorAll('nav li a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + entry.target.id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
