@@ -2,26 +2,13 @@
 // Auth · User Widget · Edit Profile · Theme Toggle · Message Developer · Subject Statuses
 
 // ── Imports ───────────────────────────────────────────────────────────────────
-import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged }
+import { auth, db } from "./firebase-config.js";
+import { signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, addDoc, collection, onSnapshot, serverTimestamp }
+import { doc, getDoc, setDoc, addDoc, collection, onSnapshot, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ── Firebase Init ─────────────────────────────────────────────────────────────
-const firebaseConfig = {
-  apiKey:            "AIzaSyDwvhiPoRJGzlZf5anKM1Kt48qjpT3Jo5E",
-  authDomain:        "study-materials-2026.firebaseapp.com",
-  projectId:         "study-materials-2026",
-  storageBucket:     "study-materials-2026.firebasestorage.app",
-  messagingSenderId: "613790178346",
-  appId:             "1:613790178346:web:6151c6bada7b389ffbf753"
-};
-
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
+// (Firebase initialized in firebase-config.js — shared with auth-guard.js)
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let currentUser    = null;

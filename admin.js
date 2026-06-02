@@ -141,11 +141,14 @@ function initAdmin() {
         });
 
         try {
-            await setDoc(statusDoc, statuses);
+            await setDoc(statusDoc, statuses, { merge: true });
             showSaveStatus('✓ Saved to Firestore', 'success');
         } catch (err) {
             console.error(err);
-            showSaveStatus('Save failed — check console.', 'error');
+            const msg = err.code === 'permission-denied'
+                ? 'Permission denied — check Firestore rules.'
+                : `Save failed: ${err.message}`;
+            showSaveStatus(msg, 'error');
         }
 
         selectAllChk.checked      = false;
