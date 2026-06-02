@@ -47,6 +47,7 @@ onAuthStateChanged(auth, (user) => {
         adminPanel.style.display   = 'flex';
         if (userEmailEl) userEmailEl.textContent = user.email;
         initAdmin();
+        initMessagesPanel();
     } else {
         loginScreen.style.display  = 'flex';
         adminPanel.style.display   = 'none';
@@ -189,7 +190,7 @@ function showSaveStatus(msg, type) {
 
 // ── Messages Panel ────────────────────────────────────────────────────────────
 
-(function initMessagesPanel() {
+function initMessagesPanel() {
   const list  = document.getElementById("messagesList");
   const count = document.getElementById("messagesCount");
   if (!list) return;
@@ -230,7 +231,7 @@ function showSaveStatus(msg, type) {
     console.error("Messages read error:", err);
     list.innerHTML = `<div class="messages-empty">Could not load messages.</div>`;
   });
-})();
+}
 
 function escapeHtml(str) {
   return String(str)
