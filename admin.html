@@ -111,6 +111,60 @@
         .save-status.success { color: var(--green); }
         .save-status.error   { color: var(--red); }
     </style>
+  <style>
+    /* Messages Panel */
+    .messages-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .messages-header {
+      padding: 1.5rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .messages-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem; color: var(--text); letter-spacing: -0.01em;
+    }
+    .messages-count {
+      font-size: 0.75rem; color: var(--text-3);
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 0.2rem 0.65rem;
+    }
+    .messages-list { padding: 0.5rem 0; }
+    .message-item {
+      padding: 1rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .message-item:last-child { border-bottom: none; }
+    .message-item:hover { background: var(--surface-2); }
+    .message-meta {
+      display: flex; align-items: center; gap: 0.6rem;
+      flex-wrap: wrap; margin-bottom: 0.4rem;
+    }
+    .message-sender { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+    .message-year {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--gold-text);
+      background: var(--gold-dim); border: 1px solid rgba(232,184,75,0.2);
+      border-radius: 20px; padding: 0.15rem 0.55rem;
+    }
+    .message-email { font-size: 0.72rem; color: var(--text-3); }
+    .message-time  { font-size: 0.7rem; color: var(--text-3); margin-left: auto; }
+    .message-body  { font-size: 0.875rem; color: var(--text-2); line-height: 1.6; white-space: pre-wrap; }
+    .messages-empty {
+      padding: 3rem; text-align: center;
+      font-size: 0.875rem; color: var(--text-3);
+    }
+    .messages-loading {
+      padding: 2rem; text-align: center;
+      font-size: 0.82rem; color: var(--text-3);
+    }
+  </style>
 </head>
 <body>
 
@@ -190,7 +244,18 @@
 
         <main class="content">
 
-            <!-- FRESHMAN YEAR -->
+            <!-- Messages Panel -->
+        <div class="messages-panel" id="messagesPanel">
+          <div class="messages-header">
+            <div class="messages-title">Messages from Students</div>
+            <span class="messages-count" id="messagesCount">Loading…</span>
+          </div>
+          <div class="messages-list" id="messagesList">
+            <div class="messages-loading">Loading messages…</div>
+          </div>
+        </div>
+
+        <!-- FRESHMAN YEAR -->
             <section id="freshman" class="year-section">
                 <div class="year-header">
                     <h2 class="year-title">Freshman Year</h2>

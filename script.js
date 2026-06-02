@@ -1,12 +1,12 @@
-// script.js — Study Hub dashboard
-// Handles: Firebase init, auth, user widget, edit profile, subject statuses, search, modal
+// script.js — Study Hub Dashboard
+// Auth · User Widget · Edit Profile · Theme Toggle · Message Developer · Subject Statuses
 
-// ── Imports ──────────────────────────────────────────────────────────────────
+// ── Imports ───────────────────────────────────────────────────────────────────
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp }
+import { getFirestore, doc, getDoc, setDoc, addDoc, collection, onSnapshot, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ── Firebase Init ─────────────────────────────────────────────────────────────
@@ -24,25 +24,43 @@ const auth = getAuth(app);
 const db   = getFirestore(app);
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let currentUser = null;
+let currentUser    = null;
+let currentProfile = null;
 
-// ── Auth: Guard + Populate Widget ─────────────────────────────────────────────
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
+// ── Theme ─────────────────────────────────────────────────────────────────────
+// Default: dark. Light mode is opt-in, stored in localStorage.
+(function initTheme() {
+  if (localStorage.getItem("theme") === "light") {
+    document.documentElement.setAttribute("data-theme", "light");
   }
+})();
+
+window.toggleTheme = function () {
+  const isLight = document.documentElement.getAttribute("data-theme") === "light";
+  if (isLight) {
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.removeItem("theme");
+  } else {
+    document.documentElement.setAttribute("data-theme", "light");
+    localStorage.setItem("theme", "light");
+  }
+};
+
+// ── Widget Population ─────────────────────────────────────────────────────────
+// Auth guarding is handled by auth-guard.js in <head>.
+// This listener only populates the user widget once auth is confirmed.
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return; // auth-guard.js handles the redirect
+
   currentUser = user;
 
   const snap = await getDoc(doc(db, "users", user.uid));
-  if (!snap.exists()) {
-    window.location.href = "login.html";
-    return;
-  }
+  if (!snap.exists()) return;
 
-  const p        = snap.data();
-  const nickname = p.nickname || p.firstName || user.displayName?.split(" ")[0] || "Scholar";
-  const year     = p.year || "";
+  currentProfile     = snap.data();
+  const p            = currentProfile;
+  const nickname     = p.nickname || p.firstName || user.displayName?.split(" ")[0] || "Scholar";
+  const year         = p.year || "";
 
   document.getElementById("userNickname").textContent = nickname;
   document.getElementById("userYear").textContent     = year;
@@ -58,7 +76,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// ── User Menu: Toggle ─────────────────────────────────────────────────────────
+// ── User Menu Toggle ──────────────────────────────────────────────────────────
 window.toggleUserMenu = function () {
   document.getElementById("userWidget").classList.toggle("open");
 };
@@ -125,8 +143,8 @@ window.saveEditProfile = async function () {
       { firstName, lastName, nickname, year, updatedAt: serverTimestamp() },
       { merge: true }
     );
+    currentProfile = { ...currentProfile, firstName, lastName, nickname, year };
 
-    // Update widget live
     document.getElementById("userNickname").textContent = nickname;
     document.getElementById("userYear").textContent     = year;
     document.getElementById("menuFullName").textContent = `${firstName} ${lastName}`;
@@ -142,7 +160,91 @@ window.saveEditProfile = async function () {
   }
 };
 
-// ── DOM Ready: Modal, Search, Subject Statuses ────────────────────────────────
+// ── Message Developer ─────────────────────────────────────────────────────────
+// Rate limit: max 2 sends per hour, tracked via localStorage timestamps
+const MSG_RATE_KEY  = "msgDev_timestamps";
+const MSG_LIMIT     = 2;
+const MSG_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+function getMsgTimestamps() {
+  try { return JSON.parse(localStorage.getItem(MSG_RATE_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function saveMsgTimestamps(ts) {
+  localStorage.setItem(MSG_RATE_KEY, JSON.stringify(ts));
+}
+
+function checkRateLimit() {
+  const now  = Date.now();
+  const prev = getMsgTimestamps().filter(t => now - t < MSG_WINDOW_MS);
+  saveMsgTimestamps(prev);
+  return prev;
+}
+
+window.sendDevMessage = async function () {
+  const textarea = document.getElementById("msgDevText");
+  const btn      = document.getElementById("msgDevBtn");
+  const status   = document.getElementById("msgDevStatus");
+  const message  = textarea.value.trim();
+
+  status.className = "msg-dev-status";
+  status.textContent = "";
+
+  if (!message) {
+    status.className = "msg-dev-status err";
+    status.textContent = "Please write a message first.";
+    return;
+  }
+
+  // Rate limit check
+  const prev = checkRateLimit();
+  if (prev.length >= MSG_LIMIT) {
+    const oldest  = Math.min(...prev);
+    const resetIn = Math.ceil((MSG_WINDOW_MS - (Date.now() - oldest)) / 60000);
+    status.className = "msg-dev-status err";
+    status.textContent = `Slow down — you can send again in ~${resetIn} min.`;
+    return;
+  }
+
+  if (!currentUser || !currentProfile) {
+    status.className = "msg-dev-status err";
+    status.textContent = "Not signed in. Please refresh.";
+    return;
+  }
+
+  btn.disabled  = true;
+  btn.textContent = "Sending…";
+
+  try {
+    await addDoc(collection(db, "messages"), {
+      uid:      currentUser.uid,
+      email:    currentUser.email,
+      nickname: currentProfile.nickname || currentProfile.firstName || "Unknown",
+      year:     currentProfile.year     || "Unknown",
+      message,
+      sentAt:   serverTimestamp(),
+    });
+
+    // Record timestamp
+    const updated = [...prev, Date.now()];
+    saveMsgTimestamps(updated);
+
+    textarea.value      = "";
+    status.className    = "msg-dev-status ok";
+    status.textContent  = "Message sent! Thanks for the feedback.";
+    setTimeout(() => { status.textContent = ""; status.className = "msg-dev-status"; }, 5000);
+  } catch (err) {
+    console.error(err);
+    status.className   = "msg-dev-status err";
+    status.textContent = "Could not send. Please try again.";
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = "Send Message";
+  }
+};
+
+// ── DOM Ready: Modal · Search · Subject Statuses ──────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
 
   // ── Modal ──────────────────────────────────────────────────────────────────
@@ -152,9 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalMessage  = document.querySelector(".modal-message");
   const modalIcon     = document.querySelector(".modal-icon");
 
-  function closeModal() {
-    lockModal.classList.remove("active");
-  }
+  function closeModal() { lockModal.classList.remove("active"); }
 
   function showModal(title, message, icon) {
     modalTitle.textContent   = title;
@@ -209,7 +309,6 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         showModal("Access Denied", "This subject requires completion of prerequisites or admin approval.", "🔒");
       });
-
     } else if (status === "unavailable") {
       card.classList.add("unavailable");
       const badge = document.createElement("div");
@@ -220,7 +319,6 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         showModal("Subject Unavailable", "This subject is not being offered at this time.", "🚫");
       });
-
     } else if (status === "coming_soon") {
       card.classList.add("coming-soon");
       const badge = document.createElement("div");
@@ -232,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showModal("Not Available Yet", "This subject is scheduled for a future semester.", "⏳");
       });
     }
-    // "unlocked" — link works normally, no handler needed
+    // "unlocked" — link works normally
   }
 
   // ── Firestore: Real-time Subject Statuses ──────────────────────────────────
@@ -246,9 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
         applyStatus(card, status);
       });
     },
-    (error) => {
-      console.error("Firestore read error:", error);
-    }
+    (error) => console.error("Firestore read error:", error)
   );
 
 }); // end DOMContentLoaded

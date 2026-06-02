@@ -182,3 +182,58 @@ function showSaveStatus(msg, type) {
     saveStatus.style.opacity = '1';
     setTimeout(() => { saveStatus.style.opacity = '0'; }, 3000);
 }
+
+// ── Messages Panel ────────────────────────────────────────────────────────────
+import { collection, query, orderBy, onSnapshot as _onSnapshot }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+(function initMessagesPanel() {
+  const list  = document.getElementById("messagesList");
+  const count = document.getElementById("messagesCount");
+  if (!list) return;
+
+  const q = query(collection(db, "messages"), orderBy("sentAt", "desc"));
+
+  _onSnapshot(q, (snapshot) => {
+    count.textContent = `${snapshot.size} message${snapshot.size !== 1 ? "s" : ""}`;
+
+    if (snapshot.empty) {
+      list.innerHTML = `<div class="messages-empty">No messages yet.</div>`;
+      return;
+    }
+
+    list.innerHTML = "";
+    snapshot.forEach((docSnap) => {
+      const d   = docSnap.data();
+      const ts  = d.sentAt?.toDate();
+      const time = ts ? ts.toLocaleString("en-PH", {
+        month: "short", day: "numeric",
+        hour: "numeric", minute: "2-digit", hour12: true
+      }) : "—";
+
+      const item = document.createElement("div");
+      item.className = "message-item";
+      item.innerHTML = `
+        <div class="message-meta">
+          <span class="message-sender">${escapeHtml(d.nickname || "Unknown")}</span>
+          <span class="message-year">${escapeHtml(d.year || "")}</span>
+          <span class="message-email">${escapeHtml(d.email || "")}</span>
+          <span class="message-time">${time}</span>
+        </div>
+        <div class="message-body">${escapeHtml(d.message || "")}</div>
+      `;
+      list.appendChild(item);
+    });
+  }, (err) => {
+    console.error("Messages read error:", err);
+    list.innerHTML = `<div class="messages-empty">Could not load messages.</div>`;
+  });
+})();
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
