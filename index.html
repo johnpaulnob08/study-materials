@@ -12,41 +12,6 @@
 </head>
 <body>
 
-    <!-- Edit Profile Modal -->
-    <div class="ep-overlay" id="epOverlay" onclick="closeEditOnBackdrop(event)">
-        <div class="ep-modal">
-            <div class="ep-header">
-                <div class="ep-title">Edit Profile</div>
-                <button class="ep-close" onclick="closeEditProfile()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
-            <div class="ep-field-row">
-                <div class="ep-field"><label>First Name</label><input type="text" id="ep-firstname" placeholder="First name"></div>
-                <div class="ep-field"><label>Last Name</label><input type="text" id="ep-lastname" placeholder="Last name"></div>
-            </div>
-            <div class="ep-field">
-                <label>Nickname <span style="font-weight:400;color:var(--text-3);">(shown on dashboard)</span></label>
-                <input type="text" id="ep-nickname" placeholder="What should we call you?">
-            </div>
-            <div class="ep-field">
-                <label>Year Level</label>
-                <div class="ep-select-wrap">
-                    <select id="ep-year">
-                        <option value="Freshman">1st Year — Freshman</option>
-                        <option value="Sophomore">2nd Year — Sophomore</option>
-                        <option value="Junior">3rd Year — Junior</option>
-                        <option value="Senior">4th Year — Senior</option>
-                    </select>
-                </div>
-            </div>
-            <div class="ep-alert" id="ep-alert"></div>
-            <div class="ep-actions">
-                <button class="ep-btn-cancel" onclick="closeEditProfile()">Cancel</button>
-                <button class="ep-btn-save" id="ep-save-btn" onclick="saveEditProfile()">Save Changes</button>
-            </div>
-        </div>
-    </div>
 
     <!-- User Widget -->
     <div class="user-widget" id="userWidget">
