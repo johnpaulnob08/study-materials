@@ -11,7 +11,11 @@ import {
     doc,
     getDoc,
     setDoc,
-    onSnapshot
+    onSnapshot,
+    collection,
+    query,
+    orderBy,
+    addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ── DOM refs ────────────────────────────────────────────────
@@ -184,8 +188,6 @@ function showSaveStatus(msg, type) {
 }
 
 // ── Messages Panel ────────────────────────────────────────────────────────────
-import { collection, query, orderBy, onSnapshot as _onSnapshot }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 (function initMessagesPanel() {
   const list  = document.getElementById("messagesList");
@@ -194,7 +196,7 @@ import { collection, query, orderBy, onSnapshot as _onSnapshot }
 
   const q = query(collection(db, "messages"), orderBy("sentAt", "desc"));
 
-  _onSnapshot(q, (snapshot) => {
+  onSnapshot(q, (snapshot) => {
     count.textContent = `${snapshot.size} message${snapshot.size !== 1 ? "s" : ""}`;
 
     if (snapshot.empty) {
