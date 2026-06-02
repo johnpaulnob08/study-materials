@@ -46,16 +46,19 @@ window.toggleTheme = function () {
   }
 };
 
-// ── Widget Population ─────────────────────────────────────────────────────────
-// Auth guarding is handled by auth-guard.js in <head>.
-// This listener only populates the user widget once auth is confirmed.
+// ── Auth Guard + Widget Population ───────────────────────────────────────────
 onAuthStateChanged(auth, async (user) => {
-  if (!user) return; // auth-guard.js handles the redirect
-
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
   currentUser = user;
 
   const snap = await getDoc(doc(db, "users", user.uid));
-  if (!snap.exists()) return;
+  if (!snap.exists()) {
+    window.location.href = "login.html";
+    return;
+  }
 
   currentProfile     = snap.data();
   const p            = currentProfile;
