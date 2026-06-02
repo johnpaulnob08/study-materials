@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyHub XU — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f14;--surface:#13161d;--surface-2:#1a1e28;
+  --border:rgba(255,255,255,0.07);--border-hover:rgba(255,255,255,0.14);
+  --gold:#e8b84b;--gold-dim:rgba(232,184,75,0.12);--gold-glow:rgba(232,184,75,0.25);--gold-text:#f5d080;
+  --text:#e8eaf0;--text-2:#9ba3b8;--text-3:#5a6178;
+  --red:#f87171;--red-dim:rgba(248,113,113,0.1);
+  --green:#4ade80;--green-dim:rgba(74,222,128,0.1);
+  --font-display:'DM Serif Display',Georgia,serif;
+  --font-body:'DM Sans',sans-serif;
+  --radius:14px;--radius-sm:8px;
+  --transition:0.25s cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;overflow-x:hidden;position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,0.055) 1px,transparent 1px);
+  background-size:28px 28px;pointer-events:none;z-index:0;
+}
+.blob{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px);}
+.blob-1{width:520px;height:520px;top:-170px;left:-130px;background:radial-gradient(circle,rgba(232,184,75,0.09) 0%,transparent 70%);}
+.blob-2{width:440px;height:440px;bottom:-130px;right:-90px;background:radial-gradient(circle,rgba(99,102,241,0.09) 0%,transparent 70%);}
+
+.wrapper{position:relative;z-index:1;width:100%;max-width:460px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:0;}
+
+/* Card */
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:2.8rem 2.4rem 2.4rem;
+  box-shadow:0 0 0 1px rgba(232,184,75,0.04),0 32px 64px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04);
+  display:none;flex-direction:column;align-items:center;width:100%;
+  opacity:0;transform:translateY(14px);
+  transition:opacity 0.35s ease,transform 0.4s cubic-bezier(0.34,1.2,0.64,1);
+}
+.card.active{display:flex;}
+.card.visible{opacity:1;transform:translateY(0);}
+
+/* Brand */
+.brand{display:flex;flex-direction:column;align-items:center;gap:0.4rem;margin-bottom:1.8rem;}
+.brand-icon{
+  width:54px;height:54px;background:var(--gold-dim);border:1px solid rgba(232,184,75,0.25);
+  border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:1.55rem;margin-bottom:0.3rem;box-shadow:0 0 28px rgba(232,184,75,0.1);
+}
+.brand-name{font-family:var(--font-display);font-size:1.75rem;color:var(--text);letter-spacing:-0.02em;line-height:1;}
+.brand-sub{font-size:0.74rem;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase;}
+
+.divider{width:100%;height:1px;background:var(--border);margin:1.5rem 0;}
+
+.card-title{font-family:var(--font-display);font-size:1.3rem;color:var(--text);text-align:center;margin-bottom:0.35rem;width:100%;}
+.card-sub{font-size:0.82rem;color:var(--text-2);text-align:center;line-height:1.55;margin-bottom:1.8rem;width:100%;}
+
+/* Google btn */
+.btn-google{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:0.7rem;
+  padding:0.85rem 1.2rem;background:var(--surface-2);border:1px solid var(--border-hover);
+  border-radius:var(--radius);color:var(--text);font-family:var(--font-body);
+  font-size:0.9rem;font-weight:500;cursor:pointer;transition:var(--transition);
+  margin-bottom:0.75rem;
+}
+.btn-google:hover{background:#1e2230;border-color:rgba(255,255,255,0.2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+.btn-google:active{transform:none;}
+.btn-google:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.google-logo{width:18px;height:18px;flex-shrink:0;}
+
+/* Domain note */
+.domain-note{
+  display:flex;align-items:center;gap:0.45rem;font-size:0.74rem;color:var(--text-3);
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:0.55rem 0.85rem;width:100%;
+}
+.domain-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;box-shadow:0 0 6px var(--gold-glow);}
+
+/* Alert */
+.alert{
+  display:none;align-items:flex-start;gap:0.5rem;width:100%;font-size:0.78rem;
+  border-radius:var(--radius-sm);padding:0.65rem 0.9rem;margin-top:0.9rem;line-height:1.45;
+}
+.alert.show{display:flex;}
+.alert-error{color:var(--red);background:var(--red-dim);border:1px solid rgba(248,113,113,0.2);}
+.alert-success{color:var(--green);background:var(--green-dim);border:1px solid rgba(74,222,128,0.2);}
+
+/* Year select */
+.year-greeting{
+  font-size:0.76rem;color:var(--gold-text);font-weight:500;letter-spacing:0.06em;
+  text-transform:uppercase;margin-bottom:0.45rem;display:flex;
+  align-items:center;justify-content:center;gap:0.5rem;width:100%;
+}
+.year-greeting::before,.year-greeting::after{content:'';display:block;width:22px;height:1px;background:rgba(232,184,75,0.35);}
+.year-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;width:100%;margin-bottom:1.3rem;}
+.year-btn{
+  display:flex;flex-direction:column;align-items:flex-start;gap:0.2rem;
+  padding:1rem 1rem;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--radius);cursor:pointer;transition:var(--transition);
+  text-align:left;position:relative;overflow:hidden;
+}
+.year-btn::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform 0.3s ease;
+}
+.year-btn:hover{background:var(--surface);border-color:rgba(232,184,75,0.25);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+.year-btn:hover::before{transform:scaleX(1);}
+.year-btn.selected{background:var(--gold-dim);border-color:rgba(232,184,75,0.4);box-shadow:0 0 0 1px rgba(232,184,75,0.1);}
+.year-btn.selected::before{transform:scaleX(1);}
+.year-emoji{font-size:1.2rem;margin-bottom:0.2rem;}
+.year-label{font-size:0.7rem;font-weight:600;color:var(--gold-text);letter-spacing:0.06em;text-transform:uppercase;}
+.year-name{font-family:var(--font-display);font-size:1rem;color:var(--text);line-height:1.1;}
+.year-hint{font-size:0.72rem;color:var(--text-3);text-align:center;line-height:1.5;width:100%;}
+
+/* Confirm btn */
+.btn-primary{
+  width:100%;padding:0.8rem 1.2rem;background:var(--gold);color:#0d0f14;
+  border:none;border-radius:var(--radius);font-family:var(--font-body);
+  font-size:0.9rem;font-weight:600;cursor:pointer;transition:var(--transition);
+  margin-top:1.2rem;letter-spacing:0.02em;
+}
+.btn-primary:hover{background:var(--gold-text);transform:translateY(-1px);box-shadow:0 6px 20px var(--gold-glow);}
+.btn-primary:active{transform:none;}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+/* Spinner */
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(13,15,20,0.3);border-top-color:#0d0f14;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+
+/* Credits */
+.credits{margin-top:1.5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.25rem;}
+.credits-made{font-size:0.71rem;color:var(--text-3);}
+.credits-name{font-size:0.79rem;font-weight:600;color:var(--gold-text);}
+.credits-name span{color:var(--text-3);font-weight:400;}
+.credits-sub{font-size:0.67rem;color:var(--text-3);letter-spacing:0.03em;}
+
+@media(max-width:500px){
+  .wrapper{padding:1rem;}
+  .card{padding:2.2rem 1.5rem 2rem;border-radius:16px;}
+  .brand-name{font-size:1.5rem;}
+  .card-title{font-size:1.15rem;}
+  .year-grid{gap:0.55rem;}
+  .year-btn{padding:0.85rem 0.8rem;}
+}
+@media(max-width:360px){.year-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="wrapper">
+
+  <!-- STEP 1: Login -->
+  <div class="card active" id="card-login">
+    <div class="brand">
+      <div class="brand-icon">📚</div>
+      <div class="brand-name">StudyHub</div>
+      <div class="brand-sub"> INFORMATION TECHNOLOGY</div>
+    </div>
+    <div class="divider"></div>
+    <div class="card-title">Welcome back</div>
+    <div class="card-sub">Sign in with your XU Google account to access your study materials.</div>
+    <button class="btn-google" id="btn-google" onclick="handleGoogleLogin()">
+      <svg class="google-logo" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continue with Google
+    </button>
+    <div class="domain-note">
+      <div class="domain-dot"></div>
+      Only <strong style="color:var(--text-2);margin:0 3px;">@my.xu.edu.ph</strong> accounts are allowed
+    </div>
+    <div class="alert alert-error" id="login-error">
+      <span>⚠️</span><span id="login-error-text">Please use your XU email to sign in.</span>
+    </div>
+  </div>
+
+  <!-- STEP 2: Year selection -->
+  <div class="card" id="card-year">
+    <div class="brand">
+      <div class="brand-icon">🎓</div>
+      <div class="brand-name">StudyHub</div>
+      <div class="brand-sub">Xavier University · Ateneo de Cagayan</div>
+    </div>
+    <div class="divider"></div>
+    <div class="year-greeting"><span>Hello, <strong id="user-firstname">Scholar</strong>!</span></div>
+    <div class="card-title" style="margin-bottom:0.35rem;">What year are you?</div>
+    <div class="card-sub">Select your current academic year to personalize your dashboard.</div>
+    <div class="year-grid">
+      <button class="year-btn" data-year="Freshman" onclick="pickYear(this)"><div class="year-emoji">🌱</div><div class="year-label">1st Year</div><div class="year-name">Freshman</div></button>
+      <button class="year-btn" data-year="Sophomore" onclick="pickYear(this)"><div class="year-emoji">📖</div><div class="year-label">2nd Year</div><div class="year-name">Sophomore</div></button>
+      <button class="year-btn" data-year="Junior" onclick="pickYear(this)"><div class="year-emoji">⚙️</div><div class="year-label">3rd Year</div><div class="year-name">Junior</div></button>
+      <button class="year-btn" data-year="Senior" onclick="pickYear(this)"><div class="year-emoji">🏆</div><div class="year-label">4th Year</div><div class="year-name">Senior</div></button>
+    </div>
+    <div class="year-hint">You can update this anytime in your profile.</div>
+    <button class="btn-primary" id="btn-confirm" onclick="confirmYear()" disabled>Continue →</button>
+    <div class="alert alert-error" id="year-error" style="margin-top:.8rem;"><span>⚠️</span><span id="year-error-text"></span></div>
+  </div>
+
+  <!-- Credits -->
+  <div class="credits">
+    <div class="credits-made">Study materials by</div>
+    <div class="credits-name">John Paul Nob <span>aka Kuya Pau</span></div>
+    <div class="credits-sub">Information Technology &nbsp;·&nbsp; College of Computer Studies</div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ── 🔧 REPLACE with your Firebase project config ──
+const firebaseConfig = {
+  apiKey:            "AIzaSyDwvhiPoRJGzlZf5anKM1Kt48qjpT3Jo5E",
+  authDomain:        "study-materials-2026.firebaseapp.com",
+  projectId:         "study-materials-2026",
+  storageBucket:     "study-materials-2026.firebasestorage.app",
+  messagingSenderId: "613790178346",
+  appId:             "1:613790178346:web:6151c6bada7b389ffbf753"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+let currentUser = null;
+let selectedYear = null;
+
+// ── Expose functions to inline onclick handlers ──
+window.handleGoogleLogin = async function() {
+  const btn = document.getElementById('btn-google');
+  setBtn(btn, true, '<div class="spin"></div> Signing in...');
+
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ hd: "my.xu.edu.ph" });
+
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user   = result.user;
+
+    if (!user.email.endsWith("@my.xu.edu.ph")) {
+      await auth.signOut();
+      showAlert('login-error', 'login-error-text', 'Please use your @my.xu.edu.ph account to sign in.');
+      setBtn(btn, false, googleBtnHTML());
+      return;
+    }
+    // Auth succeeded; onAuthStateChanged will handle the rest
+  } catch (err) {
+    console.error(err);
+    const msg = err.code === 'auth/popup-closed-by-user'
+      ? 'Sign-in was cancelled.'
+      : 'Sign-in failed. Please try again.';
+    showAlert('login-error', 'login-error-text', msg);
+    setBtn(btn, false, googleBtnHTML());
+  }
+};
+
+window.pickYear = function(el) {
+  document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedYear = el.dataset.year;
+  document.getElementById('btn-confirm').disabled = false;
+};
+
+window.confirmYear = async function() {
+  if (!selectedYear || !currentUser) return;
+  const btn = document.getElementById('btn-confirm');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin" style="border-color:rgba(13,15,20,.3);border-top-color:#0d0f14;"></div> Saving...';
+
+  try {
+    const ref  = doc(db, "users", currentUser.uid);
+    const snap = await getDoc(ref);
+
+    const nameParts = (currentUser.displayName || '').trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName  = nameParts.slice(1).join(' ') || '';
+
+    if (!snap.exists()) {
+      // New user — create full profile
+      await setDoc(ref, {
+        uid:         currentUser.uid,
+        email:       currentUser.email,
+        displayName: currentUser.displayName || '',
+        firstName:   firstName,
+        lastName:    lastName,
+        nickname:    firstName,   // default nickname = first name
+        photoURL:    currentUser.photoURL || '',
+        year:        selectedYear,
+        createdAt:   serverTimestamp(),
+        updatedAt:   serverTimestamp(),
+      });
+    } else {
+      // Existing user — just update year
+      await setDoc(ref, { year: selectedYear, updatedAt: serverTimestamp() }, { merge: true });
+    }
+
+    window.location.href = "index.html";
+  } catch (err) {
+    console.error(err);
+    showAlert('year-error', 'year-error-text', 'Could not save your info. Please try again.');
+    btn.disabled = false;
+    btn.innerHTML = 'Continue →';
+  }
+};
+
+// ── Auth state observer ──
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+  if (!user.email.endsWith("@my.xu.edu.ph")) {
+    await auth.signOut(); return;
+  }
+
+  currentUser = user;
+
+  // Check if profile already exists
+  const ref  = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+
+  if (snap.exists() && snap.data().year) {
+    // Already set up — go straight to dashboard
+    window.location.href = "index.html";
+    return;
+  }
+
+  // Show year selection
+  const firstName = (user.displayName || 'Scholar').split(' ')[0];
+  document.getElementById('user-firstname').textContent = firstName + '!';
+  showCard('card-year');
+});
+
+// ── Helpers ──
+function showCard(id) {
+  document.querySelectorAll('.card').forEach(c => {
+    c.classList.remove('active','visible');
+  });
+  const card = document.getElementById(id);
+  card.classList.add('active');
+  requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('visible')));
+}
+
+function showAlert(alertId, textId, msg) {
+  const el = document.getElementById(alertId);
+  document.getElementById(textId).textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 6000);
+}
+
+function setBtn(btn, disabled, html) {
+  btn.disabled = disabled;
+  btn.innerHTML = html;
+}
+
+function googleBtnHTML() {
+  return `<svg class="google-logo" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Continue with Google`;
+}
+
+// Init login card visible
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  document.getElementById('card-login').classList.add('visible');
+}));
+</script>
+</body>
+</html>
