@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Hub — BSIT Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="/it-icon.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+  <script type="module" src="auth-guard.js"></script>
+</head>
+<body>
+
+
+    <!-- User Widget -->
+    <div class="user-widget" id="userWidget">
+        <div class="user-trigger" onclick="toggleUserMenu(event)">
+            <div class="user-avatar" id="userAvatar"></div>
+            <div class="user-info">
+                <span class="user-nickname" id="userNickname">...</span>
+                <span class="user-year" id="userYear"></span>
+            </div>
+            <svg class="user-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
+        </div>
+        <div class="user-menu">
+            <div class="menu-header">
+                <div class="menu-header-name" id="menuFullName"></div>
+                <div class="menu-header-email" id="menuEmail"></div>
+            </div>
+            <button class="menu-item" onclick="openEditProfile()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Profile
+            </button>
+            <button class="menu-item theme-toggle" onclick="toggleTheme()">
+                <span class="theme-toggle-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    Light Mode
+                </span>
+                <div class="theme-toggle-track"><div class="theme-toggle-thumb"></div></div>
+            </button>
+            <div class="menu-divider"></div>
+            <button class="menu-item danger" onclick="handleLogout()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Sign Out
+            </button>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="ep-overlay" id="epOverlay" onclick="closeEditOnBackdrop(event)">
+        <div class="ep-modal">
+            <div class="ep-header">
+                <div class="ep-title">Edit Profile</div>
+                <button class="ep-close" onclick="closeEditProfile()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="ep-field-row">
+                <div class="ep-field">
+                    <label>First Name</label>
+                    <input type="text" id="ep-firstname" placeholder="First name">
+                </div>
+                <div class="ep-field">
+                    <label>Last Name</label>
+                    <input type="text" id="ep-lastname" placeholder="Last name">
+                </div>
+            </div>
+            <div class="ep-field">
+                <label>Nickname <span style="font-weight:400;color:var(--text-3);">(shown on dashboard)</span></label>
+                <input type="text" id="ep-nickname" placeholder="What should we call you?">
+            </div>
+            <div class="ep-field">
+                <label>Year Level</label>
+                <div class="ep-select-wrap">
+                    <select id="ep-year">
+                        <option value="Freshman">1st Year — Freshman</option>
+                        <option value="Sophomore">2nd Year — Sophomore</option>
+                        <option value="Junior">3rd Year — Junior</option>
+                        <option value="Senior">4th Year — Senior</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ep-alert" id="ep-alert"></div>
+            <div class="ep-actions">
+                <button class="ep-btn-cancel" onclick="closeEditProfile()">Cancel</button>
+                <button class="ep-btn-save" id="ep-save-btn" onclick="saveEditProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="brand-container">
+            <div class="brand-logo">
+                <div class="brand-icon">📚</div>
+                <div class="brand-title">Study Hub</div>
+            </div>
+            <div class="author">John Paul Nob</div>
+            <div class="program">BS Information Technology</div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search subjects…" autocomplete="off">
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <span class="nav-label">Jump to year</span>
+        <nav>
+            <a href="#freshman"><span class="nav-dot"></span>Freshman Year</a>
+            <a href="#sophomore"><span class="nav-dot"></span>Sophomore Year</a>
+            <a href="#junior"><span class="nav-dot"></span>Junior Year</a>
+            <a href="#senior"><span class="nav-dot"></span>Senior Year</a>
+        </nav>
+
+        <!-- Message Developer -->
+        <div class="msg-dev-section">
+            <div class="msg-dev-label">Message the Developer</div>
+            <textarea class="msg-dev-textarea" id="msgDevText" placeholder="Have a suggestion, bug report, or request? Send it here…" maxlength="500"></textarea>
+            <button class="msg-dev-btn" id="msgDevBtn" onclick="sendDevMessage()">Send Message</button>
+            <div class="msg-dev-status" id="msgDevStatus"></div>
+        </div>
+    </aside>
+
+    <main class="content">
+
+        <!-- FRESHMAN YEAR -->
+        <section id="freshman" class="year-section">
+            <div class="year-header">
+                <h2 class="year-title">Freshman Year</h2>
+                <span class="year-count">16 subjects</span>
+            </div>
+            <div class="semester">
+                <h3 class="semester-title">1st Semester</h3>
+                <div class="grid">
+                    <a href="CC10_1.html" class="card subject-card" data-subject-id="cc10_1"><div class="lock-icon">🔒</div><div class="card-icon">🖥️</div><h3>CC 10.1</h3><p>Introduction to Computing</p></a>
+                    <a href="CC11.html" class="card subject-card" data-subject-id="cc11"><div class="lock-icon">🔒</div><div class="card-icon">⌨️</div><h3>CC 11</h3><p>Computer Programming 1</p></a>
+                    <a href="HIST1.html" class="card subject-card" data-subject-id="hist1"><div class="lock-icon">🔒</div><div class="card-icon">📜</div><h3>HIST 1</h3><p>Readings in Philippine History</p></a>
+                    <a href="MATH4.html" class="card subject-card" data-subject-id="math4"><div class="lock-icon">🔒</div><div class="card-icon">📐</div><h3>MATH 4</h3><p>Mathematics in the Modern World</p></a>
+                    <a href="NSTP1.html" class="card subject-card" data-subject-id="nstp1"><div class="lock-icon">🔒</div><div class="card-icon">🤝</div><h3>NSTP 1</h3><p>National Service Training Program 1</p></a>
+                    <a href="PE11.html" class="card subject-card" data-subject-id="pe11"><div class="lock-icon">🔒</div><div class="card-icon">🏃</div><h3>PE 11</h3><p>PATH-FIT 1</p></a>
+                    <a href="PSY1.html" class="card subject-card" data-subject-id="psy1"><div class="lock-icon">🔒</div><div class="card-icon">💭</div><h3>PSY 1</h3><p>Understanding the Self</p></a>
+                    <a href="THEO1.html" class="card subject-card" data-subject-id="theo1"><div class="lock-icon">🔒</div><div class="card-icon">🕊️</div><h3>THEO 1</h3><p>Introduction to Christian Theology</p></a>
+                </div>
+            </div>
+            <div class="semester">
+                <h3 class="semester-title">2nd Semester</h3>
+                <div class="grid">
+                    <a href="CC12.html" class="card subject-card" data-subject-id="cc12"><div class="lock-icon">🔒</div><div class="card-icon">💻</div><h3>CC 12</h3><p>Computer Programming 2</p></a>
+                    <a href="CSCC35_1.html" class="card subject-card" data-subject-id="cscc35_1"><div class="lock-icon">🔒</div><div class="card-icon">🖱️</div><h3>CSCC 35.1</h3><p>Human Computer Interaction</p></a>
+                    <a href="ENGL1.html" class="card subject-card" data-subject-id="engl1"><div class="lock-icon">🔒</div><div class="card-icon">✍️</div><h3>ENGL 1</h3><p>Written Communication Skills Enhancement</p></a>
+                    <a href="ENGL2.html" class="card subject-card" data-subject-id="engl2"><div class="lock-icon">🔒</div><div class="card-icon">🗣️</div><h3>ENGL 2</h3><p>Oral Communication Skills Enhancement</p></a>
+                    <a href="IDE10_1.html" class="card subject-card" data-subject-id="ide10_1"><div class="lock-icon">🔒</div><div class="card-icon">🏛️</div><h3>IDE 10.1</h3><p>Ignatian Culture and Mission</p></a>
+                    <a href="NSTP2.html" class="card subject-card" data-subject-id="nstp2"><div class="lock-icon">🔒</div><div class="card-icon">🌱</div><h3>NSTP 2</h3><p>National Service Training Program 2</p></a>
+                    <a href="PE12.html" class="card subject-card" data-subject-id="pe12"><div class="lock-icon">🔒</div><div class="card-icon">🤸</div><h3>PE 12</h3><p>PATH-FIT 2</p></a>
+                    <a href="STS10.html" class="card subject-card" data-subject-id="sts10"><div class="lock-icon">🔒</div><div class="card-icon">🔬</div><h3>STS 10</h3><p>Science, Technology, and Society</p></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOPHOMORE YEAR -->
+        <section id="sophomore" class="year-section">
+            <div class="year-header">
+                <h2 class="year-title">Sophomore Year</h2>
+                <span class="year-count">16 subjects</span>
+            </div>
+            <div class="semester">
+                <h3 class="semester-title">1st Semester</h3>
+                <div class="grid">
+                    <a href="CC13_1.html" class="card subject-card" data-subject-id="cc13_1"><div class="lock-icon">🔒</div><div class="card-icon">🌳</div><h3>CC 13.1</h3><p>Data Structures and Algorithms</p></a>
+                    <a href="CC14.html" class="card subject-card" data-subject-id="cc14"><div class="lock-icon">🔒</div><div class="card-icon">🗄️</div><h3>CC 14</h3><p>Database Systems and Information Management</p></a>
+                    <a href="CSCC11.html" class="card subject-card" data-subject-id="cscc11"><div class="lock-icon">🔒</div><div class="card-icon">🔢</div><h3>CSCC 11</h3><p>Discrete Structures 1</p></a>
+                    <a href="CSCC20.html" class="card subject-card" data-subject-id="cscc20"><div class="lock-icon">🔒</div><div class="card-icon">📦</div><h3>CSCC 20</h3><p>Object Oriented Programming</p></a>
+                    <a href="ITCC10.html" class="card subject-card" data-subject-id="itcc10"><div class="lock-icon">🔒</div><div class="card-icon">🔌</div><h3>ITCC 10</h3><p>Fundamentals of Information Technology</p></a>
+                    <a href="IDE20.html" class="card subject-card" data-subject-id="ide20"><div class="lock-icon">🔒</div><div class="card-icon">🧩</div><h3>IDE 20</h3><p>Interdisciplinary Elective 2</p></a>
+                    <a href="PE13.html" class="card subject-card" data-subject-id="pe13"><div class="lock-icon">🔒</div><div class="card-icon">🏃‍♂️</div><h3>PE 13</h3><p>PATH-FIT 3</p></a>
+                    <a href="SocEcon10.html" class="card subject-card" data-subject-id="socecon10"><div class="lock-icon">🔒</div><div class="card-icon">🌍</div><h3>SocEcon 10</h3><p>The Contemporary World</p></a>
+                </div>
+            </div>
+            <div class="semester">
+                <h3 class="semester-title">2nd Semester</h3>
+                <div class="grid">
+                    <a href="CC15.html" class="card subject-card" data-subject-id="cc15"><div class="lock-icon">🔒</div><div class="card-icon">🚀</div><h3>CC 15</h3><p>Applications Development and Emerging Technology</p></a>
+                    <a href="ITCC11_1.html" class="card subject-card" data-subject-id="itcc11_1"><div class="lock-icon">🔒</div><div class="card-icon">⚡</div><h3>ITCC 11.1</h3><p>Event Driven Programming</p></a>
+                    <a href="ITCC13_1.html" class="card subject-card" data-subject-id="itcc13_1"><div class="lock-icon">🔒</div><div class="card-icon">🕸️</div><h3>ITCC 13.1</h3><p>Web Systems and Technologies</p></a>
+                    <a href="ITCC21_1.html" class="card subject-card" data-subject-id="itcc21_1"><div class="lock-icon">🔒</div><div class="card-icon">🔐</div><h3>ITCC 21.1</h3><p>Information Assurance and Security 1</p></a>
+                    <a href="ENGL5.html" class="card subject-card" data-subject-id="engl5"><div class="lock-icon">🔒</div><div class="card-icon">🎯</div><h3>ENGL 5</h3><p>Purposive Communication</p></a>
+                    <a href="FL2_1.html" class="card subject-card" data-subject-id="fl2_1"><div class="lock-icon">🔒</div><div class="card-icon">🇪🇸</div><h3>FL 2.1</h3><p>Elementary Spanish</p></a>
+                    <a href="HIST3.html" class="card subject-card" data-subject-id="hist3"><div class="lock-icon">🔒</div><div class="card-icon">📖</div><h3>HIST 3</h3><p>Life and Works of Rizal</p></a>
+                    <a href="PE14.html" class="card subject-card" data-subject-id="pe14"><div class="lock-icon">🔒</div><div class="card-icon">🏅</div><h3>PE 14</h3><p>PATH-FIT 4</p></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- JUNIOR YEAR -->
+        <section id="junior" class="year-section">
+            <div class="year-header">
+                <h2 class="year-title">Junior Year</h2>
+                <span class="year-count">16 subjects</span>
+            </div>
+            <div class="semester">
+                <h3 class="semester-title">1st Semester</h3>
+                <div class="grid">
+                    <a href="CSCC21_1.html" class="card subject-card" data-subject-id="cscc21_1"><div class="lock-icon">🔒</div><div class="card-icon">💻</div><h3>CSCC 21.1</h3><p>Software Engineering 1 (Elective)</p></a>
+                    <a href="FL2_5.html" class="card subject-card" data-subject-id="fl2_5"><div class="lock-icon">🔒</div><div class="card-icon">🇪🇸</div><h3>FL 2.5</h3><p>Intermediate Spanish</p></a>
+                    <a href="ITCC14.html" class="card subject-card" data-subject-id="itcc14"><div class="lock-icon">🔒</div><div class="card-icon">🧩</div><h3>ITCC 14</h3><p>Integrative Programming and Technologies</p></a>
+                    <a href="ITCC22_1.html" class="card subject-card" data-subject-id="itcc22_1"><div class="lock-icon">🔒</div><div class="card-icon">🛡️</div><h3>ITCC 22.1</h3><p>Information Assurance and Security 2</p></a>
+                    <a href="ITCC31.html" class="card subject-card" data-subject-id="itcc31"><div class="lock-icon">🔒</div><div class="card-icon">🌐</div><h3>ITCC 31</h3><p>Networking 1</p></a>
+                    <a href="ITCC33.html" class="card subject-card" data-subject-id="itcc33"><div class="lock-icon">🔒</div><div class="card-icon">🗄️</div><h3>ITCC 33</h3><p>Advanced Database Systems</p></a>
+                    <a href="ITCC41.html" class="card subject-card" data-subject-id="itcc41"><div class="lock-icon">🔒</div><div class="card-icon">📱</div><h3>ITCC 41</h3><p>Mobile Applications Development (Elective)</p></a>
+                    <a href="PHILO23.html" class="card subject-card" data-subject-id="philo23"><div class="lock-icon">🔒</div><div class="card-icon">⚖️</div><h3>PHILO 23</h3><p>Ethics</p></a>
+                </div>
+            </div>
+            <div class="semester">
+                <h3 class="semester-title">2nd Semester</h3>
+                <div class="grid">
+                    <a href="PlatformTech.html" class="card subject-card" data-subject-id="itcc12"><div class="lock-icon">🔒</div><div class="card-icon">🖥️</div><h3>ITCC 12</h3><p>Platform Technologies (Elective)</p></a>
+                    <a href="ITCC15_1.html" class="card subject-card" data-subject-id="itcc15_1"><div class="lock-icon">🔒</div><div class="card-icon">⚙️</div><h3>ITCC 15.1</h3><p>Systems Integration and Architecture</p></a>
+                    <a href="ITCC16_1.html" class="card subject-card" data-subject-id="itcc16_1"><div class="lock-icon">🔒</div><div class="card-icon">🛠️</div><h3>ITCC 16.1</h3><p>Systems Administration and Maintenance</p></a>
+                    <a href="ITCC32_1.html" class="card subject-card" data-subject-id="itcc32_1"><div class="lock-icon">🔒</div><div class="card-icon">🌐</div><h3>ITCC 32.1</h3><p>Networking 2</p></a>
+                    <a href="ITCC40.html" class="card subject-card" data-subject-id="itcc40"><div class="lock-icon">🔒</div><div class="card-icon">🎨</div><h3>ITCC 40</h3><p>Web Design and Development (Elective)</p></a>
+                    <a href="ITCC42.html" class="card subject-card" data-subject-id="itcc42"><div class="lock-icon">🔒</div><div class="card-icon">🌍</div><h3>ITCC 42</h3><p>ICT for Development (SLP)</p></a>
+                    <a href="PHILO25.html" class="card subject-card" data-subject-id="philo25"><div class="lock-icon">🔒</div><div class="card-icon">🧠</div><h3>PHILO 25</h3><p>Philosophy of Religion</p></a>
+                    <a href="THEO2.html" class="card subject-card" data-subject-id="theo2"><div class="lock-icon">🔒</div><div class="card-icon">📖</div><h3>THEO 2</h3><p>Faith in Action</p></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SENIOR YEAR -->
+        <section id="senior" class="year-section">
+            <div class="year-header">
+                <h2 class="year-title">Senior Year</h2>
+                <span class="year-count">Coming Soon</span>
+            </div>
+            <div class="semester">
+                <h3 class="semester-title">1st Semester</h3>
+                <div class="grid">
+                    <a href="CC50.html" class="card subject-card" data-subject-id="cc50"><div class="lock-icon">🔒</div><div class="card-icon">💼</div><h3>CC 50</h3><p>Practicum</p></a>
+                    <a href="ITCC51.html" class="card subject-card" data-subject-id="itcc51"><div class="lock-icon">🔒</div><div class="card-icon">🏆</div><h3>ITCC 51</h3><p>IT Capstone Project 1</p></a>
+                </div>
+            </div>
+            <div class="semester">
+                <h3 class="semester-title">2nd Semester</h3>
+                <div class="grid">
+                    <a href="Elective5.html" class="card subject-card" data-subject-id="elective5"><div class="lock-icon">🔒</div><div class="card-icon">⭐</div><h3>Elective 5</h3><p>Professional Elective 5</p></a>
+                    <a href="ITCC52.html" class="card subject-card" data-subject-id="itcc52"><div class="lock-icon">🔒</div><div class="card-icon">🎓</div><h3>ITCC 52</h3><p>IT Capstone Project 2</p></a>
+                    <a href="FIL75.html" class="card subject-card" data-subject-id="fil75"><div class="lock-icon">🔒</div><div class="card-icon">🎭</div><h3>FIL 75</h3><p>Pagpapahalaga sa Sining</p></a>
+                    <a href="IDE30_1.html" class="card subject-card" data-subject-id="ide30_1"><div class="lock-icon">🔒</div><div class="card-icon">🤝</div><h3>IDE 30.1</h3><p>Gender, Culture and Society</p></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal -->
+    <div id="lockModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-icon">🔒</span>
+            <h3 class="modal-title">Access Denied</h3>
+            <p class="modal-message">This subject is currently locked by the admin. Please check back later.</p>
+            <button id="closeModalBtn" class="modal-btn">Got it</button>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -88,7 +88,7 @@ function showBlockedOverlay(status) {
         <span id="__ag_icon">${icon}</span>
         <div id="__ag_ttl">${title}</div>
         <p id="__ag_msg">${msg}</p>
-        <button id="__ag_btn" onclick="history.length>1?history.back():location.href='index.html'">← Go Back</button>
+        <button id="__ag_btn" onclick="history.length>1?history.back():location.href='dashboard.html'">← Go Back</button>
     </div>`;
     document.body.appendChild(el);
 }

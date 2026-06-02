@@ -307,7 +307,7 @@ window.confirmYear = async function() {
       await setDoc(ref, { year: selectedYear, updatedAt: serverTimestamp() }, { merge: true });
     }
 
-    window.location.href = "index.html";
+    window.location.href = "dashboard.html";
   } catch (err) {
     console.error(err);
     showAlert('year-error', 'year-error-text', 'Could not save your info. Please try again.');
@@ -331,7 +331,7 @@ onAuthStateChanged(auth, async (user) => {
 
   if (snap.exists() && snap.data().year) {
     // Already set up — go straight to dashboard
-    window.location.href = "index.html";
+    window.location.href = "dashboard.html";
     return;
   }
 
