@@ -246,7 +246,9 @@ window.sendDevMessage = async function () {
 };
 
 // ── DOM Ready: Modal · Search · Subject Statuses ──────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
+// NOTE: No DOMContentLoaded wrapper needed — ES modules are already deferred,
+// so this code runs after the DOM is fully parsed.
+(function () {
 
   // ── Modal ──────────────────────────────────────────────────────────────────
   const lockModal     = document.getElementById("lockModal");
@@ -348,4 +350,4 @@ document.addEventListener("DOMContentLoaded", () => {
     (error) => console.error("Firestore read error:", error)
   );
 
-}); // end DOMContentLoaded
+})(); // end IIFE
