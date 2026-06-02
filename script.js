@@ -113,3 +113,133 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyDwvhiPoRJGzlZf5anKM1Kt48qjpT3Jo5E",
+  authDomain:        "study-materials-2026.firebaseapp.com",
+  projectId:         "study-materials-2026",
+  storageBucket:     "study-materials-2026.firebasestorage.app",
+  messagingSenderId: "613790178346",
+  appId:             "1:613790178346:web:6151c6bada7b389ffbf753"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+let currentUser = null;
+
+// ── Populate widget on load ──
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+  currentUser = user;
+
+  const snap = await getDoc(doc(db, 'users', user.uid));
+  if (!snap.exists()) return;
+
+  const p = snap.data();
+  const nickname = p.nickname || p.firstName || user.displayName?.split(' ')[0] || 'Scholar';
+  const year     = p.year || '';
+
+  // Widget
+  document.getElementById('userNickname').textContent = nickname;
+  document.getElementById('userYear').textContent     = year;
+  document.getElementById('menuFullName').textContent = `${p.firstName || ''} ${p.lastName || ''}`.trim() || user.displayName || '';
+  document.getElementById('menuEmail').textContent    = user.email;
+
+  // Avatar
+  const avatarEl = document.getElementById('userAvatar');
+  if (user.photoURL) {
+    avatarEl.innerHTML = `<img src="${user.photoURL}" alt="${nickname}">`;
+  } else {
+    avatarEl.textContent = nickname.charAt(0).toUpperCase();
+  }
+});
+
+// ── Toggle dropdown ──
+window.toggleUserMenu = function () {
+  document.getElementById('userWidget').classList.toggle('open');
+};
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const widget = document.getElementById('userWidget');
+  if (!widget.contains(e.target)) widget.classList.remove('open');
+});
+
+// ── Logout ──
+window.handleLogout = async function () {
+  await signOut(auth);
+  window.location.href = 'login.html';
+};
+
+// ── Edit Profile ──
+window.openEditProfile = async function () {
+  document.getElementById('userWidget').classList.remove('open');
+  if (!currentUser) return;
+
+  const snap = await getDoc(doc(db, 'users', currentUser.uid));
+  if (!snap.exists()) return;
+  const p = snap.data();
+
+  document.getElementById('ep-firstname').value = p.firstName || '';
+  document.getElementById('ep-lastname').value  = p.lastName  || '';
+  document.getElementById('ep-nickname').value  = p.nickname  || '';
+  document.getElementById('ep-year').value      = p.year      || 'Freshman';
+
+  document.getElementById('epOverlay').classList.add('open');
+};
+
+window.closeEditProfile = function () {
+  document.getElementById('epOverlay').classList.remove('open');
+  document.getElementById('ep-alert').classList.remove('show');
+};
+
+window.closeEditOnBackdrop = function (e) {
+  if (e.target === document.getElementById('epOverlay')) closeEditProfile();
+};
+
+window.saveEditProfile = async function () {
+  const firstName = document.getElementById('ep-firstname').value.trim();
+  const lastName  = document.getElementById('ep-lastname').value.trim();
+  const nickname  = document.getElementById('ep-nickname').value.trim();
+  const year      = document.getElementById('ep-year').value;
+  const alertEl   = document.getElementById('ep-alert');
+
+  if (!firstName || !lastName || !nickname || !year) {
+    alertEl.textContent = 'Please fill in all fields.';
+    alertEl.classList.add('show');
+    return;
+  }
+
+  const btn = document.getElementById('ep-save-btn');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spin-sm"></span> Saving...`;
+
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      firstName, lastName, nickname, year,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+
+    // Update widget live
+    document.getElementById('userNickname').textContent = nickname;
+    document.getElementById('userYear').textContent     = year;
+    document.getElementById('menuFullName').textContent = `${firstName} ${lastName}`;
+
+    closeEditProfile();
+  } catch (err) {
+    console.error(err);
+    alertEl.textContent = 'Could not save. Please try again.';
+    alertEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Save Changes';
+  }
+};

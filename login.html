@@ -4,216 +4,403 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StudyHub XU — Sign In</title>
-<link rel="icon" type="image/x-icon" href="/it-icon.jpg">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0d0f14;--surface:#13161d;--surface-2:#1a1e28;
-  --border:rgba(255,255,255,0.07);--border-hover:rgba(255,255,255,0.14);
-  --gold:#e8b84b;--gold-dim:rgba(232,184,75,0.12);--gold-glow:rgba(232,184,75,0.25);--gold-text:#f5d080;
-  --text:#e8eaf0;--text-2:#9ba3b8;--text-3:#5a6178;
-  --red:#f87171;--red-dim:rgba(248,113,113,0.1);
-  --green:#4ade80;--green-dim:rgba(74,222,128,0.1);
-  --font-display:'DM Serif Display',Georgia,serif;
-  --font-body:'DM Sans',sans-serif;
-  --radius:14px;--radius-sm:8px;
-  --transition:0.25s cubic-bezier(0.4,0,0.2,1);
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:var(--font-body);background:var(--bg);color:var(--text);
-  min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;overflow-x:hidden;position:relative;
-}
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image:radial-gradient(circle,rgba(255,255,255,0.055) 1px,transparent 1px);
-  background-size:28px 28px;pointer-events:none;z-index:0;
-}
-.blob{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px);}
-.blob-1{width:520px;height:520px;top:-170px;left:-130px;background:radial-gradient(circle,rgba(232,184,75,0.09) 0%,transparent 70%);}
-.blob-2{width:440px;height:440px;bottom:-130px;right:-90px;background:radial-gradient(circle,rgba(99,102,241,0.09) 0%,transparent 70%);}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-.wrapper{position:relative;z-index:1;width:100%;max-width:460px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:0;}
-
-/* Card */
-.card{
-  background:var(--surface);border:1px solid var(--border);border-radius:20px;
-  padding:2.8rem 2.4rem 2.4rem;
-  box-shadow:0 0 0 1px rgba(232,184,75,0.04),0 32px 64px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04);
-  display:none;flex-direction:column;align-items:center;width:100%;
-  opacity:0;transform:translateY(14px);
-  transition:opacity 0.35s ease,transform 0.4s cubic-bezier(0.34,1.2,0.64,1);
+:root {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --border: #e4e7ec;
+  --border-focus: #a0aec0;
+  --text: #111827;
+  --text-2: #4b5563;
+  --text-3: #9ca3af;
+  --accent: #1a56db;
+  --accent-hover: #1648c4;
+  --accent-light: #eff4ff;
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
 }
-.card.active{display:flex;}
-.card.visible{opacity:1;transform:translateY(0);}
 
-/* Brand */
-.brand{display:flex;flex-direction:column;align-items:center;gap:0.4rem;margin-bottom:1.8rem;}
-.brand-icon{
-  width:54px;height:54px;background:var(--gold-dim);border:1px solid rgba(232,184,75,0.25);
-  border-radius:16px;display:flex;align-items:center;justify-content:center;
-  font-size:1.55rem;margin-bottom:0.3rem;box-shadow:0 0 28px rgba(232,184,75,0.1);
+html, body {
+  height: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
-.brand-name{font-family:var(--font-display);font-size:1.75rem;color:var(--text);letter-spacing:-0.02em;line-height:1;}
-.brand-sub{font-size:0.74rem;color:var(--text-3);letter-spacing:0.06em;text-transform:uppercase;}
 
-.divider{width:100%;height:1px;background:var(--border);margin:1.5rem 0;}
-
-.card-title{font-family:var(--font-display);font-size:1.3rem;color:var(--text);text-align:center;margin-bottom:0.35rem;width:100%;}
-.card-sub{font-size:0.82rem;color:var(--text-2);text-align:center;line-height:1.55;margin-bottom:1.8rem;width:100%;}
-
-/* Google btn */
-.btn-google{
-  width:100%;display:flex;align-items:center;justify-content:center;gap:0.7rem;
-  padding:0.85rem 1.2rem;background:var(--surface-2);border:1px solid var(--border-hover);
-  border-radius:var(--radius);color:var(--text);font-family:var(--font-body);
-  font-size:0.9rem;font-weight:500;cursor:pointer;transition:var(--transition);
-  margin-bottom:0.75rem;
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.5rem;
 }
-.btn-google:hover{background:#1e2230;border-color:rgba(255,255,255,0.2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
-.btn-google:active{transform:none;}
-.btn-google:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
-.google-logo{width:18px;height:18px;flex-shrink:0;}
 
-/* Domain note */
-.domain-note{
-  display:flex;align-items:center;gap:0.45rem;font-size:0.74rem;color:var(--text-3);
-  background:rgba(255,255,255,0.02);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:0.55rem 0.85rem;width:100%;
+/* ── Card ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem 2.25rem;
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34,1.2,0.64,1);
 }
-.domain-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;box-shadow:0 0 6px var(--gold-glow);}
+.card.active { display: flex; }
+.card.visible { opacity: 1; transform: translateY(0); }
 
-/* Alert */
-.alert{
-  display:none;align-items:flex-start;gap:0.5rem;width:100%;font-size:0.78rem;
-  border-radius:var(--radius-sm);padding:0.65rem 0.9rem;margin-top:0.9rem;line-height:1.45;
+/* ── Brand ── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 2rem;
 }
-.alert.show{display:flex;}
-.alert-error{color:var(--red);background:var(--red-dim);border:1px solid rgba(248,113,113,0.2);}
-.alert-success{color:var(--green);background:var(--green-dim);border:1px solid rgba(74,222,128,0.2);}
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.brand-logo svg { width: 18px; height: 18px; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name { font-size: 0.95rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+.brand-sub { font-size: 0.72rem; color: var(--text-3); font-weight: 400; }
 
-/* Year select */
-.year-greeting{
-  font-size:0.76rem;color:var(--gold-text);font-weight:500;letter-spacing:0.06em;
-  text-transform:uppercase;margin-bottom:0.45rem;display:flex;
-  align-items:center;justify-content:center;gap:0.5rem;width:100%;
-}
-.year-greeting::before,.year-greeting::after{content:'';display:block;width:22px;height:1px;background:rgba(232,184,75,0.35);}
-.year-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;width:100%;margin-bottom:1.3rem;}
-.year-btn{
-  display:flex;flex-direction:column;align-items:flex-start;gap:0.2rem;
-  padding:1rem 1rem;background:var(--surface-2);border:1px solid var(--border);
-  border-radius:var(--radius);cursor:pointer;transition:var(--transition);
-  text-align:left;position:relative;overflow:hidden;
-}
-.year-btn::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform 0.3s ease;
-}
-.year-btn:hover{background:var(--surface);border-color:rgba(232,184,75,0.25);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
-.year-btn:hover::before{transform:scaleX(1);}
-.year-btn.selected{background:var(--gold-dim);border-color:rgba(232,184,75,0.4);box-shadow:0 0 0 1px rgba(232,184,75,0.1);}
-.year-btn.selected::before{transform:scaleX(1);}
-.year-emoji{font-size:1.2rem;margin-bottom:0.2rem;}
-.year-label{font-size:0.7rem;font-weight:600;color:var(--gold-text);letter-spacing:0.06em;text-transform:uppercase;}
-.year-name{font-family:var(--font-display);font-size:1rem;color:var(--text);line-height:1.1;}
-.year-hint{font-size:0.72rem;color:var(--text-3);text-align:center;line-height:1.5;width:100%;}
+/* ── Heading ── */
+.heading { margin-bottom: 1.75rem; }
+.heading h1 { font-size: 1.45rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 0.35rem; }
+.heading p { font-size: 0.84rem; color: var(--text-2); line-height: 1.55; }
 
-/* Confirm btn */
-.btn-primary{
-  width:100%;padding:0.8rem 1.2rem;background:var(--gold);color:#0d0f14;
-  border:none;border-radius:var(--radius);font-family:var(--font-body);
-  font-size:0.9rem;font-weight:600;cursor:pointer;transition:var(--transition);
-  margin-top:1.2rem;letter-spacing:0.02em;
+/* ── Google button ── */
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
-.btn-primary:hover{background:var(--gold-text);transform:translateY(-1px);box-shadow:0 6px 20px var(--gold-glow);}
-.btn-primary:active{transform:none;}
-.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
-
-/* Spinner */
-@keyframes spin{to{transform:rotate(360deg);}}
-.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(13,15,20,0.3);border-top-color:#0d0f14;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-
-/* Credits */
-.credits{margin-top:1.5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.25rem;}
-.credits-made{font-size:0.71rem;color:var(--text-3);}
-.credits-name{font-size:0.79rem;font-weight:600;color:var(--gold-text);}
-.credits-name span{color:var(--text-3);font-weight:400;}
-.credits-sub{font-size:0.67rem;color:var(--text-3);letter-spacing:0.03em;}
-
-@media(max-width:500px){
-  .wrapper{padding:1rem;}
-  .card{padding:2.2rem 1.5rem 2rem;border-radius:16px;}
-  .brand-name{font-size:1.5rem;}
-  .card-title{font-size:1.15rem;}
-  .year-grid{gap:0.55rem;}
-  .year-btn{padding:0.85rem 0.8rem;}
+.btn-google:hover:not(:disabled) {
+  background: #fafbfc;
+  border-color: var(--border-focus);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
 }
-@media(max-width:360px){.year-grid{grid-template-columns:1fr;}}
+.btn-google:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-google svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.domain-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text-3);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.85rem;
+}
+.domain-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── Alert ── */
+.alert {
+  display: none;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  border-radius: var(--radius);
+  padding: 0.65rem 0.85rem;
+  margin-top: 1rem;
+  line-height: 1.45;
+  border: 1px solid transparent;
+}
+.alert.show { display: flex; }
+.alert-error { color: var(--red); background: var(--red-light); border-color: #fecaca; }
+
+/* ── Form (profile setup) ── */
+.form-title { font-size: 1.3rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; margin-bottom: 0.3rem; }
+.form-sub { font-size: 0.83rem; color: var(--text-2); line-height: 1.55; margin-bottom: 1.5rem; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+.field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.85rem; }
+.field label { font-size: 0.78rem; font-weight: 600; color: var(--text-2); letter-spacing: 0.01em; }
+.field input, .field select {
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.field input::placeholder { color: var(--text-3); }
+.field input:focus, .field select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+}
+.field .hint { font-size: 0.73rem; color: var(--text-3); }
+
+.select-wrap { position: relative; }
+.select-wrap select { width: 100%; padding-right: 2.2rem; cursor: pointer; }
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--text-3);
+  pointer-events: none;
+}
+
+/* ── Primary button ── */
+.btn-primary {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+  margin-top: 0.5rem;
+  letter-spacing: 0.01em;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26,86,219,0.25);
+}
+.btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+/* ── Welcome card ── */
+.welcome-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+.welcome-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.welcome-label { font-size: 0.78rem; font-weight: 600; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.4rem; }
+.welcome-name { font-size: 1.6rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+.welcome-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: 1px solid rgba(26,86,219,0.15);
+  border-radius: 20px;
+  padding: 0.3rem 0.85rem;
+  margin-bottom: 1.75rem;
+}
+.welcome-divider { width: 100%; height: 1px; background: var(--border); margin-bottom: 1.5rem; }
+
+/* ── Spinner ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.spin-dark {
+  border-color: rgba(0,0,0,0.1);
+  border-top-color: var(--text-2);
+}
+
+/* ── Footer ── */
+.footer { margin-top: 1.5rem; text-align: center; font-size: 0.73rem; color: var(--text-3); line-height: 1.6; }
+.footer strong { color: var(--text-2); font-weight: 600; }
+
+@media (max-width: 480px) {
+  .card { padding: 2rem 1.5rem; border-radius: 14px; }
+  .field-row { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
 
-<div class="wrapper">
-
-  <!-- STEP 1: Login -->
-  <div class="card active" id="card-login">
-    <div class="brand">
-      <div class="brand-icon">📚</div>
-      <div class="brand-name">StudyHub</div>
-      <div class="brand-sub"> INFORMATION TECHNOLOGY</div>
+<!-- CARD 1: Sign in -->
+<div class="card active" id="card-login">
+  <div class="brand">
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
     </div>
-    <div class="divider"></div>
-    <div class="card-title">Welcome back</div>
-    <div class="card-sub">Sign in with your XU Google account to access your study materials.</div>
-    <button class="btn-google" id="btn-google" onclick="handleGoogleLogin()">
-      <svg class="google-logo" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-      Continue with Google
-    </button>
-    <div class="domain-note">
-      <div class="domain-dot"></div>
-      Only <strong style="color:var(--text-2);margin:0 3px;">@my.xu.edu.ph</strong> accounts are allowed
-    </div>
-    <div class="alert alert-error" id="login-error">
-      <span>⚠️</span><span id="login-error-text">Please use your XU email to sign in.</span>
+    <div class="brand-text">
+      <span class="brand-name">StudyHub XU</span>
+      <span class="brand-sub">Information Technology</span>
     </div>
   </div>
 
-  <!-- STEP 2: Year selection -->
-  <div class="card" id="card-year">
-    <div class="brand">
-      <div class="brand-icon">🎓</div>
-      <div class="brand-name">StudyHub</div>
-      <div class="brand-sub">Xavier University · Ateneo de Cagayan</div>
-    </div>
-    <div class="divider"></div>
-    <div class="year-greeting"><span>Hello, <strong id="user-firstname">Scholar</strong>!</span></div>
-    <div class="card-title" style="margin-bottom:0.35rem;">What year are you?</div>
-    <div class="card-sub">Select your current academic year to personalize your dashboard.</div>
-    <div class="year-grid">
-      <button class="year-btn" data-year="Freshman" onclick="pickYear(this)"><div class="year-emoji">🌱</div><div class="year-label">1st Year</div><div class="year-name">Freshman</div></button>
-      <button class="year-btn" data-year="Sophomore" onclick="pickYear(this)"><div class="year-emoji">📖</div><div class="year-label">2nd Year</div><div class="year-name">Sophomore</div></button>
-      <button class="year-btn" data-year="Junior" onclick="pickYear(this)"><div class="year-emoji">⚙️</div><div class="year-label">3rd Year</div><div class="year-name">Junior</div></button>
-      <button class="year-btn" data-year="Senior" onclick="pickYear(this)"><div class="year-emoji">🏆</div><div class="year-label">4th Year</div><div class="year-name">Senior</div></button>
-    </div>
-    <div class="year-hint">You can update this anytime in your profile.</div>
-    <button class="btn-primary" id="btn-confirm" onclick="confirmYear()" disabled>Continue →</button>
-    <div class="alert alert-error" id="year-error" style="margin-top:.8rem;"><span>⚠️</span><span id="year-error-text"></span></div>
+  <div class="heading">
+    <h1>Sign in to your account</h1>
+    <p>Access your study materials using your XU Google account.</p>
   </div>
 
-  <!-- Credits -->
-  <div class="credits">
-    <div class="credits-made">Study materials by</div>
-    <div class="credits-name">John Paul Nob <span>aka Kuya Pau</span></div>
-    <div class="credits-sub">Information Technology &nbsp;·&nbsp; College of Computer Studies</div>
+  <button class="btn-google" id="btn-google" onclick="handleGoogleLogin()">
+    <svg viewBox="0 0 24 24">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+    </svg>
+    Continue with Google
+  </button>
+
+  <div class="divider">or</div>
+
+  <div class="domain-note">
+    <div class="domain-dot"></div>
+    Only <strong style="color:var(--text-2);margin:0 3px;">@my.xu.edu.ph</strong> accounts are permitted
+  </div>
+
+  <div class="alert alert-error" id="login-error">
+    <span>&#9888;</span>
+    <span id="login-error-text">Please use your XU email to sign in.</span>
   </div>
 </div>
 
-<!-- Firebase SDK -->
+<!-- CARD 2: Profile setup (first-time) -->
+<div class="card" id="card-profile">
+  <div class="brand">
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-name">StudyHub XU</span>
+      <span class="brand-sub">Information Technology</span>
+    </div>
+  </div>
+
+  <div class="form-title">Set up your profile</div>
+  <div class="form-sub">Tell us a bit about yourself. You can update this anytime.</div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="inp-firstname">First Name</label>
+      <input type="text" id="inp-firstname" placeholder="e.g. Juan">
+    </div>
+    <div class="field">
+      <label for="inp-lastname">Last Name</label>
+      <input type="text" id="inp-lastname" placeholder="e.g. dela Cruz">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="inp-nickname">Nickname</label>
+    <input type="text" id="inp-nickname" placeholder="What should we call you?">
+    <span class="hint">This is shown on the dashboard.</span>
+  </div>
+
+  <div class="field">
+    <label for="inp-year">Year Level</label>
+    <div class="select-wrap">
+      <select id="inp-year">
+        <option value="" disabled selected>Select your year</option>
+        <option value="Freshman">1st Year — Freshman</option>
+        <option value="Sophomore">2nd Year — Sophomore</option>
+        <option value="Junior">3rd Year — Junior</option>
+        <option value="Senior">4th Year — Senior</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="alert alert-error" id="profile-error">
+    <span>&#9888;</span>
+    <span id="profile-error-text"></span>
+  </div>
+
+  <button class="btn-primary" id="btn-save" onclick="saveProfile()">Save and Continue</button>
+</div>
+
+<!-- CARD 3: Welcome -->
+<div class="card" id="card-welcome">
+  <div class="welcome-avatar" id="welcome-avatar"></div>
+  <div class="welcome-label" id="welcome-label">Welcome back</div>
+  <div class="welcome-name" id="welcome-name">Scholar</div>
+  <div class="welcome-year" id="welcome-year">Freshman</div>
+  <div class="welcome-divider"></div>
+  <button class="btn-primary" onclick="window.location.href='index.html'">Go to Dashboard</button>
+</div>
+
+<div class="footer">
+  Study materials by <strong>John Paul Nob</strong> &mdash; Information Technology &middot; CCS
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged }
@@ -221,7 +408,6 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged }
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ── 🔧 REPLACE with your Firebase project config ──
 const firebaseConfig = {
   apiKey:            "AIzaSyDwvhiPoRJGzlZf5anKM1Kt48qjpT3Jo5E",
   authDomain:        "study-materials-2026.firebaseapp.com",
@@ -236,119 +422,116 @@ const auth = getAuth(app);
 const db   = getFirestore(app);
 
 let currentUser = null;
-let selectedYear = null;
 
-// ── Expose functions to inline onclick handlers ──
-window.handleGoogleLogin = async function() {
+// ── Google Login ──
+window.handleGoogleLogin = async function () {
   const btn = document.getElementById('btn-google');
-  setBtn(btn, true, '<div class="spin"></div> Signing in...');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spin spin-dark"></span> Signing in...`;
 
   const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({ hd: "my.xu.edu.ph" });
+  provider.setCustomParameters({ hd: 'my.xu.edu.ph' });
 
   try {
-    const result = await signInWithPopup(auth, provider);
-    const user   = result.user;
-
-    if (!user.email.endsWith("@my.xu.edu.ph")) {
-      await auth.signOut();
-      showAlert('login-error', 'login-error-text', 'Please use your @my.xu.edu.ph account to sign in.');
-      setBtn(btn, false, googleBtnHTML());
-      return;
-    }
-    // Auth succeeded; onAuthStateChanged will handle the rest
+    await signInWithPopup(auth, provider);
+    // onAuthStateChanged handles the rest
   } catch (err) {
     console.error(err);
     const msg = err.code === 'auth/popup-closed-by-user'
       ? 'Sign-in was cancelled.'
       : 'Sign-in failed. Please try again.';
     showAlert('login-error', 'login-error-text', msg);
-    setBtn(btn, false, googleBtnHTML());
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Continue with Google`;
   }
 };
 
-window.pickYear = function(el) {
-  document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedYear = el.dataset.year;
-  document.getElementById('btn-confirm').disabled = false;
-};
+// ── Save profile (first-time) ──
+window.saveProfile = async function () {
+  const firstName = document.getElementById('inp-firstname').value.trim();
+  const lastName  = document.getElementById('inp-lastname').value.trim();
+  const nickname  = document.getElementById('inp-nickname').value.trim();
+  const year      = document.getElementById('inp-year').value;
 
-window.confirmYear = async function() {
-  if (!selectedYear || !currentUser) return;
-  const btn = document.getElementById('btn-confirm');
+  if (!firstName || !lastName || !nickname || !year) {
+    showAlert('profile-error', 'profile-error-text', 'Please fill in all fields.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-save');
   btn.disabled = true;
-  btn.innerHTML = '<div class="spin" style="border-color:rgba(13,15,20,.3);border-top-color:#0d0f14;"></div> Saving...';
+  btn.innerHTML = `<span class="spin"></span> Saving...`;
 
   try {
-    const ref  = doc(db, "users", currentUser.uid);
-    const snap = await getDoc(ref);
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      uid:         currentUser.uid,
+      email:       currentUser.email,
+      displayName: currentUser.displayName || '',
+      photoURL:    currentUser.photoURL || '',
+      firstName,
+      lastName,
+      nickname,
+      year,
+      createdAt:   serverTimestamp(),
+      updatedAt:   serverTimestamp(),
+    });
 
-    const nameParts = (currentUser.displayName || '').trim().split(' ');
-    const firstName = nameParts[0] || '';
-    const lastName  = nameParts.slice(1).join(' ') || '';
-
-    if (!snap.exists()) {
-      // New user — create full profile
-      await setDoc(ref, {
-        uid:         currentUser.uid,
-        email:       currentUser.email,
-        displayName: currentUser.displayName || '',
-        firstName:   firstName,
-        lastName:    lastName,
-        nickname:    firstName,   // default nickname = first name
-        photoURL:    currentUser.photoURL || '',
-        year:        selectedYear,
-        createdAt:   serverTimestamp(),
-        updatedAt:   serverTimestamp(),
-      });
-    } else {
-      // Existing user — just update year
-      await setDoc(ref, { year: selectedYear, updatedAt: serverTimestamp() }, { merge: true });
-    }
-
-    window.location.href = "index.html";
+    showWelcome(nickname, year, currentUser.photoURL, true);
   } catch (err) {
     console.error(err);
-    showAlert('year-error', 'year-error-text', 'Could not save your info. Please try again.');
+    showAlert('profile-error', 'profile-error-text', 'Could not save. Please try again.');
     btn.disabled = false;
-    btn.innerHTML = 'Continue →';
+    btn.innerHTML = 'Save and Continue';
   }
 };
 
-// ── Auth state observer ──
+// ── Auth state ──
 onAuthStateChanged(auth, async (user) => {
   if (!user) return;
-  if (!user.email.endsWith("@my.xu.edu.ph")) {
+
+  if (!user.email.endsWith('@my.xu.edu.ph')) {
     await auth.signOut(); return;
   }
 
   currentUser = user;
 
-  // Check if profile already exists
-  const ref  = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
+  const snap = await getDoc(doc(db, 'users', user.uid));
 
-  if (snap.exists() && snap.data().year) {
-    // Already set up — go straight to dashboard
-    window.location.href = "index.html";
+  if (!snap.exists() || !snap.data().year) {
+    // Pre-fill name from Google
+    const parts = (user.displayName || '').trim().split(' ');
+    document.getElementById('inp-firstname').value = parts[0] || '';
+    document.getElementById('inp-lastname').value  = parts.slice(1).join(' ') || '';
+    document.getElementById('inp-nickname').value  = parts[0] || '';
+    showCard('card-profile');
     return;
   }
 
-  // Show year selection
-  const firstName = (user.displayName || 'Scholar').split(' ')[0];
-  document.getElementById('user-firstname').textContent = firstName + '!';
-  showCard('card-year');
+  const profile = snap.data();
+  showWelcome(profile.nickname || profile.firstName, profile.year, user.photoURL, false);
 });
 
 // ── Helpers ──
 function showCard(id) {
-  document.querySelectorAll('.card').forEach(c => {
-    c.classList.remove('active','visible');
-  });
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active', 'visible'));
   const card = document.getElementById(id);
   card.classList.add('active');
   requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('visible')));
+}
+
+function showWelcome(nickname, year, photoURL, isNew) {
+  document.getElementById('welcome-label').textContent = isNew ? 'Hello,' : 'Welcome back,';
+  document.getElementById('welcome-name').textContent  = nickname;
+  document.getElementById('welcome-year').textContent  = year;
+
+  const avatar = document.getElementById('welcome-avatar');
+  if (photoURL) {
+    avatar.innerHTML = `<img src="${photoURL}" alt="${nickname}">`;
+  } else {
+    avatar.textContent = nickname.charAt(0).toUpperCase();
+  }
+
+  showCard('card-welcome');
 }
 
 function showAlert(alertId, textId, msg) {
@@ -358,16 +541,7 @@ function showAlert(alertId, textId, msg) {
   setTimeout(() => el.classList.remove('show'), 6000);
 }
 
-function setBtn(btn, disabled, html) {
-  btn.disabled = disabled;
-  btn.innerHTML = html;
-}
-
-function googleBtnHTML() {
-  return `<svg class="google-logo" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Continue with Google`;
-}
-
-// Init login card visible
+// Init
 requestAnimationFrame(() => requestAnimationFrame(() => {
   document.getElementById('card-login').classList.add('visible');
 }));
