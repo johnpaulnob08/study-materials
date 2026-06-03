@@ -5,11 +5,12 @@
 //
 // What it does (in order):
 //   1. Shows a "Verifying access…" overlay immediately (no flash of content)
-//   2. Waits for Firebase Auth — if not logged in → redirects to login.html
-//   3. Rejects non @my.xu.edu.ph emails → signs out + redirects
-//   4. Checks Firestore profile — must exist AND have year set
-//   5. Checks subject lock status from Firestore (locked / unavailable / coming_soon)
-//   6. Injects the user's nickname into any [id="user-nickname"] or .user-nickname element
+//   2. Checks maintenance mode — blocks non-admins with a modal if active
+//   3. Waits for Firebase Auth — if not logged in → redirects to login.html
+//   4. Rejects non @my.xu.edu.ph emails → signs out + redirects
+//   5. Checks Firestore profile — must exist AND have year set
+//   6. Checks subject lock status from Firestore (locked / unavailable / coming_soon)
+//   7. Injects the user's nickname into any [id="user-nickname"] or .user-nickname element
 //
 // Do NOT add this to: login.html, profile.html  (they handle auth themselves)
 
@@ -50,6 +51,40 @@ function injectCheckingOverlay() {
 function removeOverlay(el) {
     el.style.opacity = '0';
     setTimeout(() => { try { el.remove(); } catch(_){} }, 320);
+}
+
+// ─── Maintenance Mode overlay ─────────────────────────────────────────────────
+function showMaintenanceOverlay(message) {
+    const s = document.createElement('style');
+    s.textContent = `
+        #__ag_maint{position:fixed;inset:0;z-index:999998;background:#0d0f14;
+            display:flex;align-items:center;justify-content:center;
+            font-family:'DM Sans',system-ui,sans-serif;}
+        #__ag_maint_box{background:#13161d;border:1px solid rgba(232,184,75,0.2);border-radius:20px;
+            padding:3rem 2.5rem;text-align:center;max-width:420px;width:90%;
+            box-shadow:0 32px 64px rgba(0,0,0,.7);
+            animation:__ag_pop .4s cubic-bezier(0.34,1.56,0.64,1) forwards;}
+        @keyframes __ag_pop{from{transform:scale(.88) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+        #__ag_maint_icon{font-size:3.2rem;display:block;margin-bottom:1.2rem;animation:__ag_fl 3s ease-in-out infinite;}
+        @keyframes __ag_fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        #__ag_maint_ttl{font-size:1.5rem;font-weight:700;color:#e8eaf0;margin-bottom:.6rem;letter-spacing:-.02em;}
+        #__ag_maint_sub{font-size:.85rem;color:#9ba3b8;line-height:1.7;margin-bottom:1.6rem;}
+        #__ag_maint_badge{display:inline-flex;align-items:center;gap:.4rem;
+            background:rgba(232,184,75,0.1);border:1px solid rgba(232,184,75,0.25);
+            border-radius:20px;padding:.3rem .9rem;font-size:.72rem;
+            font-weight:600;letter-spacing:.06em;color:#e8b84b;text-transform:uppercase;}
+    `;
+    document.head.appendChild(s);
+    document.body.style.overflow = 'hidden';
+    const el = document.createElement('div');
+    el.id = '__ag_maint';
+    el.innerHTML = `<div id="__ag_maint_box">
+        <span id="__ag_maint_icon">🔧</span>
+        <div id="__ag_maint_ttl">Under Maintenance</div>
+        <p id="__ag_maint_sub">${escapeHtml(message)}</p>
+        <div id="__ag_maint_badge">⏱ We'll be back soon</div>
+    </div>`;
+    document.body.appendChild(el);
 }
 
 // ─── Blocked overlay (subject locked/unavailable/coming_soon) ────────────────
@@ -96,6 +131,12 @@ function showBlockedOverlay(status) {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function goLogin() { window.location.replace('login.html'); }
 
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function resolveSubjectId() {
     const tag = document.querySelector('script[src*="auth-guard.js"]');
     if (tag?.dataset?.subjectId) return tag.dataset.subjectId;
@@ -115,45 +156,78 @@ const overlay = injectCheckingOverlay();
 
 onAuthStateChanged(auth, async (user) => {
 
-    // 1. Not signed in
-    if (!user) { goLogin(); return; }
-
-    // 2. Wrong domain
-    if (!user.email.endsWith('@my.xu.edu.ph')) {
-        await signOut(auth);
+    // 1. Not signed in — check maintenance first (even for guests)
+    if (!user) {
+        try {
+            const maintSnap = await getDoc(doc(db, 'settings', 'maintenance'));
+            if (maintSnap.exists() && maintSnap.data().enabled === true) {
+                removeOverlay(overlay);
+                showMaintenanceOverlay(maintSnap.data().message || 'The system is currently under maintenance.');
+                return;
+            }
+        } catch(_) {}
         goLogin();
         return;
     }
 
     try {
-        // 3. Firestore profile must exist + have year set
+        // 2. Check if admin — admins bypass all restrictions
         const userSnap = await getDoc(doc(db, 'users', user.uid));
-        if (!userSnap.exists() || !userSnap.data().year) {
+        const profile  = userSnap.exists() ? userSnap.data() : {};
+        const isAdmin  = profile.role === 'admin';
+
+        if (isAdmin) {
+            // Admin: just inject nickname and show the page — no restrictions
+            const nickname = profile.nickname || profile.firstName || user.displayName?.split(' ')[0] || 'Admin';
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => injectNickname(nickname));
+            } else {
+                injectNickname(nickname);
+            }
+            removeOverlay(overlay);
+            return;
+        }
+
+        // 3. Non-admin: check domain
+        if (!user.email.endsWith('@my.xu.edu.ph')) {
+            await signOut(auth);
+            goLogin();
+            return;
+        }
+
+        // 4. Firestore profile must exist + have year set
+        if (!userSnap.exists() || !profile.year) {
             goLogin(); return;
         }
 
-        const profile  = userSnap.data();
+        // 5. Check maintenance mode — block non-admins
+        const maintSnap = await getDoc(doc(db, 'settings', 'maintenance'));
+        if (maintSnap.exists() && maintSnap.data().enabled === true) {
+            removeOverlay(overlay);
+            showMaintenanceOverlay(maintSnap.data().message || 'The system is currently under maintenance.');
+            return;
+        }
+
         const nickname = profile.nickname || profile.firstName || user.displayName?.split(' ')[0] || 'Scholar';
 
-        // 4. Inject nickname wherever the page needs it
+        // 6. Inject nickname
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => injectNickname(nickname));
         } else {
             injectNickname(nickname);
         }
 
-        // 5. Subject status check (re-uses the Firestore statuses doc from guard.js)
-        const subjectId   = resolveSubjectId();
-        const statusSnap  = await getDoc(doc(db, 'statuses', 'subjects'));
-        const statuses    = statusSnap.exists() ? statusSnap.data() : {};
-        const status      = statuses[subjectId] || 'unlocked';
+        // 7. Subject status check
+        const subjectId  = resolveSubjectId();
+        const statusSnap = await getDoc(doc(db, 'statuses', 'subjects'));
+        const statuses   = statusSnap.exists() ? statusSnap.data() : {};
+        const status     = statuses[subjectId] || 'unlocked';
 
         removeOverlay(overlay);
 
         if (status !== 'unlocked') showBlockedOverlay(status);
 
     } catch (err) {
-        // Fail open on network errors — don't lock genuine users out
         console.warn('[auth-guard.js]', err);
         removeOverlay(overlay);
     }

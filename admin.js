@@ -37,17 +37,34 @@ const applyBulkBtn     = document.getElementById('applyBulkBtn');
 const saveStatus       = document.getElementById('saveStatus');
 
 const statusDoc = doc(db, "statuses", "subjects");
+const maintDoc  = doc(db, "settings", "maintenance");
 
 let statuses = {};
 
 // ── Auth gate ───────────────────────────────────────────────
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
     if (user) {
+        // Role check — only admin role gets in
+        try {
+            const userSnap = await getDoc(doc(db, 'users', user.uid));
+            const profile  = userSnap.exists() ? userSnap.data() : {};
+            if (profile.role !== 'admin') {
+                loginError.textContent = 'Access denied. Admin accounts only.';
+                await signOut(auth);
+                loginScreen.style.display = 'flex';
+                adminPanel.style.display  = 'none';
+                return;
+            }
+        } catch(err) {
+            console.error('Role check failed:', err);
+        }
+
         loginScreen.style.display  = 'none';
         adminPanel.style.display   = 'flex';
         if (userEmailEl) userEmailEl.textContent = user.email;
         initAdmin();
         initMessagesPanel();
+        initSettingsPanel();
     } else {
         loginScreen.style.display  = 'flex';
         adminPanel.style.display   = 'none';
@@ -133,9 +150,9 @@ function initAdmin() {
         applyBulkBtn.disabled    = true;
 
         selected.forEach(card => {
-            const id      = card.getAttribute('data-subject-id');
+            const id       = card.getAttribute('data-subject-id');
             const newState = bulkStatusSelect.value;
-            statuses[id]  = newState;
+            statuses[id]   = newState;
             updateLabel(card, newState);
             card.classList.remove('selected');
         });
@@ -185,61 +202,196 @@ function updateLabel(card, state) {
 
 function showSaveStatus(msg, type) {
     if (!saveStatus) return;
-    saveStatus.textContent  = msg;
-    saveStatus.className    = `save-status ${type}`;
+    saveStatus.textContent   = msg;
+    saveStatus.className     = `save-status ${type}`;
     saveStatus.style.opacity = '1';
     setTimeout(() => { saveStatus.style.opacity = '0'; }, 3000);
 }
 
-// ── Messages Panel ────────────────────────────────────────────────────────────
-
+// ── Messages Panel (notification icon + modal) ───────────────────────────────
 function initMessagesPanel() {
-  const list  = document.getElementById("messagesList");
-  const count = document.getElementById("messagesCount");
-  if (!list) return;
+    const bellBtn   = document.getElementById('msgBellBtn');
+    const badge     = document.getElementById('msgBadge');
+    const modal     = document.getElementById('msgModal');
+    const closeBtn  = document.getElementById('msgModalClose');
+    const body      = document.getElementById('msgModalBody');
+    if (!bellBtn || !modal) return;
 
-  const q = query(collection(db, "messages"), orderBy("sentAt", "desc"));
+    let allMessages  = [];
+    let unreadCount  = 0;
 
-  onSnapshot(q, (snapshot) => {
-    count.textContent = `${snapshot.size} message${snapshot.size !== 1 ? "s" : ""}`;
+    // Read unread count from localStorage
+    const getLastRead = () => parseInt(localStorage.getItem('admin_msg_last_read') || '0');
+    const setLastRead = (ts) => localStorage.setItem('admin_msg_last_read', String(ts));
 
-    if (snapshot.empty) {
-      list.innerHTML = `<div class="messages-empty">No messages yet.</div>`;
-      return;
+    const q = query(collection(db, "messages"), orderBy("sentAt", "asc"));
+
+    onSnapshot(q, (snapshot) => {
+        allMessages = [];
+        snapshot.forEach(d => {
+            const data = d.data();
+            allMessages.push({ id: d.id, ...data });
+        });
+
+        // Count messages newer than last read timestamp
+        const lastRead = getLastRead();
+        unreadCount = allMessages.filter(m => {
+            const ts = m.sentAt?.toMillis ? m.sentAt.toMillis() : 0;
+            return ts > lastRead;
+        }).length;
+
+        // Update badge
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }, (err) => {
+        console.error("Messages read error:", err);
+    });
+
+    // Open modal
+    bellBtn.addEventListener('click', () => {
+        renderMsgModal(allMessages, body);
+        modal.classList.add('open');
+
+        // Mark all as read
+        if (allMessages.length > 0) {
+            const latest = Math.max(...allMessages.map(m => m.sentAt?.toMillis ? m.sentAt.toMillis() : 0));
+            setLastRead(latest);
+            unreadCount = 0;
+            badge.style.display = 'none';
+        }
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+}
+
+function renderMsgModal(messages, body) {
+    if (messages.length === 0) {
+        body.innerHTML = '<div class="msg-modal-empty">No messages yet.</div>';
+        return;
     }
 
-    list.innerHTML = "";
-    snapshot.forEach((docSnap) => {
-      const d   = docSnap.data();
-      const ts  = d.sentAt?.toDate();
-      const time = ts ? ts.toLocaleString("en-PH", {
-        month: "short", day: "numeric",
-        hour: "numeric", minute: "2-digit", hour12: true
-      }) : "—";
-
-      const item = document.createElement("div");
-      item.className = "message-item";
-      item.innerHTML = `
-        <div class="message-meta">
-          <span class="message-sender">${escapeHtml(d.nickname || "Unknown")}</span>
-          <span class="message-year">${escapeHtml(d.year || "")}</span>
-          <span class="message-email">${escapeHtml(d.email || "")}</span>
-          <span class="message-time">${time}</span>
-        </div>
-        <div class="message-body">${escapeHtml(d.message || "")}</div>
-      `;
-      list.appendChild(item);
+    // Group by year → month
+    const grouped = {}; // { 2025: { 5: [...], 6: [...] }, 2026: { ... } }
+    messages.forEach(m => {
+        const ts = m.sentAt?.toDate ? m.sentAt.toDate() : new Date(m.sentAt?.seconds * 1000 || Date.now());
+        const yr = ts.getFullYear();
+        const mo = ts.getMonth(); // 0-indexed
+        if (!grouped[yr]) grouped[yr] = {};
+        if (!grouped[yr][mo]) grouped[yr][mo] = [];
+        grouped[yr][mo].push({ ...m, _date: ts });
     });
-  }, (err) => {
-    console.error("Messages read error:", err);
-    list.innerHTML = `<div class="messages-empty">Could not load messages.</div>`;
-  });
+
+    const MONTHS = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+
+    let html = '';
+    // Sort years ascending
+    Object.keys(grouped).sort((a,b) => a-b).forEach(yr => {
+        html += `<div class="msg-year-group"><div class="msg-year-label">${yr}</div>`;
+        // Sort months ascending
+        Object.keys(grouped[yr]).sort((a,b) => a-b).forEach(mo => {
+            const msgs = grouped[yr][mo];
+            html += `<div class="msg-month-card">
+                <div class="msg-month-header">
+                    <span class="msg-month-name">${MONTHS[mo]}</span>
+                    <span class="msg-month-count">${msgs.length} message${msgs.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="msg-month-list">`;
+            msgs.forEach(m => {
+                const time = m._date.toLocaleString('en-PH', {
+                    day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
+                });
+                html += `<div class="msg-item">
+                    <div class="msg-item-meta">
+                        <span class="msg-item-sender">${escapeHtml(m.nickname || 'Unknown')}</span>
+                        <span class="msg-item-year-badge">${escapeHtml(m.year || '')}</span>
+                        <span class="msg-item-email">${escapeHtml(m.email || '')}</span>
+                        <span class="msg-item-time">${time}</span>
+                    </div>
+                    <div class="msg-item-body">${escapeHtml(m.message || '')}</div>
+                </div>`;
+            });
+            html += `</div></div>`;
+        });
+        html += '</div>';
+    });
+
+    body.innerHTML = html;
+}
+
+// ── Settings Panel (maintenance mode toggle) ──────────────────────────────────
+function initSettingsPanel() {
+    const settingsBtn   = document.getElementById('settingsBtn');
+    const settingsModal = document.getElementById('settingsModal');
+    const settingsClose = document.getElementById('settingsModalClose');
+    const maintToggle   = document.getElementById('maintToggle');
+    const maintMsg      = document.getElementById('maintMessage');
+    const saveMaintBtn  = document.getElementById('saveMaintBtn');
+    const maintStatus   = document.getElementById('maintStatus');
+    if (!settingsBtn || !settingsModal) return;
+
+    // Load current maintenance state from Firestore
+    onSnapshot(maintDoc, (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        maintToggle.checked = data.enabled === true;
+        maintMsg.value      = data.message || '';
+        updateMaintLabel(data.enabled === true);
+    });
+
+    function updateMaintLabel(enabled) {
+        const label = document.getElementById('maintToggleLabel');
+        if (label) label.textContent = enabled ? 'Maintenance Mode is ON' : 'Maintenance Mode is OFF';
+        if (maintToggle) maintToggle.checked = enabled;
+    }
+
+    // Open/close
+    settingsBtn.addEventListener('click', () => settingsModal.classList.add('open'));
+    settingsClose.addEventListener('click', () => settingsModal.classList.remove('open'));
+    settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) settingsModal.classList.remove('open');
+    });
+
+    maintToggle.addEventListener('change', () => {
+        updateMaintLabel(maintToggle.checked);
+    });
+
+    // Save maintenance settings
+    saveMaintBtn.addEventListener('click', async () => {
+        saveMaintBtn.textContent = 'Saving…';
+        saveMaintBtn.disabled    = true;
+        try {
+            await setDoc(maintDoc, {
+                enabled: maintToggle.checked,
+                message: maintMsg.value.trim() || 'The system is currently under maintenance. Please check back later.'
+            });
+            maintStatus.textContent  = '✓ Settings saved';
+            maintStatus.className    = 'maint-status success';
+            maintStatus.style.opacity = '1';
+            setTimeout(() => { maintStatus.style.opacity = '0'; }, 3000);
+        } catch(err) {
+            console.error(err);
+            maintStatus.textContent  = err.code === 'permission-denied' ? 'Permission denied.' : `Error: ${err.message}`;
+            maintStatus.className    = 'maint-status error';
+            maintStatus.style.opacity = '1';
+            setTimeout(() => { maintStatus.style.opacity = '0'; }, 4000);
+        } finally {
+            saveMaintBtn.textContent = 'Save Settings';
+            saveMaintBtn.disabled    = false;
+        }
+    });
 }
 
 function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
 }
