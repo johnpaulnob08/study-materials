@@ -44,11 +44,14 @@ let statuses = {};
 // ── Auth gate ───────────────────────────────────────────────
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        // Role check — only admin role gets in
+        // Role check — must have role:'admin' in Firestore users doc,
+        // OR be the designated admin email (fallback if no users doc exists yet)
+        const ADMIN_EMAIL = 'studyhub.nob-admin@gmail.com';
         try {
             const userSnap = await getDoc(doc(db, 'users', user.uid));
             const profile  = userSnap.exists() ? userSnap.data() : {};
-            if (profile.role !== 'admin') {
+            const isAdmin  = profile.role === 'admin' || user.email === ADMIN_EMAIL;
+            if (!isAdmin) {
                 loginError.textContent = 'Access denied. Admin accounts only.';
                 await signOut(auth);
                 loginScreen.style.display = 'flex';
@@ -56,7 +59,14 @@ onAuthStateChanged(auth, async (user) => {
                 return;
             }
         } catch(err) {
-            console.error('Role check failed:', err);
+            // If Firestore read fails, fall back to email check only
+            if (user.email !== ADMIN_EMAIL) {
+                loginError.textContent = 'Access denied. Admin accounts only.';
+                await signOut(auth);
+                loginScreen.style.display = 'flex';
+                adminPanel.style.display  = 'none';
+                return;
+            }
         }
 
         loginScreen.style.display  = 'none';
