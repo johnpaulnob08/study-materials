@@ -1,16 +1,28 @@
 // maintenance-check.js
-// Blocks index.html and login.html during maintenance mode.
-// Reads directly from Firestore — no auth wait needed.
+// Checks Firestore directly — no auth wait — and blocks the page instantly.
+// Add to index.html and login.html only.
 
-import { db, auth } from "./firebase-config.js";
+import { db } from "./firebase-config.js";
 import { doc, getDoc }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { onAuthStateChanged }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// Show blocking overlay immediately — before anything else renders
+(async () => {
+    try {
+        const snap = await getDoc(doc(db, "settings", "maintenance"));
+        if (!snap.exists() || snap.data().enabled !== true) return;
+
+        // Maintenance is ON — block the page immediately
+        const message = snap.data().message
+            || "The system is currently under maintenance. Please check back later.";
+        showMaintenance(message);
+
+    } catch (err) {
+        console.warn("[maintenance-check]", err);
+    }
+})();
+
 function showMaintenance(message) {
-    const esc = (s) => String(s).replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const esc = (s) => String(s).replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const s = document.createElement("style");
     s.textContent = `
         #__maint{position:fixed;inset:0;z-index:999999;background:#0d0f14;
@@ -47,39 +59,3 @@ function showMaintenance(message) {
     </div>`;
     document.body.appendChild(el);
 }
-
-// Main — runs immediately on page load
-(async () => {
-    try {
-        // 1. Fetch maintenance state directly — no auth dependency
-        const maintSnap = await getDoc(doc(db, "settings", "maintenance"));
-
-        // Not in maintenance — do nothing, page loads normally
-        if (!maintSnap.exists() || maintSnap.data().enabled !== true) return;
-
-        const message = maintSnap.data().message
-            || "The system is currently under maintenance. Please check back later.";
-
-        // 2. Check if a logged-in admin is viewing — if so, skip the block
-        //    Use a short-circuit: wait max 3s for auth, then block anyway
-        await new Promise((resolve) => {
-            const timeout = setTimeout(() => resolve(false), 3000);
-            onAuthStateChanged(auth, async (user) => {
-                clearTimeout(timeout);
-                if (!user) return resolve(false);
-                try {
-                    const ADMIN_EMAIL = "studyhub.nob-admin@gmail.com";
-                    if (user.email === ADMIN_EMAIL) return resolve(true); // admin — don't block
-                    const userSnap = await getDoc(doc(db, "users", user.uid));
-                    if (userSnap.exists() && userSnap.data().role === "admin") return resolve(true);
-                } catch(_) {}
-                resolve(false);
-            });
-        }).then((isAdmin) => {
-            if (!isAdmin) showMaintenance(message);
-        });
-
-    } catch(err) {
-        console.warn("[maintenance-check]", err);
-    }
-})();
